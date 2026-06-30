@@ -492,6 +492,10 @@ p {
 }
 
 .topic-page-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   min-height: 48px;
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -504,6 +508,16 @@ p {
   color: white;
   border-color: var(--primary);
   background: var(--primary);
+}
+
+.topic-page-tabs button.locked {
+  cursor: not-allowed;
+  color: #9aa5b8;
+  background: #f1f5fb;
+}
+
+.lesson-gate-tabs {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .topic-map,
@@ -521,9 +535,25 @@ p {
   color: var(--accent);
 }
 
+.topic-map-card {
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+}
+
+.topic-map-card.locked-card {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
 .topic-map-card strong {
   font-size: 0.95rem;
   line-height: 1.35;
+}
+
+.topic-map-card small {
+  color: var(--primary);
+  font-weight: 900;
 }
 
 .subtopic-card {
@@ -533,6 +563,59 @@ p {
   border: 1px solid var(--border);
   border-radius: 20px;
   background: white;
+}
+
+.lesson-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.lesson-section {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #fbfdff;
+}
+
+.guided-question-list,
+.checkpoint-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.checkpoint-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.exit-ticket-panel {
+  background: #ffffff;
+}
+
+.lesson-next-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.lesson-next-row .btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.locked-lesson {
+  min-height: 220px;
+  display: grid;
+  align-items: center;
+}
+
+.lesson-feature-icon.locked {
+  background: #9aa5b8;
+}
+
+.teacher-note ul {
+  margin: 10px 0 0;
+  padding-left: 20px;
 }
 
 .section-header.compact {
@@ -754,6 +837,7 @@ p {
 
   .lesson-tabs,
   .topic-map,
+  .checkpoint-grid,
   .simulator-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -772,6 +856,7 @@ p {
   .lesson-tabs,
   .topic-page-tabs,
   .topic-map,
+  .checkpoint-grid,
   .simulator-grid {
     grid-template-columns: 1fr;
   }

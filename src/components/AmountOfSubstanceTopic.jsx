@@ -1,175 +1,243 @@
 import { useMemo, useState } from 'react'
-import { Atom, Beaker, BookOpen, CheckCircle2, FlaskConical, GraduationCap, Scale, Wind } from 'lucide-react'
+import { Atom, Beaker, BookOpen, CheckCircle2, FlaskConical, GraduationCap, Lock, Scale, Wind } from 'lucide-react'
 import Flashcards from './Flashcards.jsx'
 import QuizBlock from './QuizBlock.jsx'
 import MoleCalculator from '../tools/MoleCalculator.jsx'
 import ConcentrationCalculator from '../tools/ConcentrationCalculator.jsx'
 import FormulaMassCalculator from '../tools/FormulaMassCalculator.jsx'
 import { quizzes } from '../data/quizzes.js'
+import { useLocalStorage } from '../utils/useLocalStorage.js'
 
-const lessonTabs = [
+const PASS_MARK = 80
+
+const amountLessons = [
   {
-    id: 'mole-basics',
+    id: 'lesson-1',
+    label: 'Lesson 1',
+    title: 'Mole Concept',
     icon: Atom,
-    title: '1. Mole Concept',
-    focus: 'Particles, Avogadro constant, and why chemists count by weighing.',
-    core: [
-      'One mole contains 6.02 x 10^23 particles.',
-      'The particles can be atoms, molecules, ions, electrons, or formula units.',
-      'Use n = N / L when a question gives a number of particles.'
+    nextLessonId: 'lesson-2',
+    summary: 'Define the mole, connect it to Avogadro constant, and calculate amount of substance from a number of particles.',
+    objectives: [
+      'Define one mole as 6.02 x 10^23 particles.',
+      'Identify what the counted particles are in atoms, molecules, ions, and formula units.',
+      'Use n = N / L to calculate moles from number of particles.',
+      'Use N = n x L to calculate number of particles from moles.'
     ],
-    workedExample: {
-      title: 'Particles to moles',
-      question: 'Calculate the amount of Mg atoms in 3.01 x 10^22 atoms of Mg.',
-      steps: [
-        'Write the relationship: n = N / L.',
-        'Substitute: n = (3.01 x 10^22) / (6.02 x 10^23).',
-        'Calculate: n = 0.0500 mol.'
-      ],
-      answer: '0.0500 mol of Mg atoms'
-    },
-    teacherNotes: 'Pause on particle identity: one mole of O atoms and one mole of O2 molecules are different particle counts in formulas.'
+    priorKnowledge: [
+      'I can use standard form such as 3.01 x 10^22.',
+      'I know atoms, molecules, and ions are particles.',
+      'I can rearrange a simple equation.',
+      'I understand that chemists often measure mass instead of counting particles directly.'
+    ],
+    teachingSections: [
+      {
+        title: 'Why chemists use the mole',
+        body: 'Atoms and molecules are far too small to count one by one in the laboratory. The mole is a counting unit, like a dozen, but much larger. One mole always contains 6.02 x 10^23 particles.'
+      },
+      {
+        title: 'Particle identity matters',
+        body: 'The word particles must be interpreted from the formula. One mole of Mg contains one mole of Mg atoms. One mole of CO2 contains one mole of CO2 molecules, but three moles of atoms in total because each molecule contains one carbon atom and two oxygen atoms.'
+      },
+      {
+        title: 'The key equations',
+        body: 'Use n = N / L when a question gives the number of particles. Use N = n x L when the question asks for particles. L is the Avogadro constant, 6.02 x 10^23 mol-1.'
+      }
+    ],
+    workedExamples: [
+      {
+        title: 'Particles to moles',
+        question: 'Calculate the amount of Mg atoms in 3.01 x 10^22 atoms of Mg.',
+        steps: [
+          'Write the relationship: n = N / L.',
+          'Substitute: n = (3.01 x 10^22) / (6.02 x 10^23).',
+          'Calculate: n = 0.0500 mol.'
+        ],
+        answer: '0.0500 mol of Mg atoms'
+      },
+      {
+        title: 'Moles to particles',
+        question: 'How many CO2 molecules are present in 0.250 mol of CO2?',
+        steps: [
+          'Write the relationship: N = n x L.',
+          'Substitute: N = 0.250 x 6.02 x 10^23.',
+          'Calculate: N = 1.51 x 10^23 molecules.'
+        ],
+        answer: '1.51 x 10^23 CO2 molecules'
+      }
+    ],
+    guidedQuestions: [
+      {
+        prompt: 'A sample contains 1.204 x 10^24 atoms of helium. Which equation should you use first?',
+        answer: 'Use n = N / L because the question gives a number of particles and asks for amount in moles.'
+      },
+      {
+        prompt: 'In 2.00 mol of water molecules, how many moles of hydrogen atoms are present?',
+        answer: 'Each H2O molecule contains two H atoms, so 2.00 mol H2O contains 4.00 mol of H atoms.'
+      }
+    ],
+    checkpoints: [
+      {
+        prompt: 'What is the Avogadro constant?',
+        expected: '6.02 x 10^23 mol-1.'
+      },
+      {
+        prompt: 'One mole of sodium chloride contains what kind of particles?',
+        expected: 'Formula units of NaCl, made from Na+ and Cl- ions.'
+      }
+    ],
+    exitTicket: [
+      {
+        id: 'l1-q1',
+        prompt: 'One mole contains:',
+        options: [
+          { id: 'a', text: '6.02 x 10^23 particles' },
+          { id: 'b', text: '6.02 x 10^-23 particles' },
+          { id: 'c', text: '24.0 particles' }
+        ],
+        answer: 'a',
+        explanation: 'One mole is defined as 6.02 x 10^23 particles.'
+      },
+      {
+        id: 'l1-q2',
+        prompt: 'Which equation calculates moles from number of particles?',
+        options: [
+          { id: 'a', text: 'n = N x L' },
+          { id: 'b', text: 'n = N / L' },
+          { id: 'c', text: 'n = L / N' }
+        ],
+        answer: 'b',
+        explanation: 'Amount in moles equals number of particles divided by the Avogadro constant.'
+      },
+      {
+        id: 'l1-q3',
+        prompt: 'How many moles are in 3.01 x 10^23 molecules?',
+        options: [
+          { id: 'a', text: '0.500 mol' },
+          { id: 'b', text: '1.00 mol' },
+          { id: 'c', text: '2.00 mol' }
+        ],
+        answer: 'a',
+        explanation: '3.01 x 10^23 is half of 6.02 x 10^23, so it is 0.500 mol.'
+      },
+      {
+        id: 'l1-q4',
+        prompt: 'How many molecules are present in 2.00 mol of oxygen molecules?',
+        options: [
+          { id: 'a', text: '3.01 x 10^23' },
+          { id: 'b', text: '6.02 x 10^23' },
+          { id: 'c', text: '1.204 x 10^24' }
+        ],
+        answer: 'c',
+        explanation: 'N = n x L = 2.00 x 6.02 x 10^23 = 1.204 x 10^24 molecules.'
+      },
+      {
+        id: 'l1-q5',
+        prompt: 'One mole of CO2 contains:',
+        options: [
+          { id: 'a', text: 'one mole of CO2 molecules' },
+          { id: 'b', text: 'one mole of carbon atoms only' },
+          { id: 'c', text: 'three molecules in total' }
+        ],
+        answer: 'a',
+        explanation: 'The formula CO2 identifies the counted particle as a molecule of carbon dioxide.'
+      }
+    ],
+    teacherNotes: [
+      'Students often say one mole is a mass. Keep returning to one mole as a number of particles.',
+      'Ask students to name the counted particle every time: atoms, molecules, ions, or formula units.'
+    ]
   },
   {
-    id: 'mass-moles',
+    id: 'lesson-2',
+    label: 'Lesson 2',
+    title: 'Moles and Mass',
     icon: Scale,
-    title: '2. Moles and Mass',
-    focus: 'Using relative formula mass to move between grams and moles.',
-    core: [
-      'Use n = m / Mr when mass is in grams.',
-      'Use m = n x Mr when the question asks for mass.',
-      'Calculate Mr by adding the relative atomic masses in the formula.'
-    ],
-    workedExample: {
-      title: 'Mass to moles',
-      question: 'Calculate the moles in 5.30 g of Na2CO3. Mr = 106.0.',
-      steps: [
-        'Choose the formula: n = m / Mr.',
-        'Substitute: n = 5.30 / 106.0.',
-        'Calculate: n = 0.0500 mol.'
-      ],
-      answer: '0.0500 mol of Na2CO3'
-    },
-    teacherNotes: 'Insist on units in every line. Most early errors are formula choice errors or missing the 2 in Na2.'
+    nextLessonId: 'lesson-3',
+    summary: 'Use relative formula mass to convert between mass and amount of substance.',
+    objectives: ['Calculate Mr from a formula.', 'Use n = m / Mr.', 'Use m = n x Mr.'],
+    priorKnowledge: ['I can read chemical formulae.', 'I can add relative atomic masses.'],
+    teachingSections: [],
+    workedExamples: [],
+    guidedQuestions: [],
+    checkpoints: [],
+    exitTicket: [],
+    teacherNotes: ['Full lesson content will be built in the next content phase.']
   },
   {
-    id: 'solutions',
+    id: 'lesson-3',
+    label: 'Lesson 3',
+    title: 'Moles and Solutions',
     icon: Beaker,
-    title: '3. Moles and Solutions',
-    focus: 'Concentration, volume conversion, and titration-ready thinking.',
-    core: [
-      'Use c = n / V, where V is in dm3.',
-      'Convert cm3 to dm3 by dividing by 1000.',
-      'Use n = c x V when calculating moles in a known volume.'
-    ],
-    workedExample: {
-      title: 'Concentration to moles',
-      question: 'Find moles of HCl in 25.0 cm3 of 0.200 mol dm-3 HCl.',
-      steps: [
-        'Convert volume: 25.0 cm3 = 0.0250 dm3.',
-        'Choose the formula: n = c x V.',
-        'Substitute: n = 0.200 x 0.0250 = 0.00500 mol.'
-      ],
-      answer: '0.00500 mol of HCl'
-    },
-    teacherNotes: 'Make students say "dm3" before they calculate. The volume conversion is the classic avoidable mark loss.'
+    nextLessonId: 'lesson-4',
+    summary: 'Connect concentration, amount, and solution volume using dm3.',
+    objectives: ['Convert cm3 to dm3.', 'Use c = n / V.', 'Calculate moles in a solution.'],
+    priorKnowledge: ['I can convert cm3 to dm3.', 'I can rearrange equations.'],
+    teachingSections: [],
+    workedExamples: [],
+    guidedQuestions: [],
+    checkpoints: [],
+    exitTicket: [],
+    teacherNotes: ['Full lesson content will be built in the next content phase.']
   },
   {
-    id: 'gases',
+    id: 'lesson-4',
+    label: 'Lesson 4',
+    title: 'Moles and Gases',
     icon: Wind,
-    title: '4. Moles and Gases',
-    focus: 'Gas volume, molar gas volume, and reacting gas calculations.',
-    core: [
-      'At room temperature and pressure, 1 mol of gas occupies 24.0 dm3.',
-      'Use n = V / 24.0 when gas volume is in dm3 at room temperature and pressure.',
-      'Use balanced equation ratios after converting gas volume to moles.'
-    ],
-    workedExample: {
-      title: 'Gas volume to moles',
-      question: 'Calculate the amount of CO2 in 600 cm3 of CO2 at room temperature and pressure.',
-      steps: [
-        'Convert volume: 600 cm3 = 0.600 dm3.',
-        'Use molar gas volume: n = V / 24.0.',
-        'Calculate: n = 0.600 / 24.0 = 0.0250 mol.'
-      ],
-      answer: '0.0250 mol of CO2'
-    },
-    teacherNotes: 'Keep conditions explicit. The 24.0 dm3 mol-1 shortcut applies at room temperature and pressure, not all gas questions.'
+    nextLessonId: 'lesson-5',
+    summary: 'Use molar gas volume and reacting gas ratios.',
+    objectives: ['Use molar gas volume at room temperature and pressure.', 'Convert cm3 to dm3.', 'Use gas volume ratios.'],
+    priorKnowledge: ['I can interpret balanced equations.', 'I can convert volume units.'],
+    teachingSections: [],
+    workedExamples: [],
+    guidedQuestions: [],
+    checkpoints: [],
+    exitTicket: [],
+    teacherNotes: ['Full lesson content will be built in the next content phase.']
   },
   {
-    id: 'formulae',
+    id: 'lesson-5',
+    label: 'Lesson 5',
+    title: 'Empirical Formula',
     icon: BookOpen,
-    title: '5. Empirical Formula',
-    focus: 'Turning composition data into simplest whole-number formulae.',
-    core: [
-      'Convert masses or percentages into moles.',
-      'Divide all mole values by the smallest value.',
-      'Scale to whole numbers if needed.'
-    ],
-    workedExample: {
-      title: 'Empirical formula from mass',
-      question: 'A compound contains 2.4 g C and 0.6 g H. Find its empirical formula.',
-      steps: [
-        'Moles C = 2.4 / 12.0 = 0.200 mol.',
-        'Moles H = 0.6 / 1.0 = 0.600 mol.',
-        'Divide by smallest: C = 1, H = 3, so formula is CH3.'
-      ],
-      answer: 'CH3'
-    },
-    teacherNotes: 'When ratios are near x.5 or x.33, multiply every ratio by 2 or 3. Keep rounding disciplined.'
+    nextLessonId: 'lesson-6',
+    summary: 'Turn composition data into the simplest whole-number formula.',
+    objectives: ['Convert masses to moles.', 'Find simplest ratios.', 'Scale ratios to whole numbers.'],
+    priorKnowledge: ['I can calculate moles from mass.', 'I can simplify number ratios.'],
+    teachingSections: [],
+    workedExamples: [],
+    guidedQuestions: [],
+    checkpoints: [],
+    exitTicket: [],
+    teacherNotes: ['Full lesson content will be built in the next content phase.']
   },
   {
-    id: 'limiting',
+    id: 'lesson-6',
+    label: 'Lesson 6',
+    title: 'Limiting Reagents',
     icon: FlaskConical,
-    title: '6. Limiting Reagents',
-    focus: 'Deciding which reactant runs out first and predicting product amount.',
-    core: [
-      'Convert each reactant amount into the moles of product it could make.',
-      'The smaller possible product amount identifies the limiting reagent.',
-      'Excess reagent remains after the limiting reagent has been used up.'
-    ],
-    workedExample: {
-      title: 'Identify the limiting reagent',
-      question: '2.00 mol H2 reacts with 1.20 mol O2. Equation: 2H2 + O2 -> 2H2O.',
-      steps: [
-        'From H2: 2.00 mol H2 can form 2.00 mol H2O.',
-        'From O2: 1.20 mol O2 can form 2.40 mol H2O.',
-        'The smaller product amount is from H2, so H2 is limiting.'
-      ],
-      answer: 'H2 is limiting; maximum H2O = 2.00 mol'
-    },
-    teacherNotes: 'The simulator below uses the same logic: compare possible product, not just starting moles.'
+    nextLessonId: null,
+    summary: 'Identify the reactant used up first and calculate maximum product.',
+    objectives: ['Use mole ratios from equations.', 'Compare possible product amounts.', 'Identify excess reagent.'],
+    priorKnowledge: ['I can calculate moles.', 'I can use balanced equation ratios.'],
+    teachingSections: [],
+    workedExamples: [],
+    guidedQuestions: [],
+    checkpoints: [],
+    exitTicket: [],
+    teacherNotes: ['Full lesson content will be built in the next content phase.']
   }
 ]
 
 const pageTabs = [
   { id: 'overview', label: 'Overview' },
-  { id: 'lesson-1', label: 'Lesson 1' },
-  { id: 'lesson-2', label: 'Lesson 2' },
-  { id: 'lesson-3', label: 'Lesson 3' },
+  ...amountLessons.map(lesson => ({ id: lesson.id, label: lesson.label })),
   { id: 'practice', label: 'Practice' },
   { id: 'exam', label: 'Exam Questions' },
   { id: 'flashcards', label: 'Flashcards' },
   { id: 'quiz', label: 'Quiz' }
 ]
-
-const lessonGroups = {
-  'lesson-1': {
-    title: 'Lesson 1: Counting Particles and Weighing Substances',
-    description: 'Build the mole concept first, then connect amount of substance to mass and relative formula mass.',
-    subtopics: ['mole-basics', 'mass-moles']
-  },
-  'lesson-2': {
-    title: 'Lesson 2: Solutions and Gases',
-    description: 'Use volume carefully: dm3 for solutions, molar gas volume for gases at room temperature and pressure.',
-    subtopics: ['solutions', 'gases']
-  },
-  'lesson-3': {
-    title: 'Lesson 3: Formulae and Limiting Reagents',
-    description: 'Use mole ratios to find empirical formulae and decide which reactant limits product formation.',
-    subtopics: ['formulae', 'limiting']
-  }
-}
 
 const calculationWalkthroughs = [
   {
@@ -254,6 +322,40 @@ const examQuestions = [
 function format(value, places = 3) {
   if (!Number.isFinite(value)) return '0'
   return value.toPrecision(places)
+}
+
+function createInitialProgress() {
+  return amountLessons.reduce((progress, lesson, index) => {
+    progress[lesson.id] = {
+      bestScore: 0,
+      completed: false,
+      unlocked: index === 0
+    }
+    return progress
+  }, {})
+}
+
+function normaliseProgress(progress) {
+  const initial = createInitialProgress()
+  return amountLessons.reduce((nextProgress, lesson, index) => {
+    const stored = progress?.[lesson.id] || {}
+    const previousLesson = amountLessons[index - 1]
+    const previousCompleted = index === 0 || Boolean(nextProgress[previousLesson.id]?.completed)
+    nextProgress[lesson.id] = {
+      bestScore: Number(stored.bestScore) || 0,
+      completed: Boolean(stored.completed),
+      unlocked: index === 0 || previousCompleted || Boolean(stored.unlocked)
+    }
+    return nextProgress
+  }, initial)
+}
+
+function getLessonStatus(lessonId, progress, mode) {
+  if (mode === 'teacher') return { unlocked: true, completed: progress[lessonId]?.completed || false }
+  return {
+    unlocked: progress[lessonId]?.unlocked || false,
+    completed: progress[lessonId]?.completed || false
+  }
 }
 
 function LimitingReagentSimulator() {
@@ -352,68 +454,290 @@ function ModeToggle({ mode, setMode }) {
   )
 }
 
-function SubtopicCard({ subtopic, mode }) {
-  const Icon = subtopic.icon
+function PriorKnowledgeChecklist({ checks }) {
+  const [checked, setChecked] = useState({})
+
+  function toggleCheck(check) {
+    setChecked({ ...checked, [check]: !checked[check] })
+  }
 
   return (
-    <article className="subtopic-card">
-      <div className="lesson-feature compact-card">
-        <div className="lesson-feature-icon">
-          <Icon size={26} />
-        </div>
-        <div>
-          <p className="eyebrow">Model Subtopic</p>
-          <h3>{subtopic.title}</h3>
-          <p>{subtopic.focus}</p>
-        </div>
-      </div>
-
-      <div className="grid-2">
-        <div className="mini-panel">
-          <h3>Core Ideas</h3>
-          <ul className="clean-list">
-            {subtopic.core.map(item => <li key={item}>{item}</li>)}
-          </ul>
-        </div>
-        <div className="mini-panel worked-example">
-          <p className="eyebrow">Worked Example</p>
-          <h3>{subtopic.workedExample.title}</h3>
-          <p><strong>{subtopic.workedExample.question}</strong></p>
-          <ol className="step-list">
-            {subtopic.workedExample.steps.map(step => <li key={step}>{step}</li>)}
-          </ol>
-          <div className="result-box">{subtopic.workedExample.answer}</div>
-        </div>
-      </div>
-
-      {mode === 'teacher' && (
-        <article className="teacher-note">
-          <strong>Teacher mode note:</strong> {subtopic.teacherNotes}
-        </article>
-      )}
-    </article>
+    <section className="lesson-section">
+      <p className="eyebrow">Checking Prior Knowledge</p>
+      <h3>Before You Start</h3>
+      <ul className="check-list">
+        {checks.map(check => (
+          <li className="check-item" key={check}>
+            <input type="checkbox" checked={Boolean(checked[check])} onChange={() => toggleCheck(check)} />
+            <span>{check}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 
-function LessonPanel({ groupId, mode }) {
-  const group = lessonGroups[groupId]
-  const subtopics = group.subtopics.map(id => lessonTabs.find(tab => tab.id === id)).filter(Boolean)
-
+function GuidedQuestions({ questions }) {
   return (
-    <section className="panel">
-      <p className="eyebrow">Guided Lesson</p>
-      <h3>{group.title}</h3>
-      <p>{group.description}</p>
-      <div className="subtopic-stack">
-        {subtopics.map(subtopic => (
-          <SubtopicCard key={subtopic.id} subtopic={subtopic} mode={mode} />
+    <section className="lesson-section">
+      <p className="eyebrow">Guided Questions</p>
+      <h3>Think It Through</h3>
+      <div className="guided-question-list">
+        {questions.map((question, index) => (
+          <details className="exam-question" key={question.prompt}>
+            <summary>
+              <span>Guided Question {index + 1}</span>
+              <strong>Reveal support</strong>
+            </summary>
+            <p>{question.prompt}</p>
+            <div className="mark-scheme">
+              <h4>Suggested reasoning</h4>
+              <p>{question.answer}</p>
+            </div>
+          </details>
         ))}
       </div>
     </section>
   )
 }
 
-function OverviewPanel({ lesson }) {
+function ExitTicket({ lesson, progress, setProgress, setActivePageTab, mode }) {
+  const [answers, setAnswers] = useState({})
+  const [submitted, setSubmitted] = useState(false)
+  const questions = lesson.exitTicket || []
+
+  const score = questions.reduce((total, question) => {
+    return total + (answers[question.id] === question.answer ? 1 : 0)
+  }, 0)
+  const percent = questions.length ? Math.round((score / questions.length) * 100) : 0
+  const passed = percent >= PASS_MARK
+  const nextLesson = amountLessons.find(item => item.id === lesson.nextLessonId)
+
+  function selectAnswer(questionId, optionId) {
+    setAnswers({ ...answers, [questionId]: optionId })
+  }
+
+  function submitExitTicket(event) {
+    event.preventDefault()
+    setSubmitted(true)
+
+    setProgress(current => {
+      const nextProgress = normaliseProgress(current)
+      const existing = nextProgress[lesson.id] || { bestScore: 0, completed: false, unlocked: true }
+      nextProgress[lesson.id] = {
+        ...existing,
+        bestScore: Math.max(existing.bestScore || 0, percent),
+        completed: existing.completed || passed,
+        unlocked: true
+      }
+
+      if (passed && lesson.nextLessonId) {
+        nextProgress[lesson.nextLessonId] = {
+          ...(nextProgress[lesson.nextLessonId] || {}),
+          unlocked: true
+        }
+      }
+
+      return nextProgress
+    })
+  }
+
+  if (!questions.length) {
+    return (
+      <section className="lesson-section exit-ticket-panel">
+        <p className="eyebrow">Exit Ticket Quiz</p>
+        <h3>Coming Next</h3>
+        <p>This lesson is part of the Phase 1 data model. Its full exit ticket will be added when this lesson is built out.</p>
+      </section>
+    )
+  }
+
+  return (
+    <section className="lesson-section exit-ticket-panel">
+      <p className="eyebrow">Exit Ticket Quiz</p>
+      <h3>Score {PASS_MARK}% to Unlock the Next Lesson</h3>
+      <p>Best saved score for this lesson: <strong>{progress[lesson.id]?.bestScore || 0}%</strong></p>
+
+      <form onSubmit={submitExitTicket}>
+        {questions.map(question => (
+          <div className="quiz-question" key={question.id}>
+            <strong>{question.prompt}</strong>
+            {question.options.map(option => (
+              <label className="quiz-option" key={option.id}>
+                <input
+                  type="radio"
+                  name={question.id}
+                  value={option.id}
+                  checked={answers[question.id] === option.id}
+                  onChange={() => selectAnswer(question.id, option.id)}
+                />
+                <span>{option.text}</span>
+              </label>
+            ))}
+
+            {submitted && (
+              <p className={answers[question.id] === question.answer ? 'feedback good' : 'feedback needs-work'}>
+                {answers[question.id] === question.answer ? 'Correct.' : `Review: ${question.explanation}`}
+              </p>
+            )}
+          </div>
+        ))}
+
+        <button className="btn primary" type="submit">Submit exit ticket</button>
+
+        {submitted && (
+          <p className={passed ? 'feedback good' : 'feedback needs-work'}>
+            Score: {score}/{questions.length} ({percent}%). {passed ? 'Lesson passed. The next lesson is unlocked.' : `You need at least ${PASS_MARK}%. Review the examples and try again.`}
+          </p>
+        )}
+      </form>
+
+      <div className="lesson-next-row">
+        {nextLesson ? (
+          <button
+            className="btn primary"
+            disabled={mode !== 'teacher' && !getLessonStatus(nextLesson.id, progress, mode).unlocked && !passed}
+            onClick={() => setActivePageTab(nextLesson.id)}
+          >
+            Go to {nextLesson.label}: {nextLesson.title}
+          </button>
+        ) : (
+          <span className="badge">Final lesson</span>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function LessonPanel({ lesson, progress, setProgress, mode, setActivePageTab }) {
+  const Icon = lesson.icon
+  const lessonStatus = getLessonStatus(lesson.id, progress, mode)
+
+  if (!lessonStatus.unlocked) {
+    const index = amountLessons.findIndex(item => item.id === lesson.id)
+    const previousLesson = amountLessons[index - 1]
+
+    return (
+      <section className="panel locked-lesson">
+        <div className="lesson-feature compact-card">
+          <div className="lesson-feature-icon locked">
+            <Lock size={26} />
+          </div>
+          <div>
+            <p className="eyebrow">Locked Lesson</p>
+            <h3>{lesson.label}: {lesson.title}</h3>
+            <p>Score {PASS_MARK}% or higher on {previousLesson.label} to unlock this lesson.</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="panel lesson-panel">
+      <div className="lesson-feature compact-card">
+        <div className="lesson-feature-icon">
+          <Icon size={28} />
+        </div>
+        <div>
+          <p className="eyebrow">{lesson.label}</p>
+          <h2>{lesson.title}</h2>
+          <p>{lesson.summary}</p>
+          <div className="topic-meta">
+            <span className="badge">Best score: {progress[lesson.id]?.bestScore || 0}%</span>
+            <span className="badge">{lessonStatus.completed ? 'Completed' : `Pass mark ${PASS_MARK}%`}</span>
+          </div>
+        </div>
+      </div>
+
+      <section className="lesson-section">
+        <p className="eyebrow">Objectives</p>
+        <h3>By the End of This Lesson</h3>
+        <ul className="clean-list">
+          {lesson.objectives.map(objective => <li key={objective}>{objective}</li>)}
+        </ul>
+      </section>
+
+      <PriorKnowledgeChecklist checks={lesson.priorKnowledge} />
+
+      <section className="lesson-section">
+        <p className="eyebrow">Core Teaching</p>
+        <h3>Lesson Notes</h3>
+        <div className="calc-walkthroughs">
+          {lesson.teachingSections.length ? lesson.teachingSections.map(section => (
+            <article className="mini-panel" key={section.title}>
+              <h3>{section.title}</h3>
+              <p>{section.body}</p>
+            </article>
+          )) : (
+            <article className="mini-panel">
+              <h3>Content phase placeholder</h3>
+              <p>This lesson has its objectives and lock position set. Its full teaching sequence will be written in the next phase.</p>
+            </article>
+          )}
+        </div>
+      </section>
+
+      {lesson.workedExamples.length > 0 && (
+        <section className="lesson-section">
+          <p className="eyebrow">Sample Examples</p>
+          <h3>Worked Examples</h3>
+          <div className="calc-walkthroughs">
+            {lesson.workedExamples.map(example => (
+              <article className="mini-panel worked-example" key={example.title}>
+                <h3>{example.title}</h3>
+                <p><strong>{example.question}</strong></p>
+                <ol className="step-list">
+                  {example.steps.map(step => <li key={step}>{step}</li>)}
+                </ol>
+                <div className="result-box">{example.answer}</div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {lesson.guidedQuestions.length > 0 && <GuidedQuestions questions={lesson.guidedQuestions} />}
+
+      <section className="lesson-section">
+        <p className="eyebrow">Checkpoints</p>
+        <h3>Quick Checks</h3>
+        <div className="checkpoint-grid">
+          {lesson.checkpoints.length ? lesson.checkpoints.map(checkpoint => (
+            <article className="mini-panel" key={checkpoint.prompt}>
+              <h3>{checkpoint.prompt}</h3>
+              <p>{checkpoint.expected}</p>
+            </article>
+          )) : (
+            <article className="mini-panel">
+              <h3>Checkpoint questions pending</h3>
+              <p>These will be added with the full lesson content.</p>
+            </article>
+          )}
+        </div>
+      </section>
+
+      {mode === 'teacher' && (
+        <section className="teacher-note">
+          <strong>Teacher mode notes:</strong>
+          <ul>
+            {lesson.teacherNotes.map(note => <li key={note}>{note}</li>)}
+          </ul>
+        </section>
+      )}
+
+      <ExitTicket
+        lesson={lesson}
+        progress={progress}
+        setProgress={setProgress}
+        setActivePageTab={setActivePageTab}
+        mode={mode}
+      />
+    </section>
+  )
+}
+
+function OverviewPanel({ lesson, progress, mode, setActivePageTab }) {
   return (
     <section className="panel amount-overview">
       <p className="eyebrow">Model Topic</p>
@@ -421,14 +745,20 @@ function OverviewPanel({ lesson }) {
       <p>{lesson.overview}</p>
 
       <div className="topic-map">
-        {lessonTabs.map(subtopic => {
-          const Icon = subtopic.icon
+        {amountLessons.map(item => {
+          const Icon = item.icon
+          const status = getLessonStatus(item.id, progress, mode)
           return (
-            <article className="metric-card topic-map-card" key={subtopic.id}>
-              <Icon size={22} />
-              <span>{subtopic.title}</span>
-              <strong>{subtopic.focus}</strong>
-            </article>
+            <button
+              className={`metric-card topic-map-card ${status.unlocked ? '' : 'locked-card'}`}
+              key={item.id}
+              onClick={() => status.unlocked && setActivePageTab(item.id)}
+            >
+              {status.unlocked ? <Icon size={22} /> : <Lock size={22} />}
+              <span>{item.label}: {item.title}</span>
+              <strong>{item.summary}</strong>
+              <small>{status.completed ? 'Completed' : status.unlocked ? `Best score ${progress[item.id]?.bestScore || 0}%` : 'Locked'}</small>
+            </button>
           )
         })}
       </div>
@@ -495,12 +825,37 @@ function ExamQuestionsPanel() {
 export default function AmountOfSubstanceTopic({ lesson }) {
   const [activePageTab, setActivePageTab] = useState('overview')
   const [mode, setMode] = useState('student')
+  const [storedProgress, setStoredProgress] = useLocalStorage('amount-substance-lesson-progress', createInitialProgress())
+  const progress = normaliseProgress(storedProgress)
+
+  function updateProgress(updater) {
+    setStoredProgress(current => normaliseProgress(updater(current)))
+  }
+
+  function selectTab(tabId) {
+    const lessonTab = amountLessons.find(item => item.id === tabId)
+    if (lessonTab && !getLessonStatus(lessonTab.id, progress, mode).unlocked) return
+    setActivePageTab(tabId)
+  }
 
   function renderActiveTab() {
-    if (activePageTab === 'overview') return <OverviewPanel lesson={lesson} />
-    if (activePageTab === 'lesson-1') return <LessonPanel groupId="lesson-1" mode={mode} />
-    if (activePageTab === 'lesson-2') return <LessonPanel groupId="lesson-2" mode={mode} />
-    if (activePageTab === 'lesson-3') return <LessonPanel groupId="lesson-3" mode={mode} />
+    if (activePageTab === 'overview') {
+      return <OverviewPanel lesson={lesson} progress={progress} mode={mode} setActivePageTab={setActivePageTab} />
+    }
+
+    const activeLesson = amountLessons.find(item => item.id === activePageTab)
+    if (activeLesson) {
+      return (
+        <LessonPanel
+          lesson={activeLesson}
+          progress={progress}
+          setProgress={updateProgress}
+          mode={mode}
+          setActivePageTab={setActivePageTab}
+        />
+      )
+    }
+
     if (activePageTab === 'practice') return <PracticePanel />
     if (activePageTab === 'exam') return <ExamQuestionsPanel />
     if (activePageTab === 'flashcards') return <Flashcards cards={lesson.flashcards} />
@@ -515,23 +870,30 @@ export default function AmountOfSubstanceTopic({ lesson }) {
           <div>
             <p className="eyebrow">Topic Workspace</p>
             <h2>Amount of Substance</h2>
-            <p>Move through the topic using the lesson, practice, exam, and revision tabs.</p>
+            <p>Lessons unlock one at a time. Score {PASS_MARK}% or higher on each exit ticket to continue.</p>
           </div>
           <ModeToggle mode={mode} setMode={setMode} />
         </div>
 
-        <div className="topic-page-tabs" role="tablist" aria-label="Amount of Substance topic sections">
-          {pageTabs.map(tab => (
-            <button
-              key={tab.id}
-              className={tab.id === activePageTab ? 'active' : ''}
-              onClick={() => setActivePageTab(tab.id)}
-              role="tab"
-              aria-selected={tab.id === activePageTab}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="topic-page-tabs lesson-gate-tabs" role="tablist" aria-label="Amount of Substance topic sections">
+          {pageTabs.map(tab => {
+            const lessonTab = amountLessons.find(item => item.id === tab.id)
+            const status = lessonTab ? getLessonStatus(lessonTab.id, progress, mode) : { unlocked: true, completed: false }
+            return (
+              <button
+                key={tab.id}
+                className={`${tab.id === activePageTab ? 'active' : ''} ${!status.unlocked ? 'locked' : ''}`}
+                onClick={() => selectTab(tab.id)}
+                role="tab"
+                aria-selected={tab.id === activePageTab}
+                disabled={!status.unlocked}
+              >
+                {lessonTab && !status.unlocked && <Lock size={15} />}
+                {lessonTab && status.completed && <CheckCircle2 size={15} />}
+                <span>{tab.label}</span>
+              </button>
+            )
+          })}
         </div>
       </section>
 
