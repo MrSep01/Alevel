@@ -440,11 +440,18 @@ p {
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 11px 12px;
   background: white;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 104px;
+  line-height: 1.45;
 }
 
 .result-box {
@@ -586,6 +593,19 @@ p {
 
 .checkpoint-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.solve-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: white;
+}
+
+.compact-actions {
+  margin-top: 0;
 }
 
 .exit-ticket-panel {

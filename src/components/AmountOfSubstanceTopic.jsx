@@ -19,10 +19,11 @@ const amountLessons = [
     nextLessonId: 'lesson-2',
     summary: 'Define the mole, connect it to Avogadro constant, and calculate amount of substance from a number of particles.',
     objectives: [
-      'Define one mole as 6.02 x 10^23 particles.',
-      'Identify what the counted particles are in atoms, molecules, ions, and formula units.',
-      'Use n = N / L to calculate moles from number of particles.',
-      'Use N = n x L to calculate number of particles from moles.'
+      'Use the Cambridge definition of the mole in terms of the Avogadro constant.',
+      'Use the Cambridge data-book value L = 6.022 x 10^23 mol-1.',
+      'Identify the counted particles in atoms, molecules, ions, electrons, and formula units.',
+      'Use n = N / L and N = nL in particle-counting calculations.',
+      'Give answers to a sensible number of significant figures and include the particle type.'
     ],
     priorKnowledge: [
       'I can use standard form such as 3.01 x 10^22.',
@@ -32,16 +33,20 @@ const amountLessons = [
     ],
     teachingSections: [
       {
-        title: 'Why chemists use the mole',
-        body: 'Atoms and molecules are far too small to count one by one in the laboratory. The mole is a counting unit, like a dozen, but much larger. One mole always contains 6.02 x 10^23 particles.'
+        title: 'Cambridge definition',
+        body: 'For Cambridge International AS Chemistry 9701, amount of substance is represented by n and measured in mol. One mole contains L particles, where L is the Avogadro constant. The Cambridge data booklet gives L = 6.022 x 10^23 mol-1.'
       },
       {
-        title: 'Particle identity matters',
-        body: 'The word particles must be interpreted from the formula. One mole of Mg contains one mole of Mg atoms. One mole of CO2 contains one mole of CO2 molecules, but three moles of atoms in total because each molecule contains one carbon atom and two oxygen atoms.'
+        title: 'What counts as a particle?',
+        body: 'A particle can be an atom, molecule, ion, electron, or formula unit. The formula tells you what is being counted. One mole of Mg contains one mole of Mg atoms. One mole of CO2 contains one mole of CO2 molecules. One mole of NaCl contains one mole of NaCl formula units, not separate NaCl molecules.'
       },
       {
-        title: 'The key equations',
-        body: 'Use n = N / L when a question gives the number of particles. Use N = n x L when the question asks for particles. L is the Avogadro constant, 6.02 x 10^23 mol-1.'
+        title: 'Formula choice',
+        body: 'Use n = N / L when the question gives a number of particles and asks for amount of substance. Use N = nL when the question gives amount of substance and asks for number of particles. N has no unit; n has unit mol; L has unit mol-1.'
+      },
+      {
+        title: 'Common Cambridge marking point',
+        body: 'Questions often require the identity of particles in the answer. For example, 1.204 x 10^24 is not enough by itself; write 1.204 x 10^24 CO2 molecules, Mg atoms, electrons, or formula units as appropriate.'
       }
     ],
     workedExamples: [
@@ -50,40 +55,70 @@ const amountLessons = [
         question: 'Calculate the amount of Mg atoms in 3.01 x 10^22 atoms of Mg.',
         steps: [
           'Write the relationship: n = N / L.',
-          'Substitute: n = (3.01 x 10^22) / (6.02 x 10^23).',
+          'Substitute: n = (3.01 x 10^22) / (6.022 x 10^23).',
           'Calculate: n = 0.0500 mol.'
         ],
         answer: '0.0500 mol of Mg atoms'
       },
       {
         title: 'Moles to particles',
-        question: 'How many CO2 molecules are present in 0.250 mol of CO2?',
+        question: 'How many CO2 molecules are present in 0.250 mol of CO2? Use L = 6.022 x 10^23 mol-1.',
         steps: [
           'Write the relationship: N = n x L.',
-          'Substitute: N = 0.250 x 6.02 x 10^23.',
+          'Substitute: N = 0.250 x 6.022 x 10^23.',
           'Calculate: N = 1.51 x 10^23 molecules.'
         ],
         answer: '1.51 x 10^23 CO2 molecules'
+      },
+      {
+        title: 'Formula units',
+        question: 'Calculate the number of formula units in 0.0400 mol of sodium chloride.',
+        steps: [
+          'NaCl is ionic, so the counted particles are formula units.',
+          'Use N = nL.',
+          'Substitute: N = 0.0400 x 6.022 x 10^23.',
+          'Calculate: N = 2.41 x 10^22 formula units.'
+        ],
+        answer: '2.41 x 10^22 NaCl formula units'
       }
     ],
     guidedQuestions: [
       {
-        prompt: 'A sample contains 1.204 x 10^24 atoms of helium. Which equation should you use first?',
-        answer: 'Use n = N / L because the question gives a number of particles and asks for amount in moles.'
+        prompt: 'A sample contains 1.204 x 10^24 atoms of helium. Calculate the amount, in mol, of helium atoms.',
+        hint: 'The question gives N, the number of particles. Use n = N / L.',
+        answer: 'n = (1.204 x 10^24) / (6.022 x 10^23) = 2.00 mol He atoms.'
       },
       {
-        prompt: 'In 2.00 mol of water molecules, how many moles of hydrogen atoms are present?',
-        answer: 'Each H2O molecule contains two H atoms, so 2.00 mol H2O contains 4.00 mol of H atoms.'
+        prompt: 'In 2.00 mol of water molecules, calculate the amount of hydrogen atoms present.',
+        hint: 'Each H2O molecule contains two H atoms, so compare molecules to atoms before calculating particles.',
+        answer: '2.00 mol H2O contains 2 x 2.00 = 4.00 mol of H atoms.'
+      },
+      {
+        prompt: 'A student writes that 0.100 mol of CO2 contains 0.100 mol of atoms. Explain the error.',
+        hint: 'Look at the formula CO2 and count the atoms inside one molecule.',
+        answer: '0.100 mol CO2 means 0.100 mol of CO2 molecules. Each molecule contains three atoms, so it contains 0.300 mol of atoms in total.'
       }
     ],
     checkpoints: [
       {
-        prompt: 'What is the Avogadro constant?',
-        expected: '6.02 x 10^23 mol-1.'
+        prompt: 'Calculate the number of oxygen molecules in 0.125 mol of O2.',
+        hint: 'Use N = nL.',
+        answer: 'N = 0.125 x 6.022 x 10^23 = 7.53 x 10^22 O2 molecules.'
       },
       {
-        prompt: 'One mole of sodium chloride contains what kind of particles?',
-        expected: 'Formula units of NaCl, made from Na+ and Cl- ions.'
+        prompt: 'Calculate the amount of substance in 9.033 x 10^22 sodium ions.',
+        hint: 'Use n = N / L.',
+        answer: 'n = (9.033 x 10^22) / (6.022 x 10^23) = 0.150 mol Na+ ions.'
+      },
+      {
+        prompt: 'Calculate the number of electrons in 0.0200 mol of electrons.',
+        hint: 'Electrons can be counted using the mole in the same way as atoms or molecules.',
+        answer: 'N = 0.0200 x 6.022 x 10^23 = 1.20 x 10^22 electrons.'
+      },
+      {
+        prompt: '0.500 mol of CH4 molecules contains how many moles of hydrogen atoms?',
+        hint: 'Each CH4 molecule contains four H atoms.',
+        answer: '0.500 mol CH4 contains 4 x 0.500 = 2.00 mol of H atoms.'
       }
     ],
     exitTicket: [
@@ -91,12 +126,12 @@ const amountLessons = [
         id: 'l1-q1',
         prompt: 'One mole contains:',
         options: [
-          { id: 'a', text: '6.02 x 10^23 particles' },
+          { id: 'a', text: '6.022 x 10^23 particles' },
           { id: 'b', text: '6.02 x 10^-23 particles' },
           { id: 'c', text: '24.0 particles' }
         ],
         answer: 'a',
-        explanation: 'One mole is defined as 6.02 x 10^23 particles.'
+        explanation: 'One mole contains the Avogadro constant of particles, L = 6.022 x 10^23 mol-1.'
       },
       {
         id: 'l1-q2',
@@ -141,6 +176,61 @@ const amountLessons = [
         ],
         answer: 'a',
         explanation: 'The formula CO2 identifies the counted particle as a molecule of carbon dioxide.'
+      },
+      {
+        id: 'l1-q6',
+        prompt: 'Using L = 6.022 x 10^23 mol-1, calculate the number of atoms in 0.750 mol of Ne.',
+        options: [
+          { id: 'a', text: '4.52 x 10^23 atoms' },
+          { id: 'b', text: '8.03 x 10^23 atoms' },
+          { id: 'c', text: '1.25 x 10^-24 atoms' }
+        ],
+        answer: 'a',
+        explanation: 'N = nL = 0.750 x 6.022 x 10^23 = 4.52 x 10^23 atoms.'
+      },
+      {
+        id: 'l1-q7',
+        prompt: 'A sample contains 1.8066 x 10^24 molecules of NH3. What is the amount of NH3?',
+        options: [
+          { id: 'a', text: '0.300 mol' },
+          { id: 'b', text: '3.00 mol' },
+          { id: 'c', text: '30.0 mol' }
+        ],
+        answer: 'b',
+        explanation: 'n = N / L = (1.8066 x 10^24) / (6.022 x 10^23) = 3.00 mol.'
+      },
+      {
+        id: 'l1-q8',
+        prompt: 'How many moles of atoms are present in 0.200 mol of CO2 molecules?',
+        options: [
+          { id: 'a', text: '0.200 mol atoms' },
+          { id: 'b', text: '0.400 mol atoms' },
+          { id: 'c', text: '0.600 mol atoms' }
+        ],
+        answer: 'c',
+        explanation: 'Each CO2 molecule contains three atoms, so 0.200 mol molecules contains 0.600 mol atoms.'
+      },
+      {
+        id: 'l1-q9',
+        prompt: 'Which particle description is most appropriate for one mole of magnesium chloride, MgCl2?',
+        options: [
+          { id: 'a', text: 'one mole of MgCl2 formula units' },
+          { id: 'b', text: 'one mole of MgCl2 molecules' },
+          { id: 'c', text: 'one mole of magnesium atoms only' }
+        ],
+        answer: 'a',
+        explanation: 'MgCl2 is ionic, so it is best described as formula units.'
+      },
+      {
+        id: 'l1-q10',
+        prompt: 'A sample contains 0.250 mol of sulfate ions, SO4 2-. How many oxygen atoms are present?',
+        options: [
+          { id: 'a', text: '0.250 mol O atoms' },
+          { id: 'b', text: '1.00 mol O atoms' },
+          { id: 'c', text: '1.51 x 10^23 mol O atoms' }
+        ],
+        answer: 'b',
+        explanation: 'Each sulfate ion contains four oxygen atoms, so 0.250 mol sulfate ions contains 1.00 mol oxygen atoms.'
       }
     ],
     teacherNotes: [
@@ -477,25 +567,62 @@ function PriorKnowledgeChecklist({ checks }) {
   )
 }
 
+function SolveCard({ item, label }) {
+  const [response, setResponse] = useState('')
+  const [showHint, setShowHint] = useState(false)
+  const [showAnswer, setShowAnswer] = useState(false)
+
+  return (
+    <article className="solve-card">
+      <p className="eyebrow">{label}</p>
+      <h3>{item.prompt}</h3>
+      <div className="field">
+        <label>Your working or answer</label>
+        <textarea
+          value={response}
+          onChange={event => setResponse(event.target.value)}
+          placeholder="Write your formula, substitution, calculation, and final answer."
+          rows="4"
+        />
+      </div>
+      <div className="action-row compact-actions">
+        <button className="btn" type="button" onClick={() => setShowHint(true)}>Show hint</button>
+        <button className="btn primary" type="button" onClick={() => setShowAnswer(true)}>Reveal answer</button>
+      </div>
+      {showHint && <p className="feedback needs-work">Hint: {item.hint}</p>}
+      {showAnswer && <p className="feedback good">Answer: {item.answer}</p>}
+    </article>
+  )
+}
+
 function GuidedQuestions({ questions }) {
   return (
     <section className="lesson-section">
       <p className="eyebrow">Guided Questions</p>
-      <h3>Think It Through</h3>
+      <h3>Try First, Then Use Support</h3>
       <div className="guided-question-list">
         {questions.map((question, index) => (
-          <details className="exam-question" key={question.prompt}>
-            <summary>
-              <span>Guided Question {index + 1}</span>
-              <strong>Reveal support</strong>
-            </summary>
-            <p>{question.prompt}</p>
-            <div className="mark-scheme">
-              <h4>Suggested reasoning</h4>
-              <p>{question.answer}</p>
-            </div>
-          </details>
+          <SolveCard item={question} label={`Guided Question ${index + 1}`} key={question.prompt} />
         ))}
+      </div>
+    </section>
+  )
+}
+
+function Checkpoints({ checkpoints }) {
+  return (
+    <section className="lesson-section">
+      <p className="eyebrow">Checkpoints</p>
+      <h3>Solve These Before the Exit Ticket</h3>
+      <div className="checkpoint-grid">
+        {checkpoints.length ? checkpoints.map((checkpoint, index) => (
+          <SolveCard item={checkpoint} label={`Checkpoint ${index + 1}`} key={checkpoint.prompt} />
+        )) : (
+          <article className="mini-panel">
+            <h3>Checkpoint questions pending</h3>
+            <p>These will be added with the full lesson content.</p>
+          </article>
+        )}
       </div>
     </section>
   )
@@ -699,23 +826,7 @@ function LessonPanel({ lesson, progress, setProgress, mode, setActivePageTab }) 
 
       {lesson.guidedQuestions.length > 0 && <GuidedQuestions questions={lesson.guidedQuestions} />}
 
-      <section className="lesson-section">
-        <p className="eyebrow">Checkpoints</p>
-        <h3>Quick Checks</h3>
-        <div className="checkpoint-grid">
-          {lesson.checkpoints.length ? lesson.checkpoints.map(checkpoint => (
-            <article className="mini-panel" key={checkpoint.prompt}>
-              <h3>{checkpoint.prompt}</h3>
-              <p>{checkpoint.expected}</p>
-            </article>
-          )) : (
-            <article className="mini-panel">
-              <h3>Checkpoint questions pending</h3>
-              <p>These will be added with the full lesson content.</p>
-            </article>
-          )}
-        </div>
-      </section>
+      <Checkpoints checkpoints={lesson.checkpoints} />
 
       {mode === 'teacher' && (
         <section className="teacher-note">
