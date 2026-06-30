@@ -142,6 +142,35 @@ const lessonTabs = [
   }
 ]
 
+const pageTabs = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'lesson-1', label: 'Lesson 1' },
+  { id: 'lesson-2', label: 'Lesson 2' },
+  { id: 'lesson-3', label: 'Lesson 3' },
+  { id: 'practice', label: 'Practice' },
+  { id: 'exam', label: 'Exam Questions' },
+  { id: 'flashcards', label: 'Flashcards' },
+  { id: 'quiz', label: 'Quiz' }
+]
+
+const lessonGroups = {
+  'lesson-1': {
+    title: 'Lesson 1: Counting Particles and Weighing Substances',
+    description: 'Build the mole concept first, then connect amount of substance to mass and relative formula mass.',
+    subtopics: ['mole-basics', 'mass-moles']
+  },
+  'lesson-2': {
+    title: 'Lesson 2: Solutions and Gases',
+    description: 'Use volume carefully: dm3 for solutions, molar gas volume for gases at room temperature and pressure.',
+    subtopics: ['solutions', 'gases']
+  },
+  'lesson-3': {
+    title: 'Lesson 3: Formulae and Limiting Reagents',
+    description: 'Use mole ratios to find empirical formulae and decide which reactant limits product formation.',
+    subtopics: ['formulae', 'limiting']
+  }
+}
+
 const calculationWalkthroughs = [
   {
     title: 'Mass -> moles -> product mass',
@@ -323,80 +352,95 @@ function ModeToggle({ mode, setMode }) {
   )
 }
 
-export default function AmountOfSubstanceTopic({ lesson }) {
-  const [activeTab, setActiveTab] = useState(lessonTabs[0].id)
-  const [mode, setMode] = useState('student')
-  const activeLesson = lessonTabs.find(tab => tab.id === activeTab) || lessonTabs[0]
-  const Icon = activeLesson.icon
+function SubtopicCard({ subtopic, mode }) {
+  const Icon = subtopic.icon
 
   return (
-    <div className="lesson-block amount-topic">
-      <section className="panel amount-overview">
-        <div className="section-header compact">
-          <div>
-            <p className="eyebrow">Polished Topic</p>
-            <h2>{lesson.title}</h2>
-            <p>{lesson.overview}</p>
-          </div>
-          <ModeToggle mode={mode} setMode={setMode} />
+    <article className="subtopic-card">
+      <div className="lesson-feature compact-card">
+        <div className="lesson-feature-icon">
+          <Icon size={26} />
         </div>
-
-        <div className="lesson-tabs" role="tablist" aria-label="Amount of Substance lessons">
-          {lessonTabs.map(tab => {
-            const TabIcon = tab.icon
-            return (
-              <button
-                key={tab.id}
-                className={tab.id === activeTab ? 'active' : ''}
-                onClick={() => setActiveTab(tab.id)}
-                role="tab"
-                aria-selected={tab.id === activeTab}
-              >
-                <TabIcon size={18} />
-                <span>{tab.title}</span>
-              </button>
-            )
-          })}
+        <div>
+          <p className="eyebrow">Model Subtopic</p>
+          <h3>{subtopic.title}</h3>
+          <p>{subtopic.focus}</p>
         </div>
+      </div>
 
-        <article className="lesson-feature">
-          <div className="lesson-feature-icon">
-            <Icon size={28} />
-          </div>
-          <div>
-            <p className="eyebrow">Lesson Focus</p>
-            <h3>{activeLesson.title}</h3>
-            <p>{activeLesson.focus}</p>
-          </div>
+      <div className="grid-2">
+        <div className="mini-panel">
+          <h3>Core Ideas</h3>
+          <ul className="clean-list">
+            {subtopic.core.map(item => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+        <div className="mini-panel worked-example">
+          <p className="eyebrow">Worked Example</p>
+          <h3>{subtopic.workedExample.title}</h3>
+          <p><strong>{subtopic.workedExample.question}</strong></p>
+          <ol className="step-list">
+            {subtopic.workedExample.steps.map(step => <li key={step}>{step}</li>)}
+          </ol>
+          <div className="result-box">{subtopic.workedExample.answer}</div>
+        </div>
+      </div>
+
+      {mode === 'teacher' && (
+        <article className="teacher-note">
+          <strong>Teacher mode note:</strong> {subtopic.teacherNotes}
         </article>
+      )}
+    </article>
+  )
+}
 
-        <div className="grid-2">
-          <article className="mini-panel">
-            <h3>Core Ideas</h3>
-            <ul className="clean-list">
-              {activeLesson.core.map(item => <li key={item}>{item}</li>)}
-            </ul>
-          </article>
-          <article className="mini-panel worked-example">
-            <p className="eyebrow">Worked Example</p>
-            <h3>{activeLesson.workedExample.title}</h3>
-            <p><strong>{activeLesson.workedExample.question}</strong></p>
-            <ol className="step-list">
-              {activeLesson.workedExample.steps.map(step => <li key={step}>{step}</li>)}
-            </ol>
-            <div className="result-box">{activeLesson.workedExample.answer}</div>
-          </article>
-        </div>
+function LessonPanel({ groupId, mode }) {
+  const group = lessonGroups[groupId]
+  const subtopics = group.subtopics.map(id => lessonTabs.find(tab => tab.id === id)).filter(Boolean)
 
-        {mode === 'teacher' && (
-          <article className="teacher-note">
-            <strong>Teacher mode note:</strong> {activeLesson.teacherNotes}
-          </article>
-        )}
-      </section>
+  return (
+    <section className="panel">
+      <p className="eyebrow">Guided Lesson</p>
+      <h3>{group.title}</h3>
+      <p>{group.description}</p>
+      <div className="subtopic-stack">
+        {subtopics.map(subtopic => (
+          <SubtopicCard key={subtopic.id} subtopic={subtopic} mode={mode} />
+        ))}
+      </div>
+    </section>
+  )
+}
 
+function OverviewPanel({ lesson }) {
+  return (
+    <section className="panel amount-overview">
+      <p className="eyebrow">Model Topic</p>
+      <h2>{lesson.title}</h2>
+      <p>{lesson.overview}</p>
+
+      <div className="topic-map">
+        {lessonTabs.map(subtopic => {
+          const Icon = subtopic.icon
+          return (
+            <article className="metric-card topic-map-card" key={subtopic.id}>
+              <Icon size={22} />
+              <span>{subtopic.title}</span>
+              <strong>{subtopic.focus}</strong>
+            </article>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
+function PracticePanel() {
+  return (
+    <>
       <section className="panel">
-        <p className="eyebrow">Calculation Method</p>
+        <p className="eyebrow">Practice</p>
         <h3>Step-by-Step Mole Calculations</h3>
         <div className="calc-walkthroughs">
           {calculationWalkthroughs.map(example => (
@@ -418,31 +462,80 @@ export default function AmountOfSubstanceTopic({ lesson }) {
         <ConcentrationCalculator />
         <FormulaMassCalculator />
       </section>
+    </>
+  )
+}
 
-      <section className="panel">
-        <p className="eyebrow">Exam Practice</p>
-        <h3>Exam-Style Questions</h3>
-        <div className="exam-question-list">
-          {examQuestions.map((item, index) => (
-            <details className="exam-question" key={item.question}>
-              <summary>
-                <span>Question {index + 1}</span>
-                <strong>{item.marks} marks</strong>
-              </summary>
-              <p>{item.question}</p>
-              <div className="mark-scheme">
-                <h4>Mark scheme</h4>
-                <ol className="step-list">
-                  {item.markScheme.map(point => <li key={point}>{point}</li>)}
-                </ol>
-              </div>
-            </details>
+function ExamQuestionsPanel() {
+  return (
+    <section className="panel">
+      <p className="eyebrow">Exam Practice</p>
+      <h3>Exam-Style Questions</h3>
+      <div className="exam-question-list">
+        {examQuestions.map((item, index) => (
+          <details className="exam-question" key={item.question}>
+            <summary>
+              <span>Question {index + 1}</span>
+              <strong>{item.marks} marks</strong>
+            </summary>
+            <p>{item.question}</p>
+            <div className="mark-scheme">
+              <h4>Mark scheme</h4>
+              <ol className="step-list">
+                {item.markScheme.map(point => <li key={point}>{point}</li>)}
+              </ol>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export default function AmountOfSubstanceTopic({ lesson }) {
+  const [activePageTab, setActivePageTab] = useState('overview')
+  const [mode, setMode] = useState('student')
+
+  function renderActiveTab() {
+    if (activePageTab === 'overview') return <OverviewPanel lesson={lesson} />
+    if (activePageTab === 'lesson-1') return <LessonPanel groupId="lesson-1" mode={mode} />
+    if (activePageTab === 'lesson-2') return <LessonPanel groupId="lesson-2" mode={mode} />
+    if (activePageTab === 'lesson-3') return <LessonPanel groupId="lesson-3" mode={mode} />
+    if (activePageTab === 'practice') return <PracticePanel />
+    if (activePageTab === 'exam') return <ExamQuestionsPanel />
+    if (activePageTab === 'flashcards') return <Flashcards cards={lesson.flashcards} />
+    if (activePageTab === 'quiz') return <QuizBlock quizId="amount-of-substance" questions={quizzes['amount-of-substance'] || []} />
+    return null
+  }
+
+  return (
+    <div className="lesson-block amount-topic">
+      <section className="panel topic-tab-shell">
+        <div className="section-header compact">
+          <div>
+            <p className="eyebrow">Topic Workspace</p>
+            <h2>Amount of Substance</h2>
+            <p>Move through the topic using the lesson, practice, exam, and revision tabs.</p>
+          </div>
+          <ModeToggle mode={mode} setMode={setMode} />
+        </div>
+
+        <div className="topic-page-tabs" role="tablist" aria-label="Amount of Substance topic sections">
+          {pageTabs.map(tab => (
+            <button
+              key={tab.id}
+              className={tab.id === activePageTab ? 'active' : ''}
+              onClick={() => setActivePageTab(tab.id)}
+              role="tab"
+              aria-selected={tab.id === activePageTab}
+            >
+              {tab.label}
+            </button>
           ))}
         </div>
       </section>
 
-      <Flashcards cards={lesson.flashcards} />
-      <QuizBlock quizId="amount-of-substance" questions={quizzes['amount-of-substance'] || []} />
+      {renderActiveTab()}
     </div>
   )
 }
