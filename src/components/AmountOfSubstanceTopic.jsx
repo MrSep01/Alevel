@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Atom, Beaker, BookOpen, CheckCircle2, FlaskConical, GraduationCap, Scale, Sigma } from 'lucide-react'
+import { Atom, Beaker, BookOpen, CheckCircle2, FlaskConical, GraduationCap, Scale, Wind } from 'lucide-react'
 import Flashcards from './Flashcards.jsx'
 import QuizBlock from './QuizBlock.jsx'
 import MoleCalculator from '../tools/MoleCalculator.jsx'
@@ -11,7 +11,7 @@ const lessonTabs = [
   {
     id: 'mole-basics',
     icon: Atom,
-    title: '1. Mole Basics',
+    title: '1. Mole Concept',
     focus: 'Particles, Avogadro constant, and why chemists count by weighing.',
     core: [
       'One mole contains 6.02 x 10^23 particles.',
@@ -33,7 +33,7 @@ const lessonTabs = [
   {
     id: 'mass-moles',
     icon: Scale,
-    title: '2. Mass and Mr',
+    title: '2. Moles and Mass',
     focus: 'Using relative formula mass to move between grams and moles.',
     core: [
       'Use n = m / Mr when mass is in grams.',
@@ -55,7 +55,7 @@ const lessonTabs = [
   {
     id: 'solutions',
     icon: Beaker,
-    title: '3. Solutions',
+    title: '3. Moles and Solutions',
     focus: 'Concentration, volume conversion, and titration-ready thinking.',
     core: [
       'Use c = n / V, where V is in dm3.',
@@ -75,53 +75,31 @@ const lessonTabs = [
     teacherNotes: 'Make students say "dm3" before they calculate. The volume conversion is the classic avoidable mark loss.'
   },
   {
-    id: 'stoichiometry',
-    icon: Sigma,
-    title: '4. Stoichiometry',
-    focus: 'Balanced equation ratios and multi-step mole calculations.',
+    id: 'gases',
+    icon: Wind,
+    title: '4. Moles and Gases',
+    focus: 'Gas volume, molar gas volume, and reacting gas calculations.',
     core: [
-      'Balanced equations give mole ratios, not mass ratios.',
-      'Find moles of the known substance first.',
-      'Use the coefficient ratio to find moles of the target substance, then convert if needed.'
+      'At room temperature and pressure, 1 mol of gas occupies 24.0 dm3.',
+      'Use n = V / 24.0 when gas volume is in dm3 at room temperature and pressure.',
+      'Use balanced equation ratios after converting gas volume to moles.'
     ],
     workedExample: {
-      title: 'Mass from an equation',
-      question: 'What mass of CO2 forms from 0.250 mol of C3H8? Equation: C3H8 + 5O2 -> 3CO2 + 4H2O.',
+      title: 'Gas volume to moles',
+      question: 'Calculate the amount of CO2 in 600 cm3 of CO2 at room temperature and pressure.',
       steps: [
-        'Read the ratio: 1 mol C3H8 forms 3 mol CO2.',
-        'Find moles CO2: 0.250 x 3 = 0.750 mol.',
-        'Convert to mass: m = n x Mr = 0.750 x 44.0 = 33.0 g.'
+        'Convert volume: 600 cm3 = 0.600 dm3.',
+        'Use molar gas volume: n = V / 24.0.',
+        'Calculate: n = 0.600 / 24.0 = 0.0250 mol.'
       ],
-      answer: '33.0 g of CO2'
+      answer: '0.0250 mol of CO2'
     },
-    teacherNotes: 'Do not let students jump from propane mass to carbon dioxide mass without the mole ratio line.'
-  },
-  {
-    id: 'limiting',
-    icon: FlaskConical,
-    title: '5. Limiting Reagents',
-    focus: 'Deciding which reactant runs out first and predicting product amount.',
-    core: [
-      'Convert each reactant amount into the moles of product it could make.',
-      'The smaller possible product amount identifies the limiting reagent.',
-      'Excess reagent remains after the limiting reagent has been used up.'
-    ],
-    workedExample: {
-      title: 'Identify the limiting reagent',
-      question: '2.00 mol H2 reacts with 1.20 mol O2. Equation: 2H2 + O2 -> 2H2O.',
-      steps: [
-        'From H2: 2.00 mol H2 can form 2.00 mol H2O.',
-        'From O2: 1.20 mol O2 can form 2.40 mol H2O.',
-        'The smaller product amount is from H2, so H2 is limiting.'
-      ],
-      answer: 'H2 is limiting; maximum H2O = 2.00 mol'
-    },
-    teacherNotes: 'The simulator below uses the same logic: compare possible product, not just starting moles.'
+    teacherNotes: 'Keep conditions explicit. The 24.0 dm3 mol-1 shortcut applies at room temperature and pressure, not all gas questions.'
   },
   {
     id: 'formulae',
     icon: BookOpen,
-    title: '6. Empirical Formula',
+    title: '5. Empirical Formula',
     focus: 'Turning composition data into simplest whole-number formulae.',
     core: [
       'Convert masses or percentages into moles.',
@@ -139,6 +117,28 @@ const lessonTabs = [
       answer: 'CH3'
     },
     teacherNotes: 'When ratios are near x.5 or x.33, multiply every ratio by 2 or 3. Keep rounding disciplined.'
+  },
+  {
+    id: 'limiting',
+    icon: FlaskConical,
+    title: '6. Limiting Reagents',
+    focus: 'Deciding which reactant runs out first and predicting product amount.',
+    core: [
+      'Convert each reactant amount into the moles of product it could make.',
+      'The smaller possible product amount identifies the limiting reagent.',
+      'Excess reagent remains after the limiting reagent has been used up.'
+    ],
+    workedExample: {
+      title: 'Identify the limiting reagent',
+      question: '2.00 mol H2 reacts with 1.20 mol O2. Equation: 2H2 + O2 -> 2H2O.',
+      steps: [
+        'From H2: 2.00 mol H2 can form 2.00 mol H2O.',
+        'From O2: 1.20 mol O2 can form 2.40 mol H2O.',
+        'The smaller product amount is from H2, so H2 is limiting.'
+      ],
+      answer: 'H2 is limiting; maximum H2O = 2.00 mol'
+    },
+    teacherNotes: 'The simulator below uses the same logic: compare possible product, not just starting moles.'
   }
 ]
 
@@ -162,6 +162,16 @@ const calculationWalkthroughs = [
       'Volume NaOH = 25.0 cm3 = 0.0250 dm3.',
       'Concentration NaOH = 0.00600 / 0.0250 = 0.240 mol dm-3.'
     ]
+  },
+  {
+    title: 'Gas volume -> moles -> reacting volume',
+    prompt: '120 cm3 of methane burns completely. Calculate the volume of oxygen needed at the same temperature and pressure. Equation: CH4 + 2O2 -> CO2 + 2H2O.',
+    steps: [
+      'For gases at the same temperature and pressure, volume ratio follows mole ratio.',
+      'Ratio CH4:O2 is 1:2.',
+      'Oxygen volume = 120 x 2 = 240 cm3.',
+      'This shortcut works because both substances are gases under the stated conditions.'
+    ]
   }
 ]
 
@@ -174,6 +184,17 @@ const examQuestions = [
       'n(CaCO3) = 2.50 / 100.1 = 0.02498 mol.',
       'n(HCl) = 2 x 0.02498 = 0.04996 mol.',
       'V = n / c = 0.04996 / 0.500 = 0.0999 dm3 = 99.9 cm3.'
+    ]
+  },
+  {
+    marks: 5,
+    question: 'At room temperature and pressure, 96.0 cm3 of carbon dioxide is produced. Calculate the amount, in moles, of carbon dioxide and the mass of carbon dioxide produced.',
+    markScheme: [
+      'Convert volume: 96.0 cm3 = 0.0960 dm3.',
+      'Use n = V / 24.0.',
+      'n(CO2) = 0.0960 / 24.0 = 0.00400 mol.',
+      'Mr(CO2) = 44.0.',
+      'mass = 0.00400 x 44.0 = 0.176 g.'
     ]
   },
   {

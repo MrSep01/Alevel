@@ -68,6 +68,17 @@ export const quizzes = {
     },
     {
       id: 'q7',
+      prompt: 'At room temperature and pressure, what volume does 0.250 mol of gas occupy?',
+      options: [
+        { id: 'a', text: '6.00 dm3' },
+        { id: 'b', text: '12.0 dm3' },
+        { id: 'c', text: '24.0 dm3' }
+      ],
+      answer: 'a',
+      explanation: 'At room temperature and pressure, volume = moles x 24.0 dm3 mol-1, so 0.250 x 24.0 = 6.00 dm3.'
+    },
+    {
+      id: 'q8',
       prompt: 'For 2H2 + O2 -> 2H2O, what is the mole ratio H2:O2?',
       options: [
         { id: 'a', text: '1:1' },
@@ -78,7 +89,7 @@ export const quizzes = {
       explanation: 'The balanced equation shows 2 mol H2 reacts with 1 mol O2.'
     },
     {
-      id: 'q8',
+      id: 'q9',
       prompt: 'A compound has mole ratio C:H = 1:4. What is its empirical formula?',
       options: [
         { id: 'a', text: 'CH4' },
@@ -89,7 +100,7 @@ export const quizzes = {
       explanation: 'The empirical formula is the simplest whole-number ratio, so C:H = 1:4 gives CH4.'
     },
     {
-      id: 'q9',
+      id: 'q10',
       prompt: 'A limiting reagent is the reactant that:',
       options: [
         { id: 'a', text: 'has the greatest mass at the start' },
