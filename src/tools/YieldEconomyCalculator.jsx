@@ -17,6 +17,9 @@ export default function YieldEconomyCalculator() {
     }
   }, [actualYield, desiredMr, theoreticalYield, totalReactantMr])
 
+  const percentageYield = result.percentageYield ? `${result.percentageYield.toFixed(1)}%` : 'Check values'
+  const atomEconomy = result.atomEconomy ? `${result.atomEconomy.toFixed(1)}%` : 'Check values'
+
   return (
     <section className="calculator-app">
       <div className="calculator-topline"><p className="eyebrow">Percentage yield and atom economy</p><span className="calculator-badge">green chemistry</span></div>
@@ -27,8 +30,20 @@ export default function YieldEconomyCalculator() {
         <article><span>Total reactant Mᵣ</span><label className="calculator-field"><div><input type="number" step="any" value={totalReactantMr} onChange={event => setTotalReactantMr(event.target.value)} /><b>Mᵣ</b></div></label></article>
       </div>
       <div className="tool-summary-grid">
-        <article><span>Percentage yield</span><strong>{result.percentageYield ? `${result.percentageYield.toFixed(1)}%` : 'Check values'}</strong></article>
-        <article><span>Atom economy</span><strong>{result.atomEconomy ? `${result.atomEconomy.toFixed(1)}%` : 'Check values'}</strong></article>
+        <article><span>Percentage yield</span><strong>{percentageYield}</strong></article>
+        <article><span>Atom economy</span><strong>{atomEconomy}</strong></article>
+      </div>
+      <div className="tool-logic-grid">
+        <article className="tool-logic-card">
+          <span>Percentage yield route</span>
+          <strong>{actualYield} ÷ {theoreticalYield} × 100 = {percentageYield}</strong>
+          <small>Compares practical yield with theoretical yield.</small>
+        </article>
+        <article className="tool-logic-card">
+          <span>Atom economy route</span>
+          <strong>{desiredMr} ÷ {totalReactantMr} × 100 = {atomEconomy}</strong>
+          <small>Compares useful product mass with total reactant mass.</small>
+        </article>
       </div>
     </section>
   )

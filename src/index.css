@@ -1116,7 +1116,7 @@ p {
 
 .calculator-working {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px;
 }
 
@@ -2544,8 +2544,52 @@ p {
 
 .tool-summary-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px;
+}
+
+.tool-logic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.tool-logic-card {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 14px;
+  background: #f9fbfd;
+  padding: 14px;
+}
+
+.tool-logic-card span {
+  color: #6d7b91;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.03em;
+  line-height: 1.12;
+  text-transform: uppercase;
+}
+
+.tool-logic-card strong,
+.tool-logic-card small {
+  display: block;
+  color: #253044;
+  line-height: 1.32;
+  overflow-wrap: anywhere;
+}
+
+.tool-logic-card strong {
+  font-size: 0.98rem;
+  font-weight: 950;
+}
+
+.tool-logic-card small {
+  color: #64748b;
+  font-weight: 800;
 }
 
 .tool-summary-grid article,

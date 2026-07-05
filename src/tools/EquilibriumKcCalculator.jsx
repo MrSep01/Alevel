@@ -1,5 +1,14 @@
 import { useMemo, useState } from 'react'
 
+function toSuperscript(value) {
+  const map = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹', '.': '·' }
+  return String(value).split('').map(character => map[character] || character).join('')
+}
+
+function formatPowerTerm(value, power) {
+  return `${value}${power === '1' ? '' : toSuperscript(power)}`
+}
+
 export default function EquilibriumKcCalculator() {
   const [a, setA] = useState('0.20')
   const [b, setB] = useState('0.20')
@@ -15,6 +24,10 @@ export default function EquilibriumKcCalculator() {
     if (values.some(value => !Number.isFinite(value) || value <= 0)) return null
     return (Number(c) ** Number(cPower) * Number(d) ** Number(dPower)) / (Number(a) ** Number(aPower) * Number(b) ** Number(bPower))
   }, [a, aPower, b, bPower, c, cPower, d, dPower])
+
+  const numerator = Number(c) ** Number(cPower) * Number(d) ** Number(dPower)
+  const denominator = Number(a) ** Number(aPower) * Number(b) ** Number(bPower)
+  const hasValidValues = kc !== null && Number.isFinite(numerator) && Number.isFinite(denominator)
 
   return (
     <section className="calculator-app">
@@ -34,6 +47,23 @@ export default function EquilibriumKcCalculator() {
         ))}
       </div>
       <div className="calculator-display compact-display"><span>Kc</span><strong>{kc ? kc.toPrecision(3) : 'Check values'}</strong><small>Kc = [C]ᶜ[D]ᵈ / [A]ᵃ[B]ᵇ</small></div>
+      <div className="tool-logic-grid">
+        <article className="tool-logic-card">
+          <span>Products</span>
+          <strong>[C]{cPower === '1' ? '' : toSuperscript(cPower)} × [D]{dPower === '1' ? '' : toSuperscript(dPower)}</strong>
+          <small>{hasValidValues ? `${formatPowerTerm(c, cPower)} × ${formatPowerTerm(d, dPower)} = ${numerator.toPrecision(3)}` : 'Use equilibrium concentrations.'}</small>
+        </article>
+        <article className="tool-logic-card">
+          <span>Reactants</span>
+          <strong>[A]{aPower === '1' ? '' : toSuperscript(aPower)} × [B]{bPower === '1' ? '' : toSuperscript(bPower)}</strong>
+          <small>{hasValidValues ? `${formatPowerTerm(a, aPower)} × ${formatPowerTerm(b, bPower)} = ${denominator.toPrecision(3)}` : 'Solids and liquids are omitted.'}</small>
+        </article>
+        <article className="tool-logic-card">
+          <span>Ratio</span>
+          <strong>{hasValidValues ? `${numerator.toPrecision(3)} ÷ ${denominator.toPrecision(3)}` : 'Check values'}</strong>
+          <small>Use the powers from the balanced equation.</small>
+        </article>
+      </div>
     </section>
   )
 }

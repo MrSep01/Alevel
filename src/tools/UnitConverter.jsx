@@ -14,6 +14,7 @@ export default function UnitConverter() {
   const [value, setValue] = useState('250')
   const conversion = conversions[mode]
   const result = useMemo(() => Number.isFinite(Number(value)) ? conversion.convert(Number(value)) : null, [conversion, value])
+  const answer = result === null ? 'Check value' : result.toPrecision(4)
 
   return (
     <section className="calculator-app">
@@ -23,7 +24,20 @@ export default function UnitConverter() {
           <label className="calculator-field"><span>Conversion</span><div><select value={mode} onChange={event => setMode(event.target.value)}>{Object.entries(conversions).map(([id, item]) => <option key={id} value={id}>{item.label}</option>)}</select><b>type</b></div></label>
           <label className="calculator-field"><span>Value</span><div><input type="number" step="any" value={value} onChange={event => setValue(event.target.value)} /><b>{conversion.from}</b></div></label>
         </div>
-        <div className="calculator-display"><span>Converted value</span><strong>{result === null ? 'Check value' : result.toPrecision(4)}</strong><small>{conversion.to}</small></div>
+        <div className="calculator-display"><span>Converted value</span><strong>{answer}</strong><small>{conversion.to}</small></div>
+      </div>
+
+      <div className="tool-logic-grid">
+        <article className="tool-logic-card">
+          <span>Start unit</span>
+          <strong>{value} {conversion.from}</strong>
+          <small>{conversion.label}</small>
+        </article>
+        <article className="tool-logic-card">
+          <span>Converted unit</span>
+          <strong>{answer} {conversion.to}</strong>
+          <small>Check whether the question wants cm³, dm³, J, kJ, g, or kg.</small>
+        </article>
       </div>
     </section>
   )

@@ -46,6 +46,24 @@ export default function MolecularFormulaCalculator() {
           <small>{result.error || `Empirical Mᵣ = ${result.empiricalMr.toFixed(1)}, multiplier = ${result.multiplier}`}</small>
         </div>
       </div>
+
+      <div className="tool-logic-grid">
+        <article className="tool-logic-card">
+          <span>1. Empirical Mᵣ</span>
+          <strong>{result.error ? 'Check formula' : result.empiricalMr.toFixed(1)}</strong>
+          <small>Add the relative atomic masses in the empirical formula.</small>
+        </article>
+        <article className="tool-logic-card">
+          <span>2. Multiplier</span>
+          <strong>{result.error ? 'Check values' : `${molecularMass} ÷ ${result.empiricalMr.toFixed(1)} = ${result.multiplier}`}</strong>
+          <small>The multiplier should be a whole number.</small>
+        </article>
+        <article className="tool-logic-card">
+          <span>3. Molecular formula</span>
+          <strong>{result.error ? 'Check values' : formatFormula(result.molecularFormula)}</strong>
+          <small>Multiply every empirical subscript by the multiplier.</small>
+        </article>
+      </div>
     </section>
   )
 }

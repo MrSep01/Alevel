@@ -16,12 +16,12 @@ export default function PHCalculator() {
 
   const result = useMemo(() => {
     const c = Number(concentration)
-    if (mode === 'strong-acid' && c > 0) return { pH: -Math.log10(c), working: 'pH = -log₁₀[H⁺]' }
-    if (mode === 'strong-base' && c > 0) return { pH: 14 + Math.log10(c), working: 'pOH = -log₁₀[OH⁻], pH = 14 - pOH' }
-    if (mode === 'weak-acid' && c > 0 && Number(ka) > 0) return { pH: -Math.log10(Math.sqrt(Number(ka) * c)), working: '[H⁺] ≈ √(Kₐ × c)' }
+    if (mode === 'strong-acid' && c > 0) return { pH: -Math.log10(c), working: 'pH = -log₁₀[H⁺]', substitution: `-log₁₀(${concentration})` }
+    if (mode === 'strong-base' && c > 0) return { pH: 14 + Math.log10(c), working: 'pOH = -log₁₀[OH⁻], pH = 14 - pOH', substitution: `14 + log₁₀(${concentration})` }
+    if (mode === 'weak-acid' && c > 0 && Number(ka) > 0) return { pH: -Math.log10(Math.sqrt(Number(ka) * c)), working: '[H⁺] ≈ √(Kₐ × c)', substitution: `-log₁₀√(${ka} × ${concentration})` }
     if (mode === 'buffer' && Number(ka) > 0 && Number(acidMoles) > 0 && Number(saltMoles) > 0) {
       const pKa = -Math.log10(Number(ka))
-      return { pH: pKa + Math.log10(Number(saltMoles) / Number(acidMoles)), working: 'pH = pKₐ + log₁₀(salt / acid)' }
+      return { pH: pKa + Math.log10(Number(saltMoles) / Number(acidMoles)), working: 'pH = pKₐ + log₁₀(salt / acid)', substitution: `${pKa.toFixed(2)} + log₁₀(${saltMoles} ÷ ${acidMoles})` }
     }
     return null
   }, [acidMoles, concentration, ka, mode, saltMoles])
@@ -53,6 +53,19 @@ export default function PHCalculator() {
           <strong>{result ? result.pH.toFixed(2) : 'Check values'}</strong>
           <small>{result?.working || 'Enter valid positive values.'}</small>
         </div>
+      </div>
+
+      <div className="tool-logic-grid">
+        <article className="tool-logic-card">
+          <span>Model</span>
+          <strong>{modes.find(item => item.id === mode)?.label}</strong>
+          <small>{result?.working || 'Choose the correct acid-base model first.'}</small>
+        </article>
+        <article className="tool-logic-card">
+          <span>Substitution</span>
+          <strong>{result?.substitution || 'Check values'}</strong>
+          <small>Keep calculator notation exact before rounding pH.</small>
+        </article>
       </div>
     </section>
   )

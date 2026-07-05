@@ -464,7 +464,7 @@ function productToAnswer(productMoles, values) {
       ? {
           value: productMoles / (finalVolume / 1000),
           unit: 'mol dm⁻³',
-          line: `c = n ÷ Vtotal`,
+          line: `c = n ÷ Vₜₒₜₐₗ`,
           detail: `${productMoles} mol ÷ (${finalVolume} cm³ ÷ 1000)`,
           finalVolume,
         }

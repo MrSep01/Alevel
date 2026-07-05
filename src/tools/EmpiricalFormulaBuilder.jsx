@@ -65,14 +65,19 @@ export default function EmpiricalFormulaBuilder() {
       </div>
 
       {result && (
-        <div className="tool-summary-grid">
+        <div className="tool-logic-grid">
           {result.usableRows.map((row, index) => (
-            <article key={row.symbol}>
+            <article className="tool-logic-card" key={row.symbol}>
               <span>{row.symbol}</span>
               <strong>{Number(result.moles[index]).toPrecision(3)} mol</strong>
               <small>{row.mass} ÷ {atomicMasses[row.symbol]}</small>
             </article>
           ))}
+          <article className="tool-logic-card">
+            <span>Simplest ratio</span>
+            <strong>{result.ratio.join(' : ')}</strong>
+            <small>Divide every mole value by the smallest mole value.</small>
+          </article>
         </div>
       )}
     </section>
