@@ -3688,11 +3688,16 @@ p {
 }
 
 .yield-reaction-heading {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px 16px;
+  justify-items: center;
+  gap: 8px;
+  min-height: 92px;
+  border: 1px solid rgba(189, 227, 255, 0.74);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.68);
+  padding: 13px 16px 15px;
+  text-align: center;
 }
 
 .yield-reaction-heading span,
@@ -3709,13 +3714,14 @@ p {
 .yield-reaction-heading strong {
   color: #1d2a3d;
   display: block;
+  width: 100%;
   max-width: 100%;
   white-space: nowrap;
   overflow-x: auto;
-  overflow-y: hidden;
-  font-size: clamp(1.1rem, 2vw, 1.55rem);
+  font-size: clamp(1.1rem, 2vw, 1.48rem);
   font-weight: 950;
-  line-height: 1.16;
+  line-height: 1.36;
+  padding: 2px 0 5px;
 }
 
 .yield-reaction-flow {
