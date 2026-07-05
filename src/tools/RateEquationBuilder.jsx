@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import FormulaStrip from './FormulaStrip.jsx'
 
 const defaultRows = [
   { id: '1', a: '0.100', b: '0.100', rate: '2.40e-4' },
@@ -36,7 +37,7 @@ function inferOrder(first, second, fixedKey, changingKey) {
   return {
     raw: rawOrder,
     order: Math.abs(rawOrder - rounded) < 0.08 ? rounded : Number(rawOrder.toFixed(2)),
-    comparison: `${secondRate / firstRate} rate change / ${secondChanging / firstChanging} concentration change`,
+    comparison: `${secondRate / firstRate} rate change ÷ ${secondChanging / firstChanging} concentration change`,
   }
 }
 
@@ -84,6 +85,12 @@ export default function RateEquationBuilder() {
         </div>
         <span className="calculator-badge">rate = k[A]ᵐ[B]ⁿ</span>
       </div>
+
+      <FormulaStrip items={[
+        { label: 'Rate equation', value: analysis.error ? 'rate = k[A]ᵐ[B]ⁿ' : `rate = k[A]${toSuperscript(analysis.orderA.order)}[B]${toSuperscript(analysis.orderB.order)}`, tone: 'formula' },
+        { label: 'Order logic', value: 'order = log(rate change) ÷ log(concentration change)', tone: 'conversion' },
+        { label: 'Prediction', value: analysis.error ? analysis.error : `${formatScientific(analysis.k)} × ${predictA}${toSuperscript(analysis.orderA.order)} × ${predictB}${toSuperscript(analysis.orderB.order)}`, tone: 'substitution' },
+      ]} />
 
       <div className="rate-table">
         <div className="rate-row header">

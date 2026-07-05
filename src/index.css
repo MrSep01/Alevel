@@ -1156,6 +1156,66 @@ p {
   overflow-wrap: anywhere;
 }
 
+.formula-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.formula-strip-card {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 16px;
+  background: #f8fbff;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.formula-strip-card span {
+  color: #66758c;
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.formula-strip-card strong {
+  color: #253044;
+  font-size: clamp(1.05rem, 1.35vw, 1.35rem);
+  font-weight: 950;
+  line-height: 1.24;
+  overflow-wrap: anywhere;
+}
+
+.formula-strip-card.formula {
+  border-color: #bde3ff;
+  background: #eef8ff;
+}
+
+.formula-strip-card.formula strong {
+  color: #126fb1;
+}
+
+.formula-strip-card.conversion {
+  border-color: #fde6b6;
+  background: #fff8ea;
+}
+
+.formula-strip-card.conversion strong {
+  color: #986a14;
+}
+
+.formula-strip-card.substitution {
+  border-color: #d8c1f5;
+  background: #f8f2ff;
+}
+
+.formula-strip-card.substitution strong {
+  color: #6b2cb2;
+}
+
 .calculator-display .calculated-value {
   color: var(--value-cyan);
   font-size: clamp(2rem, 3.45vw, 3.25rem);

@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 import { fewestSigFigs } from './significantFigures.js'
 
 const modes = [
   {
     id: 'concentration',
     label: 'Find concentration',
-    equation: 'c = n / V',
+    equation: 'c = n ÷ V',
     resultLabel: 'Concentration',
     unit: 'mol dm⁻³',
     fields: [
@@ -14,7 +15,11 @@ const modes = [
       { id: 'volumeCm3', label: 'Volume', unit: 'cm³', defaultValue: '250' },
     ],
     calculate: values => Number(values.moles) / (Number(values.volumeCm3) / 1000),
-    working: values => `${values.moles} mol / (${values.volumeCm3} ÷ 1000) dm³`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'c = n ÷ V', tone: 'formula' },
+      { label: 'Unit conversion', value: 'V(dm³) = V(cm³) × 10⁻³', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.moles} mol ÷ (${values.volumeCm3} cm³ × 10⁻³)`, tone: 'substitution' },
+    ],
   },
   {
     id: 'moles',
@@ -27,12 +32,16 @@ const modes = [
       { id: 'volumeCm3', label: 'Volume', unit: 'cm³', defaultValue: '25.0' },
     ],
     calculate: values => Number(values.concentration) * (Number(values.volumeCm3) / 1000),
-    working: values => `${values.concentration} mol dm⁻³ × (${values.volumeCm3} ÷ 1000) dm³`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'n = c × V', tone: 'formula' },
+      { label: 'Unit conversion', value: 'V(dm³) = V(cm³) × 10⁻³', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.concentration} mol dm⁻³ × (${values.volumeCm3} cm³ × 10⁻³)`, tone: 'substitution' },
+    ],
   },
   {
     id: 'volume',
     label: 'Find volume',
-    equation: 'V = n / c',
+    equation: 'V = n ÷ c',
     resultLabel: 'Volume',
     unit: 'cm³',
     fields: [
@@ -40,7 +49,11 @@ const modes = [
       { id: 'concentration', label: 'Concentration', unit: 'mol dm⁻³', defaultValue: '0.100' },
     ],
     calculate: values => (Number(values.moles) / Number(values.concentration)) * 1000,
-    working: values => `(${values.moles} mol / ${values.concentration} mol dm⁻³) × 1000`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'V(dm³) = n ÷ c', tone: 'formula' },
+      { label: 'Unit conversion', value: 'V(cm³) = V(dm³) × 10³', tone: 'conversion' },
+      { label: 'Substitution', value: `(${values.moles} mol ÷ ${values.concentration} mol dm⁻³) × 10³`, tone: 'substitution' },
+    ],
   },
   {
     id: 'dilution',
@@ -54,7 +67,11 @@ const modes = [
       { id: 'finalVolume', label: 'Final volume', unit: 'cm³', defaultValue: '250' },
     ],
     calculate: values => (Number(values.initialConcentration) * Number(values.initialVolume)) / Number(values.finalVolume),
-    working: values => `(${values.initialConcentration} × ${values.initialVolume}) / ${values.finalVolume}`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'c₂ = c₁ × V₁ ÷ V₂', tone: 'formula' },
+      { label: 'Volume units', value: 'V₁ and V₂ can both stay in cm³', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.initialConcentration} × ${values.initialVolume} cm³ ÷ ${values.finalVolume} cm³`, tone: 'substitution' },
+    ],
   },
   {
     id: 'titration',
@@ -67,7 +84,11 @@ const modes = [
       { id: 'concentration', label: 'Concentration', unit: 'mol dm⁻³', defaultValue: '0.100' },
     ],
     calculate: values => Number(values.concentration) * (Number(values.titre) / 1000),
-    working: values => `${values.concentration} mol dm⁻³ × (${values.titre} ÷ 1000) dm³`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'n = c × V', tone: 'formula' },
+      { label: 'Unit conversion', value: 'V(dm³) = titre(cm³) × 10⁻³', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.concentration} mol dm⁻³ × (${values.titre} cm³ × 10⁻³)`, tone: 'substitution' },
+    ],
   },
 ]
 
@@ -123,6 +144,8 @@ export default function ConcentrationCalculator() {
         ))}
       </div>
 
+      <FormulaStrip items={mode.formulaItems?.(values)} />
+
       <div className="calculator-body">
         <div className="calculator-input-panel">
           {mode.fields.map(field => (
@@ -147,16 +170,6 @@ export default function ConcentrationCalculator() {
         </div>
       </div>
 
-      <div className="calculator-working">
-        <div>
-          <span>Formula</span>
-          <strong>{mode.equation}</strong>
-        </div>
-        <div>
-          <span>Substitution</span>
-          <strong>{mode.working(values)}</strong>
-        </div>
-      </div>
     </section>
   )
 }

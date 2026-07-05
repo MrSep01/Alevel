@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { formatFormula, parseSimpleFormula } from './chemistryHelpers.js'
+import FormulaStrip from './FormulaStrip.jsx'
 
 export default function MolecularFormulaCalculator() {
   const [empiricalFormula, setEmpiricalFormula] = useState('CH2O')
@@ -21,6 +22,12 @@ export default function MolecularFormulaCalculator() {
         <p className="eyebrow">Molecular formula calculator</p>
         <span className="calculator-badge">Mᵣ ÷ empirical Mᵣ</span>
       </div>
+
+      <FormulaStrip items={[
+        { label: 'Multiplier', value: 'multiplier = molecular Mᵣ ÷ empirical Mᵣ', tone: 'formula' },
+        { label: 'Molecular formula', value: 'multiply every empirical subscript by the multiplier', tone: 'conversion' },
+        { label: 'Substitution', value: result.error ? result.error : `${molecularMass} ÷ ${result.empiricalMr.toFixed(1)} = ${result.multiplier}`, tone: 'substitution' },
+      ]} />
 
       <div className="calculator-body">
         <div className="calculator-input-panel">

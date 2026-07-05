@@ -11,6 +11,7 @@ import {
   YAxis,
 } from 'recharts'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 
 const titrationTypes = [
   { id: 'strong-acid-strong-base', label: 'Strong acid with strong base' },
@@ -117,6 +118,12 @@ export default function TitrationCurveSimulator() {
         </div>
         <span className="calculator-badge">pH vs volume</span>
       </div>
+
+      <FormulaStrip items={[
+        { label: 'Moles from solution', value: 'n = c × V(cm³) × 10⁻³', tone: 'formula' },
+        { label: 'Equivalence point', value: 'n(acid) = n(base) after ratio correction', tone: 'conversion' },
+        { label: 'Substitution', value: `${acidConcentration} × ${acidVolume} × 10⁻³ and ${baseConcentration} × V(base) × 10⁻³`, tone: 'substitution' },
+      ]} />
 
       <div className="calculator-body titration-layout">
         <div className="calculator-input-panel">

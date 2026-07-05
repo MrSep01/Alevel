@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { atomicMasses, formatFormula, gcd } from './chemistryHelpers.js'
+import FormulaStrip from './FormulaStrip.jsx'
 
 const defaultRows = [
   { id: 'C', symbol: 'C', mass: '40.0' },
@@ -42,6 +43,12 @@ export default function EmpiricalFormulaBuilder() {
         <p className="eyebrow">Empirical formula builder</p>
         <span className="calculator-badge">mass → mol → ratio</span>
       </div>
+
+      <FormulaStrip items={[
+        { label: 'Moles', value: 'n = mass ÷ Aᵣ', tone: 'formula' },
+        { label: 'Ratio', value: 'divide every mole value by the smallest', tone: 'conversion' },
+        { label: 'Substitution', value: result ? result.usableRows.map((row, index) => `${row.mass} ÷ ${atomicMasses[row.symbol]} = ${Number(result.moles[index]).toPrecision(3)} mol`).join('  |  ') : 'Enter valid element data', tone: 'substitution' },
+      ]} />
 
       <div className="rate-table">
         <div className="rate-row empirical-row header">

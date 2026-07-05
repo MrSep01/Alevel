@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
 
 const molarGasVolume = 24.0
@@ -111,14 +112,14 @@ function conversionText(unit, substance) {
   if (unit === 'mol') return 'Use moles directly'
   if (unit === 'g') return `n = mass ÷ Mᵣ (${substance.molarMass} g mol⁻¹)`
   if (unit === 'gas') return 'n = gas volume ÷ 24.0'
-  return 'n = concentration × volume in dm³'
+  return 'n = concentration × volume(cm³) × 10⁻³'
 }
 
 function outputText(unit, substance) {
   if (unit === 'mol') return 'Keep product moles'
   if (unit === 'g') return `mass = n × Mᵣ (${substance.molarMass} g mol⁻¹)`
   if (unit === 'gas') return 'gas volume = n × 24.0'
-  return 'concentration = n ÷ volume in dm³'
+  return 'concentration = n ÷ (volume(cm³) × 10⁻³)'
 }
 
 function isSolutionSubstance(substance) {
@@ -184,6 +185,12 @@ export default function StoichiometryEquationSolver({ standalone = false }) {
           </button>
         ))}
       </div>
+
+      <FormulaStrip items={[
+        { label: 'Mole ratio formula', value: 'target moles = known moles × target coefficient ÷ known coefficient', tone: 'formula' },
+        { label: 'Known conversion', value: conversionText(knownUnit, knownSubstance), tone: 'conversion' },
+        { label: 'Substitution', value: result ? `${formatValue(result.knownMoles, sigFigs)} mol × ${targetSubstance.coefficient} ÷ ${knownSubstance.coefficient} = ${formatValue(result.targetMoles, sigFigs)} mol` : 'Enter a valid known value', tone: 'substitution' },
+      ]} />
 
       <div className="stoich-tool-layout">
         <div className="calculator-input-panel">

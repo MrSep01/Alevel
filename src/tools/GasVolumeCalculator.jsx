@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 
 export default function GasVolumeCalculator() {
   const [moles, setMoles] = useState('0.250')
@@ -17,6 +18,11 @@ export default function GasVolumeCalculator() {
   return (
     <section className="calculator-app">
       <div className="calculator-topline"><p className="eyebrow">Gas volume calculator</p><span className="calculator-badge">V = n × molar volume</span></div>
+      <FormulaStrip items={[
+        { label: 'Formula', value: 'V = n × Vₘ × ratio', tone: 'formula' },
+        { label: 'Constant', value: `Vₘ = ${molarVolume} dm³ mol⁻¹`, tone: 'conversion' },
+        { label: 'Substitution', value: `${moles} mol × ${molarVolume} dm³ mol⁻¹ × ${ratio}`, tone: 'substitution' },
+      ]} />
       <div className="calculator-body">
         <div className="calculator-input-panel">
           <label className="calculator-field"><span>Moles</span><div><input type="number" step="any" value={moles} onChange={event => setMoles(event.target.value)} /><b>mol</b></div></label>

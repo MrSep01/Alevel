@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 import { countSignificantFigures, formatToSigFigs } from './significantFigures.js'
 
 const atomicMasses = {
@@ -301,6 +302,12 @@ export default function FormulaMassCalculator() {
         <span className="calculator-badge">Mᵣ = Σ Aᵣ</span>
       </div>
 
+      <FormulaStrip items={[
+        { label: 'Formula mass', value: 'Mᵣ = Σ(Aᵣ × subscript)', tone: 'formula' },
+        { label: 'Sample moles', value: 'n = mass ÷ Mᵣ', tone: 'conversion' },
+        { label: 'Substitution', value: result?.total ? `${sampleMass} g ÷ ${result.total.toFixed(1)} g mol⁻¹` : 'Enter a valid formula first', tone: 'substitution' },
+      ]} />
+
       <div className="calculator-body">
         <div className="calculator-input-panel">
           <label className="calculator-field">
@@ -358,7 +365,7 @@ export default function FormulaMassCalculator() {
             </div>
             <div>
               <span>Sample moles</span>
-              <strong>{sampleMass} g / {result.total.toFixed(1)} g mol⁻¹</strong>
+              <strong>{sampleMass} g ÷ {result.total.toFixed(1)} g mol⁻¹</strong>
             </div>
           </div>
         </>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 
 export default function YieldEconomyCalculator() {
   const [actualYield, setActualYield] = useState('8.20')
@@ -24,6 +25,11 @@ export default function YieldEconomyCalculator() {
   return (
     <section className="calculator-app">
       <div className="calculator-topline"><p className="eyebrow">Percentage yield and atom economy</p><span className="calculator-badge">green chemistry</span></div>
+      <FormulaStrip items={[
+        { label: 'Percentage yield', value: 'actual yield ÷ theoretical yield × 100', tone: 'formula' },
+        { label: 'Atom economy', value: 'desired product Mᵣ ÷ total reactant Mᵣ × 100', tone: 'conversion' },
+        { label: 'Substitution', value: `${actualYield} ÷ ${theoreticalYield} × 100 and ${desiredMr} ÷ ${totalReactantMr} × 100`, tone: 'substitution' },
+      ]} />
       <div className="tool-summary-grid">
         <article><span>Actual yield</span><label className="calculator-field"><div><input type="number" step="any" value={actualYield} onChange={event => setActualYield(event.target.value)} /><b>g</b></div></label></article>
         <article><span>Theoretical yield</span><label className="calculator-field"><div><input type="number" step="any" value={theoreticalYield} onChange={event => setTheoreticalYield(event.target.value)} /><b>g</b></div></label></article>

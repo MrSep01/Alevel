@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 import { fewestSigFigs } from './significantFigures.js'
 
 const avogadroConstant = 6.022e23
@@ -9,7 +10,7 @@ const modes = [
   {
     id: 'moles-from-mass',
     label: 'Mass to moles',
-    equation: 'n = m / Mᵣ',
+    equation: 'n = m ÷ Mᵣ',
     resultLabel: 'Moles',
     unit: 'mol',
     fields: [
@@ -17,7 +18,11 @@ const modes = [
       { id: 'molarMass', label: 'Molar mass', unit: 'g mol⁻¹', defaultValue: '40.0' },
     ],
     calculate: values => Number(values.mass) / Number(values.molarMass),
-    working: values => `${values.mass} g / ${values.molarMass} g mol⁻¹`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'n = m ÷ Mᵣ', tone: 'formula' },
+      { label: 'Units', value: 'mass in g, Mᵣ in g mol⁻¹', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.mass} g ÷ ${values.molarMass} g mol⁻¹`, tone: 'substitution' },
+    ],
   },
   {
     id: 'mass-from-moles',
@@ -30,12 +35,16 @@ const modes = [
       { id: 'molarMass', label: 'Molar mass', unit: 'g mol⁻¹', defaultValue: '40.0' },
     ],
     calculate: values => Number(values.moles) * Number(values.molarMass),
-    working: values => `${values.moles} mol × ${values.molarMass} g mol⁻¹`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'm = n × Mᵣ', tone: 'formula' },
+      { label: 'Units', value: 'mol × g mol⁻¹ gives g', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.moles} mol × ${values.molarMass} g mol⁻¹`, tone: 'substitution' },
+    ],
   },
   {
     id: 'molar-mass',
     label: 'Find molar mass',
-    equation: 'Mᵣ = m / n',
+    equation: 'Mᵣ = m ÷ n',
     resultLabel: 'Molar mass',
     unit: 'g mol⁻¹',
     fields: [
@@ -43,7 +52,11 @@ const modes = [
       { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.125' },
     ],
     calculate: values => Number(values.mass) / Number(values.moles),
-    working: values => `${values.mass} g / ${values.moles} mol`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'Mᵣ = m ÷ n', tone: 'formula' },
+      { label: 'Units', value: 'g ÷ mol gives g mol⁻¹', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.mass} g ÷ ${values.moles} mol`, tone: 'substitution' },
+    ],
   },
   {
     id: 'particles',
@@ -55,19 +68,27 @@ const modes = [
       { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.250' },
     ],
     calculate: values => Number(values.moles) * avogadroConstant,
-    working: values => `${values.moles} mol × 6.022 × 10²³ mol⁻¹`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'N = n × Nₐ', tone: 'formula' },
+      { label: 'Constant', value: 'Nₐ = 6.022 × 10²³ mol⁻¹', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.moles} mol × 6.022 × 10²³ mol⁻¹`, tone: 'substitution' },
+    ],
   },
   {
     id: 'moles-from-particles',
     label: 'Particles to moles',
-    equation: 'n = particles / Nₐ',
+    equation: 'n = N ÷ Nₐ',
     resultLabel: 'Moles',
     unit: 'mol',
     fields: [
       { id: 'particles', label: 'Number of particles', unit: 'particles', defaultValue: '3.011e23' },
     ],
     calculate: values => Number(values.particles) / avogadroConstant,
-    working: values => `${values.particles} particles / 6.022 × 10²³ mol⁻¹`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'n = N ÷ Nₐ', tone: 'formula' },
+      { label: 'Constant', value: 'Nₐ = 6.022 × 10²³ mol⁻¹', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.particles} particles ÷ 6.022 × 10²³ mol⁻¹`, tone: 'substitution' },
+    ],
   },
   {
     id: 'gas-volume',
@@ -79,19 +100,27 @@ const modes = [
       { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.250' },
     ],
     calculate: values => Number(values.moles) * molarGasVolumeDm3,
-    working: values => `${values.moles} mol × 24.0 dm³ mol⁻¹`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'V = n × Vₘ', tone: 'formula' },
+      { label: 'Constant', value: 'Vₘ = 24.0 dm³ mol⁻¹ at RTP', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.moles} mol × 24.0 dm³ mol⁻¹`, tone: 'substitution' },
+    ],
   },
   {
     id: 'moles-from-gas-volume',
     label: 'Gas volume to moles',
-    equation: 'n = V / 24.0',
+    equation: 'n = V ÷ Vₘ',
     resultLabel: 'Moles of gas at RTP',
     unit: 'mol',
     fields: [
       { id: 'volume', label: 'Gas volume at RTP', unit: 'dm³', defaultValue: '6.00' },
     ],
     calculate: values => Number(values.volume) / molarGasVolumeDm3,
-    working: values => `${values.volume} dm³ / 24.0 dm³ mol⁻¹`,
+    formulaItems: values => [
+      { label: 'Formula', value: 'n = V ÷ Vₘ', tone: 'formula' },
+      { label: 'Constant', value: 'Vₘ = 24.0 dm³ mol⁻¹ at RTP', tone: 'conversion' },
+      { label: 'Substitution', value: `${values.volume} dm³ ÷ 24.0 dm³ mol⁻¹`, tone: 'substitution' },
+    ],
   },
 ]
 
@@ -148,6 +177,8 @@ export default function MoleCalculator({ standalone = false }) {
         ))}
       </div>
 
+      <FormulaStrip items={mode.formulaItems?.(values)} />
+
       <div className="calculator-body">
         <div className="calculator-input-panel">
           {mode.fields.map(field => (
@@ -172,16 +203,6 @@ export default function MoleCalculator({ standalone = false }) {
         </div>
       </div>
 
-      <div className="calculator-working">
-        <div>
-          <span>Formula</span>
-          <strong>{mode.equation}</strong>
-        </div>
-        <div>
-          <span>Substitution</span>
-          <strong>{mode.working(values)}</strong>
-        </div>
-      </div>
     </section>
   )
 }

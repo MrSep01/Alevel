@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
 
 const avogadro = 6.022e23
@@ -356,7 +357,7 @@ function reactantToMoles(reactant) {
 
 function inputCalculationLine(reactant) {
   if (reactant.inputType === 'mass') return `n = mass ÷ Mᵣ`
-  if (reactant.inputType === 'solution') return `n = c × V ÷ 1000`
+  if (reactant.inputType === 'solution') return `n = c × V(cm³) × 10⁻³`
   if (reactant.inputType === 'gas') return `n = V ÷ 24.0`
   if (reactant.inputType === 'particles') return `n = particles ÷ Nₐ`
   if (reactant.inputType === 'pure-volume') return `mass = volume × density, then n = mass ÷ Mᵣ`
@@ -365,7 +366,7 @@ function inputCalculationLine(reactant) {
 
 function inputDetailLine(reactant) {
   if (reactant.inputType === 'mass') return `${reactant.mass ?? '?'} g ÷ ${reactant.molarMass ?? '?'} g mol⁻¹`
-  if (reactant.inputType === 'solution') return `${reactant.concentration ?? '?'} mol dm⁻³ × ${reactant.solutionVolume ?? '?'} cm³ ÷ 1000`
+  if (reactant.inputType === 'solution') return `${reactant.concentration ?? '?'} mol dm⁻³ × (${reactant.solutionVolume ?? '?'} cm³ × 10⁻³)`
   if (reactant.inputType === 'gas') return `${reactant.gasVolume ?? '?'} dm³ ÷ 24.0 dm³ mol⁻¹`
   if (reactant.inputType === 'particles') return `${reactant.particles ?? '?'} ÷ 6.022 × 10²³`
   if (reactant.inputType === 'pure-volume') return `${reactant.pureVolume ?? '?'} cm³ × ${reactant.density ?? '?'} g cm⁻³ ÷ ${reactant.molarMass ?? '?'} g mol⁻¹`
@@ -376,7 +377,7 @@ function inputWorkingLine(reactant, moles, sigFigs) {
   if (!Number.isFinite(moles)) return inputDetailLine(reactant)
   const molesText = `${formatValue(moles, sigFigs)} mol`
   if (reactant.inputType === 'mass') return `${reactant.mass ?? '?'} ÷ ${reactant.molarMass ?? '?'} = ${molesText}`
-  if (reactant.inputType === 'solution') return `${reactant.concentration ?? '?'} × ${reactant.solutionVolume ?? '?'} ÷ 1000 = ${molesText}`
+  if (reactant.inputType === 'solution') return `${reactant.concentration ?? '?'} × (${reactant.solutionVolume ?? '?'} × 10⁻³) = ${molesText}`
   if (reactant.inputType === 'gas') return `${reactant.gasVolume ?? '?'} ÷ 24.0 = ${molesText}`
   if (reactant.inputType === 'particles') return `${reactant.particles ?? '?'} ÷ Nₐ = ${molesText}`
   if (reactant.inputType === 'pure-volume') return `${reactant.pureVolume ?? '?'} × ${reactant.density ?? '?'} ÷ ${reactant.molarMass ?? '?'} = ${molesText}`
@@ -405,7 +406,7 @@ function productAnswerWorkingLine(result, values, sigFigs) {
   if (values.productOutputType === 'gas') return `${productMoles} mol × 24.0 = ${answer}`
   if (values.productOutputType === 'solution') {
     const finalVolume = result.answer.finalVolume || automaticSolutionVolume(values)
-    return `${productMoles} mol ÷ (${finalVolume} ÷ 1000) = ${answer}`
+    return `${productMoles} mol ÷ (${finalVolume} × 10⁻³) = ${answer}`
   }
   if (values.productOutputType === 'particles') return `${productMoles} mol × Nₐ = ${answer}`
   if (values.productOutputType === 'pure-volume') return `${productMoles} mol × ${values.productMolarMass} ÷ ${values.productDensity} = ${answer}`
@@ -466,7 +467,7 @@ function productToAnswer(productMoles, values) {
           value: productMoles / (finalVolume / 1000),
           unit: 'mol dm⁻³',
           line: `c = n ÷ Vₜₒₜₐₗ`,
-          detail: `${productMoles} mol ÷ (${finalVolume} cm³ ÷ 1000)`,
+          detail: `${productMoles} mol ÷ (${finalVolume} cm³ × 10⁻³)`,
           finalVolume,
         }
       : null
@@ -939,6 +940,12 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
           </button>
         ))}
       </div>
+
+      <FormulaStrip items={[
+        { label: 'Reactants to moles', value: `${values.aFormula}: ${reactantFormulaLine(getReactant(values, 'a'))}  |  ${values.bFormula}: ${reactantFormulaLine(getReactant(values, 'b'))}`, tone: 'formula' },
+        { label: 'Limiting check', value: 'reaction capacity = moles ÷ coefficient', tone: 'conversion' },
+        { label: 'Product answer', value: result?.answer?.line || 'answer route appears after product moles', tone: 'substitution' },
+      ]} />
 
       <div className="stoich-sim-controls">
         <button type="button" onClick={() => setIsPlaying(previous => !previous)}>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
 
 const molarGasVolume = 24.0
@@ -114,14 +115,14 @@ function conversionText(unit, substance) {
   if (unit === 'mol') return 'Use moles directly'
   if (unit === 'g') return `n = mass ÷ Mᵣ (${substance.molarMass} g mol⁻¹)`
   if (unit === 'gas') return 'n = gas volume ÷ 24.0'
-  return 'n = concentration × volume in dm³'
+  return 'n = concentration × volume(cm³) × 10⁻³'
 }
 
 function outputText(unit, substance) {
   if (unit === 'mol') return 'Keep product moles'
   if (unit === 'g') return `mass = n × Mᵣ (${substance.molarMass} g mol⁻¹)`
   if (unit === 'gas') return 'gas volume = n × 24.0'
-  return 'concentration = n ÷ volume in dm³'
+  return 'concentration = n ÷ (volume(cm³) × 10⁻³)'
 }
 
 function isSolutionSubstance(substance) {
@@ -209,6 +210,12 @@ export default function LimitingReagentTool({ standalone = false }) {
           </button>
         ))}
       </div>
+
+      <FormulaStrip items={[
+        { label: 'Limiting check', value: 'reaction capacity = reactant moles ÷ coefficient', tone: 'formula' },
+        { label: 'Reactant conversion', value: activeExample.reactants.map(reactant => conversionText(reactantInputs[reactant.id]?.unit || 'mol', reactant)).join('  |  '), tone: 'conversion' },
+        { label: 'Product moles', value: result.limiting ? `${formatValue(result.limiting.reactionExtent, sigFigs)} × ${product.coefficient} = ${formatValue(result.productMoles, sigFigs)} mol` : 'Enter valid reactant measurements', tone: 'substitution' },
+      ]} />
 
       <div className="stoich-tool-layout">
         <div className="calculator-input-panel">

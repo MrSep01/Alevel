@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 import { formatFormula, toSuperscript } from './chemistryHelpers.js'
 
 const halfCells = [
@@ -205,6 +206,12 @@ export default function ElectrochemicalCellCalculator() {
         <p className="eyebrow">Electrochemical cell simulator</p>
         <span className="calculator-badge">Eᶿcell = Eᶿcathode - Eᶿanode</span>
       </div>
+
+      <FormulaStrip items={[
+        { label: 'Formula', value: 'Eᶿcell = Eᶿcathode − Eᶿanode', tone: 'formula' },
+        { label: 'Cell direction', value: 'higher Eᶿ is reduction at the cathode', tone: 'conversion' },
+        { label: 'Substitution', value: cellData ? `${formatPotential(cellData.cathodePotential)} − (${formatPotential(cellData.anodePotential)})` : 'Choose valid half-cells', tone: 'substitution' },
+      ]} />
 
       <div className="electrochem-layout">
         <div className="calculator-input-panel electrochem-controls">

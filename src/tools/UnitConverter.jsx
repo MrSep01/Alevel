@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 
 const conversions = {
-  cm3ToDm3: { label: 'cm³ to dm³', from: 'cm³', to: 'dm³', convert: value => value / 1000 },
-  dm3ToCm3: { label: 'dm³ to cm³', from: 'dm³', to: 'cm³', convert: value => value * 1000 },
-  kjToJ: { label: 'kJ to J', from: 'kJ', to: 'J', convert: value => value * 1000 },
-  jToKj: { label: 'J to kJ', from: 'J', to: 'kJ', convert: value => value / 1000 },
-  gToKg: { label: 'g to kg', from: 'g', to: 'kg', convert: value => value / 1000 },
-  kgToG: { label: 'kg to g', from: 'kg', to: 'g', convert: value => value * 1000 },
+  cm3ToDm3: { label: 'cm³ to dm³', from: 'cm³', to: 'dm³', factor: '10⁻³', convert: value => value / 1000 },
+  dm3ToCm3: { label: 'dm³ to cm³', from: 'dm³', to: 'cm³', factor: '10³', convert: value => value * 1000 },
+  kjToJ: { label: 'kJ to J', from: 'kJ', to: 'J', factor: '10³', convert: value => value * 1000 },
+  jToKj: { label: 'J to kJ', from: 'J', to: 'kJ', factor: '10⁻³', convert: value => value / 1000 },
+  gToKg: { label: 'g to kg', from: 'g', to: 'kg', factor: '10⁻³', convert: value => value / 1000 },
+  kgToG: { label: 'kg to g', from: 'kg', to: 'g', factor: '10³', convert: value => value * 1000 },
 }
 
 export default function UnitConverter() {
@@ -20,6 +21,10 @@ export default function UnitConverter() {
   return (
     <section className="calculator-app">
       <div className="calculator-topline"><p className="eyebrow">Unit converter</p><span className="calculator-badge">chemistry units</span></div>
+      <FormulaStrip items={[
+        { label: 'Conversion factor', value: `${conversion.to} = ${conversion.from} × ${conversion.factor}`, tone: 'conversion' },
+        { label: 'Substitution', value: `${value} ${conversion.from} × ${conversion.factor}`, tone: 'substitution' },
+      ]} />
       <div className="calculator-body">
         <div className="calculator-input-panel">
           <label className="calculator-field"><span>Conversion</span><div><select value={mode} onChange={event => setMode(event.target.value)}>{Object.entries(conversions).map(([id, item]) => <option key={id} value={id}>{item.label}</option>)}</select><b>type</b></div></label>

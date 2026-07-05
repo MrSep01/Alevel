@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import FormulaStrip from './FormulaStrip.jsx'
 
 const modes = [
   { id: 'strong-acid', label: 'Strong acid' },
@@ -21,10 +22,18 @@ export default function PHCalculator() {
     if (mode === 'weak-acid' && c > 0 && Number(ka) > 0) return { pH: -Math.log10(Math.sqrt(Number(ka) * c)), working: '[H⁺] ≈ √(Kₐ × c)', substitution: `-log₁₀√(${ka} × ${concentration})` }
     if (mode === 'buffer' && Number(ka) > 0 && Number(acidMoles) > 0 && Number(saltMoles) > 0) {
       const pKa = -Math.log10(Number(ka))
-      return { pH: pKa + Math.log10(Number(saltMoles) / Number(acidMoles)), working: 'pH = pKₐ + log₁₀(salt / acid)', substitution: `${pKa.toFixed(2)} + log₁₀(${saltMoles} ÷ ${acidMoles})` }
+      return { pH: pKa + Math.log10(Number(saltMoles) / Number(acidMoles)), working: 'pH = pKₐ + log₁₀(salt ÷ acid)', substitution: `${pKa.toFixed(2)} + log₁₀(${saltMoles} ÷ ${acidMoles})` }
     }
     return null
   }, [acidMoles, concentration, ka, mode, saltMoles])
+
+  const formulaItems = result ? [
+    { label: 'Formula', value: result.working, tone: 'formula' },
+    ...(mode === 'buffer' ? [{ label: 'Ratio', value: 'salt moles ÷ acid moles', tone: 'conversion' }] : []),
+    { label: 'Substitution', value: result.substitution, tone: 'substitution' },
+  ] : [
+    { label: 'Formula', value: modes.find(item => item.id === mode)?.label, tone: 'formula' },
+  ]
 
   return (
     <section className="calculator-app">
@@ -36,6 +45,8 @@ export default function PHCalculator() {
       <div className="calculator-mode-grid">
         {modes.map(item => <button className={mode === item.id ? 'active' : ''} key={item.id} onClick={() => setMode(item.id)} type="button">{item.label}</button>)}
       </div>
+
+      <FormulaStrip items={formulaItems} />
 
       <div className="calculator-body">
         <div className="calculator-input-panel">

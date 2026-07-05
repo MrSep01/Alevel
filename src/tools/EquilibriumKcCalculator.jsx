@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 
 function toSuperscript(value) {
   const map = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹', '.': '·' }
@@ -33,6 +34,11 @@ export default function EquilibriumKcCalculator() {
   return (
     <section className="calculator-app">
       <div className="calculator-topline"><p className="eyebrow">Kc calculator</p><span className="calculator-badge">products ÷ reactants</span></div>
+      <FormulaStrip items={[
+        { label: 'Formula', value: 'Kc = [C]ᶜ[D]ᵈ ÷ [A]ᵃ[B]ᵇ', tone: 'formula' },
+        { label: 'Products', value: `[C]${cPower === '1' ? '' : toSuperscript(cPower)} × [D]${dPower === '1' ? '' : toSuperscript(dPower)}`, tone: 'conversion' },
+        { label: 'Reactants', value: `[A]${aPower === '1' ? '' : toSuperscript(aPower)} × [B]${bPower === '1' ? '' : toSuperscript(bPower)}`, tone: 'substitution' },
+      ]} />
       <div className="tool-summary-grid">
         {[
           ['[A]', a, setA, aPower, setAPower],

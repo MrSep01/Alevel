@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import FormulaStrip from './FormulaStrip.jsx'
 import { formatToSigFigs } from './significantFigures.js'
 
 export default function TitrationSolver() {
@@ -30,6 +31,12 @@ export default function TitrationSolver() {
         <span className="calculator-badge">cV ratio</span>
       </div>
 
+      <FormulaStrip items={[
+        { label: 'Formula', value: 'n = c × V', tone: 'formula' },
+        { label: 'Unit conversion', value: 'V(dm³) = V(cm³) × 10⁻³', tone: 'conversion' },
+        { label: 'Mole ratio', value: `n(unknown) = n(known) × ${unknownRatio} ÷ ${knownRatio}`, tone: 'substitution' },
+      ]} />
+
       <div className="calculator-body">
         <div className="calculator-input-panel">
           <label className="calculator-field"><span>Known concentration</span><div><input type="number" step="any" value={knownConcentration} onChange={event => setKnownConcentration(event.target.value)} /><b>mol dm⁻³</b></div></label>
@@ -49,8 +56,8 @@ export default function TitrationSolver() {
         <div className="tool-logic-grid">
           <article className="tool-logic-card">
             <span>1. Known moles</span>
-            <strong>{knownConcentration} × {knownVolume} ÷ 1000 = {result.knownMoles.toPrecision(3)} mol</strong>
-            <small>Convert cm³ to dm³ before using cV.</small>
+            <strong>{knownConcentration} × ({knownVolume} × 10⁻³) = {result.knownMoles.toPrecision(3)} mol</strong>
+            <small>Convert cm³ to dm³ using × 10⁻³ before using cV.</small>
           </article>
           <article className="tool-logic-card">
             <span>2. Mole ratio</span>
@@ -59,7 +66,7 @@ export default function TitrationSolver() {
           </article>
           <article className="tool-logic-card">
             <span>3. Unknown concentration</span>
-            <strong>{result.unknownMoles.toPrecision(3)} ÷ ({unknownVolume} ÷ 1000) = {answer}</strong>
+            <strong>{result.unknownMoles.toPrecision(3)} ÷ ({unknownVolume} × 10⁻³) = {answer}</strong>
             <small>Final concentration includes the unit.</small>
           </article>
         </div>
