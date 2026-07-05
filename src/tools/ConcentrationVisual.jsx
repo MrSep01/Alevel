@@ -135,34 +135,11 @@ function BeakerScene({ modeId, values }) {
       <rect className="lab-bench-plane" x="0" y="245" width="700" height="115" />
       <ellipse className="lab-bench-shadow deep" cx="350" cy="312" rx="202" ry="25" />
 
-      <g className="lab-real-pipette" transform="translate(88 48) rotate(27)">
-        <path className="lab-pipette-glass" d="M0 15 L150 15" />
-        <ellipse className="lab-pipette-glass-bulb" cx="46" cy="15" rx="25" ry="12" />
-        <line className="lab-pipette-fluid" x1="64" x2="136" y1="15" y2="15" />
-      </g>
-      <path className="lab-water-stream fine" d="M205 125 C214 146 219 163 224 184" />
-      <path className="lab-callout-line quiet" d="M158 72 L214 151" />
-      <Callout x="78" y="46" label="Solvent" tone="blue" width="82" />
-
-      <g className="lab-real-boat">
-        <path className="lab-watch-glass realistic" d="M514 86 C554 66 626 76 656 106 C612 131 546 124 514 86 Z" />
-        {[0, 1, 2, 3, 4, 5, 6].map(index => (
-          <circle
-            className="lab-powder-grain"
-            cx={558 + (index % 4) * 15}
-            cy={91 + Math.floor(index / 4) * 13}
-            key={index}
-            r={2.6 + (index % 2) * 0.8}
-          />
-        ))}
-      </g>
-      <path className="lab-callout-line amber quiet" d="M590 68 L578 96" />
-      <Callout x="560" y="36" label="Solute" tone="amber" width="76" />
-
       <g className="lab-beaker realistic" filter="url(#softGlassShadow)">
         <g clipPath="url(#beakerInteriorClip)">
           <path className="lab-liquid realistic" d={`M206 ${solutionTop} C274 ${solutionTop - 4} 424 ${solutionTop + 5} 494 ${solutionTop} L486 318 L214 318 Z`} />
           <path className="lab-liquid-reflection" d={`M230 ${solutionTop + 10} C286 ${solutionTop - 2} 416 ${solutionTop + 8} 466 ${solutionTop + 2} L452 278 C404 292 294 292 248 278 Z`} />
+          <path className="lab-swirl" d={`M282 ${solutionTop + 54} C314 ${solutionTop + 40} 382 ${solutionTop + 42} 410 ${solutionTop + 58}`} />
           {particlePositions.map(([x, y], index) => (
             <circle
               className="lab-particle subtle"
@@ -193,6 +170,32 @@ function BeakerScene({ modeId, values }) {
           />
         ))}
       </g>
+
+      <g className="lab-weighing-station" transform="translate(60 274)">
+        <path className="lab-spatula" d="M18 -26 L126 -54" />
+        <path className="lab-spatula-scoop" d="M116 -58 C132 -66 152 -60 162 -48 C146 -42 128 -44 116 -58 Z" />
+        <path className="lab-weigh-boat" d="M0 18 C30 -3 104 -3 134 18 C102 39 32 39 0 18 Z" />
+        {[0, 1, 2, 3, 4, 5, 6, 7].map(index => (
+          <circle
+            className="lab-powder-grain"
+            cx={43 + (index % 4) * 13}
+            cy={13 + Math.floor(index / 4) * 7}
+            key={index}
+            r={2.4 + (index % 2) * 0.5}
+          />
+        ))}
+      </g>
+      <path className="lab-callout-line amber quiet" d="M128 214 L124 286" />
+      <Callout x="72" y="188" label="Solute weighed" tone="amber" width="122" />
+
+      <g className="lab-solvent-bottle" transform="translate(542 218)">
+        <path className="lab-bottle-body" d="M28 8 L64 8 C80 22 84 70 70 96 L24 96 C10 70 12 22 28 8 Z" />
+        <path className="lab-bottle-water" d="M18 58 C34 50 60 50 76 58 L70 96 L24 96 Z" />
+        <rect className="lab-bottle-cap" x="34" y="-3" width="24" height="13" rx="3" />
+        <path className="lab-bottle-nozzle" d="M54 2 C72 -14 96 -16 118 -8" />
+      </g>
+      <path className="lab-callout-line quiet" d="M574 198 L578 238" />
+      <Callout x="518" y="168" label="Solvent measured" tone="blue" width="128" />
 
       <path className="lab-callout-line green quiet" d={`M148 256 L244 ${Math.max(solutionTop + 66, 228)}`} />
       <Callout x="96" y="244" label="Solution" tone="green" width="86" />

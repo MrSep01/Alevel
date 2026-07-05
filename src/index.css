@@ -1585,6 +1585,63 @@ p {
   stroke-width: 3.2;
 }
 
+.lab-swirl {
+  fill: none;
+  stroke: rgba(18, 111, 177, 0.28);
+  stroke-linecap: round;
+  stroke-width: 2.2;
+  stroke-dasharray: 10 8;
+  animation: lab-swirl-drift 3.6s ease-in-out infinite;
+}
+
+.lab-weigh-boat {
+  fill: rgba(255, 255, 255, 0.74);
+  stroke: #8a94a6;
+  stroke-width: 1.7;
+}
+
+.lab-spatula {
+  fill: none;
+  stroke: #64748b;
+  stroke-linecap: round;
+  stroke-width: 4;
+}
+
+.lab-spatula-scoop {
+  fill: #d7dee8;
+  stroke: #64748b;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.lab-solvent-bottle {
+  opacity: 0.96;
+}
+
+.lab-bottle-body {
+  fill: rgba(255, 255, 255, 0.42);
+  stroke: #6d7b91;
+  stroke-linejoin: round;
+  stroke-width: 1.9;
+}
+
+.lab-bottle-water {
+  fill: rgba(116, 207, 239, 0.42);
+}
+
+.lab-bottle-cap {
+  fill: #d7dee8;
+  stroke: #6d7b91;
+  stroke-width: 1.4;
+}
+
+.lab-bottle-nozzle {
+  fill: none;
+  stroke: #6d7b91;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
 .lab-glass.realistic {
   fill: url(#labGlassGradient);
   stroke: #5f6d82;
@@ -1880,6 +1937,17 @@ p {
   }
   50% {
     opacity: 1;
+  }
+}
+
+@keyframes lab-swirl-drift {
+  0%, 100% {
+    stroke-dashoffset: 0;
+    opacity: 0.18;
+  }
+  50% {
+    stroke-dashoffset: -18;
+    opacity: 0.38;
   }
 }
 
