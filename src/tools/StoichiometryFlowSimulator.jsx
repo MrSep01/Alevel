@@ -364,6 +364,10 @@ function inputCalculationLine(reactant) {
   return `n is given directly`
 }
 
+function reactantFormulaLine(reactant) {
+  return inputCalculationLine(reactant)
+}
+
 function inputDetailLine(reactant) {
   if (reactant.inputType === 'mass') return `${reactant.mass ?? '?'} g ÷ ${reactant.molarMass ?? '?'} g mol⁻¹`
   if (reactant.inputType === 'solution') return `${reactant.concentration ?? '?'} mol dm⁻³ × (${reactant.solutionVolume ?? '?'} cm³ × 10⁻³)`
