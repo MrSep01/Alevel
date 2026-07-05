@@ -893,7 +893,6 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
             <div className="stoich-reaction-arrow-card">
               <span>Balanced reaction</span>
               <strong>→</strong>
-              <small>{values.equation}</small>
             </div>
 
             <div className="stoich-reaction-side products">
@@ -904,7 +903,6 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
               <small>Target product: {formatReactionTerm(values.productCoefficient, values.productFormula)}</small>
             </div>
           </div>
-          <p>{scenario.description}</p>
         </div>
 
         <div className="stoich-visual-map" aria-label="Visual stoichiometry map with limiting reactant and excess">
