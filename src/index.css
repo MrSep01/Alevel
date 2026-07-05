@@ -1299,7 +1299,7 @@ p {
 
 .concentration-svg {
   width: 100%;
-  max-width: 660px;
+  max-width: 700px;
   min-height: 260px;
 }
 
@@ -1314,6 +1314,15 @@ p {
 .lab-bench-shadow {
   fill: #cfd9e3;
   opacity: 0.46;
+}
+
+.lab-bench-plane {
+  fill: url(#benchGradient);
+}
+
+.lab-bench-shadow.deep {
+  fill: #b9c5d1;
+  opacity: 0.36;
 }
 
 .lab-glass,
@@ -1365,6 +1374,14 @@ p {
   opacity: 0.84;
 }
 
+.lab-liquid.realistic {
+  opacity: 1;
+}
+
+.lab-liquid-reflection {
+  fill: url(#labLiquidReflection);
+}
+
 .lab-liquid.compact,
 .lab-liquid.flask-fill {
   fill: url(#dilutionFill);
@@ -1384,6 +1401,11 @@ p {
   stroke-width: 2.4;
 }
 
+.lab-meniscus.realistic {
+  stroke: rgba(18, 111, 177, 0.82);
+  stroke-width: 2;
+}
+
 .lab-meniscus.endpoint-line {
   stroke: #c45a95;
 }
@@ -1392,6 +1414,12 @@ p {
   stroke: #64748b;
   stroke-width: 1.2;
   opacity: 0.62;
+}
+
+.lab-graduation.realistic {
+  stroke: #64748b;
+  stroke-width: 1.15;
+  opacity: 0.5;
 }
 
 .lab-calibration-mark {
@@ -1413,6 +1441,12 @@ p {
   animation: lab-stream-flow 1.55s linear infinite;
 }
 
+.lab-water-stream.fine {
+  stroke-width: 3.2;
+  stroke-dasharray: 8 8;
+  opacity: 0.78;
+}
+
 .lab-transfer-flow {
   stroke: rgba(107, 44, 178, 0.58);
   stroke-width: 4;
@@ -1425,6 +1459,19 @@ p {
   fill: rgba(255, 255, 255, 0.56);
   stroke: #98a2b3;
   stroke-width: 1.8;
+}
+
+.lab-watch-glass.realistic {
+  fill: rgba(255, 255, 255, 0.34);
+  stroke: #8a94a6;
+  stroke-width: 1.6;
+}
+
+.lab-powder-grain {
+  fill: #dda232;
+  stroke: #8a5b13;
+  stroke-width: 0.7;
+  opacity: 0.9;
 }
 
 .lab-crystal {
@@ -1446,6 +1493,13 @@ p {
   animation: lab-particle-drift 4.4s ease-in-out infinite;
 }
 
+.lab-particle.subtle {
+  fill: #7354c7;
+  stroke: rgba(255, 255, 255, 0.62);
+  stroke-width: 0.8;
+  animation-duration: 5.8s;
+}
+
 .lab-particle.diluted {
   fill: #6b2cb2;
   opacity: 0.48;
@@ -1461,6 +1515,12 @@ p {
   vector-effect: non-scaling-stroke;
 }
 
+.lab-callout-line.quiet {
+  stroke-dasharray: 4 5;
+  stroke-width: 1;
+  opacity: 0.58;
+}
+
 .lab-callout-line.amber {
   stroke: #986a14;
 }
@@ -1474,36 +1534,98 @@ p {
 }
 
 .lab-callout-box {
-  fill: rgba(255, 255, 255, 0.92);
+  fill: rgba(255, 255, 255, 0.76);
   stroke: #cbd5e1;
-  stroke-width: 1.2;
+  stroke-width: 1;
 }
 
 .lab-callout-text {
   fill: #344054;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 950;
   letter-spacing: 0.01em;
 }
 
 .lab-callout.blue .lab-callout-box {
-  fill: #eef8ff;
+  fill: rgba(238, 248, 255, 0.78);
   stroke: #9bd7ff;
 }
 
 .lab-callout.amber .lab-callout-box {
-  fill: #fff8ea;
+  fill: rgba(255, 248, 234, 0.78);
   stroke: #f6d58f;
 }
 
 .lab-callout.green .lab-callout-box {
-  fill: #f2fbf6;
+  fill: rgba(242, 251, 246, 0.78);
   stroke: #9fe5c8;
 }
 
 .lab-callout.purple .lab-callout-box {
-  fill: #f8f2ff;
+  fill: rgba(248, 242, 255, 0.78);
   stroke: #d8c1f5;
+}
+
+.lab-pipette-glass {
+  fill: none;
+  stroke: rgba(94, 107, 128, 0.86);
+  stroke-linecap: round;
+  stroke-width: 5;
+}
+
+.lab-pipette-glass-bulb {
+  fill: rgba(255, 255, 255, 0.28);
+  stroke: rgba(94, 107, 128, 0.86);
+  stroke-width: 2;
+}
+
+.lab-pipette-fluid {
+  stroke: rgba(67, 174, 218, 0.76);
+  stroke-linecap: round;
+  stroke-width: 3.2;
+}
+
+.lab-glass.realistic {
+  fill: url(#labGlassGradient);
+  stroke: #5f6d82;
+  stroke-width: 2.3;
+}
+
+.lab-back-rim,
+.lab-front-rim,
+.lab-bottom-ellipse {
+  fill: none;
+  stroke: #5f6d82;
+  stroke-linecap: round;
+  stroke-width: 1.9;
+  vector-effect: non-scaling-stroke;
+}
+
+.lab-back-rim {
+  opacity: 0.8;
+}
+
+.lab-front-rim {
+  opacity: 0.42;
+}
+
+.lab-bottom-ellipse {
+  opacity: 0.68;
+}
+
+.lab-spout.realistic {
+  stroke: #5f6d82;
+  stroke-width: 2;
+}
+
+.lab-highlight.realistic {
+  stroke: rgba(255, 255, 255, 0.72);
+  stroke-width: 4.2;
+}
+
+.lab-highlight.thin.realistic {
+  stroke: rgba(255, 255, 255, 0.52);
+  stroke-width: 3.2;
 }
 
 .lab-pipette-line {

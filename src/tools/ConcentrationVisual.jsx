@@ -98,76 +98,106 @@ function Callout({ x, y, label, tone = 'blue', width = 98 }) {
 
 function BeakerScene({ modeId, values }) {
   const level = solutionLevel(modeId, values)
-  const solutionTop = 278 - (level * 150)
+  const solutionTop = 278 - (level * 142)
   const opacity = particleOpacity(modeId)
 
   return (
-    <svg className="concentration-svg lab-svg" viewBox="0 0 620 340" role="img" aria-label="Realistic beaker model showing solute, solvent, solution, and meniscus">
+    <svg className="concentration-svg lab-svg realistic-beaker-svg" viewBox="0 0 700 360" role="img" aria-label="Realistic beaker model showing solute, solvent, solution, and meniscus">
       <defs>
         <linearGradient id="labSolutionGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#b5ecff" stopOpacity="0.92" />
-          <stop offset="100%" stopColor="#4cb7df" stopOpacity="0.82" />
+          <stop offset="0%" stopColor="#d9f6ff" stopOpacity="0.56" />
+          <stop offset="48%" stopColor="#9ce4fa" stopOpacity="0.50" />
+          <stop offset="100%" stopColor="#45acd6" stopOpacity="0.56" />
         </linearGradient>
         <linearGradient id="labGlassGradient" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.62" />
-          <stop offset="48%" stopColor="#f8fbff" stopOpacity="0.22" />
-          <stop offset="100%" stopColor="#dbeafe" stopOpacity="0.36" />
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.72" />
+          <stop offset="38%" stopColor="#f8fbff" stopOpacity="0.18" />
+          <stop offset="72%" stopColor="#dbeafe" stopOpacity="0.16" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.42" />
         </linearGradient>
+        <radialGradient id="labLiquidReflection" cx="50%" cy="0%" r="70%">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.48" />
+          <stop offset="46%" stopColor="#ffffff" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="benchGradient" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#f8fafc" />
+          <stop offset="100%" stopColor="#edf2f7" />
+        </linearGradient>
+        <filter id="softGlassShadow" x="-20%" y="-20%" width="140%" height="145%">
+          <feDropShadow dx="0" dy="12" floodColor="#64748b" floodOpacity="0.16" stdDeviation="10" />
+        </filter>
+        <clipPath id="beakerInteriorClip">
+          <path d="M210 86 C276 74 424 74 490 86 L462 294 C414 314 286 314 238 294 Z" />
+        </clipPath>
       </defs>
 
-      <ellipse className="lab-bench-shadow" cx="308" cy="294" rx="154" ry="18" />
+      <rect className="lab-bench-plane" x="0" y="245" width="700" height="115" />
+      <ellipse className="lab-bench-shadow deep" cx="350" cy="312" rx="202" ry="25" />
 
-      <g className="lab-pourer">
-        <path className="lab-glass-soft" d="M76 44 L122 66 L116 84 L66 60 Z" />
-        <path className="lab-glass-line" d="M116 78 C146 92 164 116 174 151" />
-        <path className="lab-water-stream" d="M126 78 C150 104 164 124 174 154" />
+      <g className="lab-real-pipette" transform="translate(88 48) rotate(27)">
+        <path className="lab-pipette-glass" d="M0 15 L150 15" />
+        <ellipse className="lab-pipette-glass-bulb" cx="46" cy="15" rx="25" ry="12" />
+        <line className="lab-pipette-fluid" x1="64" x2="136" y1="15" y2="15" />
       </g>
-      <path className="lab-callout-line" d="M128 56 L178 126" />
-      <Callout x="34" y="26" label="Solvent" tone="blue" width="88" />
+      <path className="lab-water-stream fine" d="M205 125 C214 146 219 163 224 184" />
+      <path className="lab-callout-line quiet" d="M158 72 L214 151" />
+      <Callout x="78" y="46" label="Solvent" tone="blue" width="82" />
 
-      <g className="lab-powder-boat">
-        <path className="lab-watch-glass" d="M412 72 C442 58 492 63 520 82 C490 100 438 98 412 72 Z" />
-        <rect className="lab-crystal" x="446" y="64" width="10" height="10" rx="2" transform="rotate(12 451 69)" />
-        <rect className="lab-crystal" x="468" y="74" width="9" height="9" rx="2" transform="rotate(-10 472 78)" />
-        <rect className="lab-crystal muted" x="430" y="78" width="8" height="8" rx="2" transform="rotate(8 434 82)" />
-      </g>
-      <path className="lab-callout-line amber" d="M496 60 L454 76" />
-      <Callout x="498" y="34" label="Solute" tone="amber" width="80" />
-
-      <g className="lab-beaker">
-        <path className="lab-glass" d="M170 75 C222 68 346 68 398 75 L368 282 C326 298 242 298 198 282 Z" />
-        <path className="lab-rim" d="M170 75 C222 66 346 66 398 75" />
-        <path className="lab-spout" d="M398 75 C414 78 414 88 396 93" />
-        <path className="lab-liquid" d={`M184 ${solutionTop} C226 ${solutionTop - 7} 342 ${solutionTop + 7} 382 ${solutionTop} L368 282 C326 298 242 298 198 282 Z`} />
-        <path className="lab-meniscus" d={`M184 ${solutionTop} C226 ${solutionTop - 7} 342 ${solutionTop + 7} 382 ${solutionTop}`} />
-        <path className="lab-highlight" d="M204 93 L214 270" />
-        <path className="lab-highlight thin" d="M360 96 L344 272" />
+      <g className="lab-real-boat">
+        <path className="lab-watch-glass realistic" d="M514 86 C554 66 626 76 656 106 C612 131 546 124 514 86 Z" />
         {[0, 1, 2, 3, 4, 5, 6].map(index => (
-          <line
-            className="lab-graduation"
+          <circle
+            className="lab-powder-grain"
+            cx={558 + (index % 4) * 15}
+            cy={91 + Math.floor(index / 4) * 13}
             key={index}
-            x1={338}
-            x2={index % 2 ? 362 : 374}
-            y1={112 + index * 23}
-            y2={112 + index * 23}
+            r={2.6 + (index % 2) * 0.8}
           />
         ))}
-        {particlePositions.map(([x, y], index) => (
-          <circle
-            className="lab-particle"
-            cx={x}
-            cy={Math.max(solutionTop + 16, y)}
-            key={`${x}-${y}`}
-            r={3.3 + (index % 3) * 0.8}
-            style={{ animationDelay: `${index * 0.16}s`, opacity }}
+      </g>
+      <path className="lab-callout-line amber quiet" d="M590 68 L578 96" />
+      <Callout x="560" y="36" label="Solute" tone="amber" width="76" />
+
+      <g className="lab-beaker realistic" filter="url(#softGlassShadow)">
+        <g clipPath="url(#beakerInteriorClip)">
+          <path className="lab-liquid realistic" d={`M206 ${solutionTop} C274 ${solutionTop - 4} 424 ${solutionTop + 5} 494 ${solutionTop} L486 318 L214 318 Z`} />
+          <path className="lab-liquid-reflection" d={`M230 ${solutionTop + 10} C286 ${solutionTop - 2} 416 ${solutionTop + 8} 466 ${solutionTop + 2} L452 278 C404 292 294 292 248 278 Z`} />
+          {particlePositions.map(([x, y], index) => (
+            <circle
+              className="lab-particle subtle"
+              cx={x + 64}
+              cy={Math.max(solutionTop + 20, y + 4)}
+              key={`${x}-${y}`}
+              r={1.8 + (index % 3) * 0.4}
+              style={{ animationDelay: `${index * 0.18}s`, opacity: opacity * 0.36 }}
+            />
+          ))}
+        </g>
+        <path className="lab-glass realistic" d="M210 86 C276 74 424 74 490 86 L462 294 C414 314 286 314 238 294 Z" />
+        <path className="lab-back-rim" d="M210 86 C276 74 424 74 490 86" />
+        <path className="lab-front-rim" d="M210 86 C278 100 422 100 490 86" />
+        <path className="lab-spout realistic" d="M489 86 C514 87 516 111 486 112" />
+        <path className="lab-bottom-ellipse" d="M238 294 C286 313 414 313 462 294" />
+        <path className="lab-meniscus realistic" d={`M206 ${solutionTop} C274 ${solutionTop - 4} 424 ${solutionTop + 5} 494 ${solutionTop}`} />
+        <path className="lab-highlight realistic" d="M250 108 C248 158 246 219 252 282" />
+        <path className="lab-highlight thin realistic" d="M438 112 C436 168 430 226 420 282" />
+        {[0, 1, 2, 3, 4, 5].map(index => (
+          <line
+            className="lab-graduation realistic"
+            key={index}
+            x1={414}
+            x2={index % 2 ? 446 : 462}
+            y1={122 + index * 26}
+            y2={122 + index * 26}
           />
         ))}
       </g>
 
-      <path className="lab-callout-line green" d={`M88 238 L206 ${Math.max(solutionTop + 58, 218)}`} />
-      <Callout x="44" y="222" label="Solution" tone="green" width="90" />
-      <path className="lab-callout-line purple" d={`M470 ${Math.max(solutionTop - 14, 95)} L380 ${solutionTop}`} />
-      <Callout x="468" y={Math.max(solutionTop - 30, 78)} label="Meniscus" tone="purple" width="98" />
+      <path className="lab-callout-line green quiet" d={`M148 256 L244 ${Math.max(solutionTop + 66, 228)}`} />
+      <Callout x="96" y="244" label="Solution" tone="green" width="86" />
+      <path className="lab-callout-line purple quiet" d={`M584 ${Math.max(solutionTop - 16, 112)} L494 ${solutionTop}`} />
+      <Callout x="582" y={Math.max(solutionTop - 30, 96)} label="Meniscus" tone="purple" width="90" />
     </svg>
   )
 }
