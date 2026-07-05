@@ -2,6 +2,7 @@ export function countSignificantFigures(input) {
   const text = String(input).trim().toLowerCase()
   if (!text || Number(text) === 0 || Number.isNaN(Number(text))) return null
 
+  const usesScientificNotation = text.includes('e')
   const [coefficient] = text.split('e')
   const normalized = coefficient.replace(/^[-+]/, '')
 
@@ -9,6 +10,10 @@ export function countSignificantFigures(input) {
     const digits = normalized.replace('.', '')
     const significant = digits.replace(/^0+/, '')
     return significant.length || null
+  }
+
+  if (!usesScientificNotation && /0$/.test(normalized)) {
+    return null
   }
 
   const significant = normalized.replace(/^0+/, '').replace(/0+$/, '')
