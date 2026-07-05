@@ -117,6 +117,408 @@ function EmbeddedSlide({ slide, onRemove }) {
   )
 }
 
+function ChoiceCheck({ title, subtitle, items, mode = 'practice' }) {
+  const [answers, setAnswers] = useState({})
+  const [submitted, setSubmitted] = useState(false)
+  const answeredCount = items.filter(item => answers[item.id]).length
+  const score = items.reduce((total, item) => total + (answers[item.id] === item.answer ? 1 : 0), 0)
+  const showFeedback = mode === 'practice' || submitted
+
+  function selectAnswer(itemId, option) {
+    setAnswers(previous => ({ ...previous, [itemId]: option }))
+    if (mode === 'practice') setSubmitted(false)
+  }
+
+  return (
+    <section className={`web-lesson-card choice-check ${mode}`}>
+      <div className="lesson-section-heading">
+        <p className="eyebrow">{mode === 'exit' ? 'Exit ticket quiz' : 'Checking prior knowledge'}</p>
+        <h3>{title}</h3>
+        <p>{subtitle}</p>
+      </div>
+
+      <div className="choice-question-list">
+        {items.map((item, index) => {
+          const selected = answers[item.id]
+          const isCorrect = selected === item.answer
+          return (
+            <article className="choice-question" key={item.id}>
+              <span>{index + 1}</span>
+              <strong>{item.prompt}</strong>
+              <div className="choice-option-grid">
+                {item.options.map(option => (
+                  <button
+                    className={`${selected === option ? 'selected' : ''} ${showFeedback && selected === option ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
+                    key={option}
+                    type="button"
+                    onClick={() => selectAnswer(item.id, option)}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+              {showFeedback && selected && (
+                <p className={isCorrect ? 'feedback good' : 'feedback needs-work'}>
+                  {isCorrect ? 'Correct.' : `Review: ${item.feedback || item.explanation}`}
+                </p>
+              )}
+            </article>
+          )
+        })}
+      </div>
+
+      {mode === 'exit' ? (
+        <div className="exit-ticket-actions">
+          <button className="btn primary" type="button" onClick={() => setSubmitted(true)}>Submit exit ticket</button>
+          {submitted && (
+            <p className={score >= Math.ceil(items.length * 0.8) ? 'feedback good' : 'feedback needs-work'}>
+              Score: {score}/{items.length}. {score >= Math.ceil(items.length * 0.8) ? 'Secure enough to move on.' : 'Review the lesson cards and try again.'}
+            </p>
+          )}
+        </div>
+      ) : (
+        <p className="lesson-progress-note">{answeredCount}/{items.length} checks answered</p>
+      )}
+    </section>
+  )
+}
+
+function NuclearModelVisual() {
+  return (
+    <div className="atom-visual nuclear-model" aria-label="Nuclear atom model">
+      <div className="atom-orbit one" />
+      <div className="atom-orbit two" />
+      <div className="atom-nucleus">
+        <span>p⁺</span>
+        <span>n⁰</span>
+      </div>
+      <span className="electron-dot e1">e⁻</span>
+      <span className="electron-dot e2">e⁻</span>
+      <span className="atom-caption empty">mostly empty space</span>
+      <span className="atom-caption mass">mass concentrated in nucleus</span>
+    </div>
+  )
+}
+
+function ParticleTableVisual() {
+  return (
+    <div className="particle-table-visual">
+      {[
+        ['Particle', 'Relative charge', 'Relative mass', 'Location'],
+        ['proton', '+1', '1', 'nucleus'],
+        ['neutron', '0', '1', 'nucleus'],
+        ['electron', '-1', '1/1836', 'shells'],
+      ].map((row, index) => (
+        <div className={index === 0 ? 'header' : ''} key={row.join('-')}>
+          {row.map(cell => <span key={cell}>{cell}</span>)}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ElectricFieldVisual() {
+  return (
+    <div className="field-visual" aria-label="Particle deflection in an electric field">
+      <span className="plate negative">negative plate</span>
+      <svg viewBox="0 0 420 190" role="img" aria-label="Protons curve upward, electrons curve downward more, neutrons go straight">
+        <path className="beam proton" d="M25 95 C155 92 245 58 392 35" />
+        <path className="beam neutron" d="M25 95 L392 95" />
+        <path className="beam electron" d="M25 95 C135 105 230 148 392 168" />
+      </svg>
+      <span className="plate positive">positive plate</span>
+    </div>
+  )
+}
+
+function RadiusTrendVisual() {
+  return (
+    <div className="radius-visual" aria-label="Atomic radius trends">
+      <div>
+        <span>Across a period</span>
+        <b className="radius-dot large">Na</b>
+        <b className="radius-dot medium">Mg</b>
+        <b className="radius-dot small">Cl</b>
+      </div>
+      <div>
+        <span>Down a group</span>
+        <b className="radius-dot small">Li</b>
+        <b className="radius-dot medium">Na</b>
+        <b className="radius-dot large">K</b>
+      </div>
+    </div>
+  )
+}
+
+function ConceptVisual({ type }) {
+  if (type === 'nuclear-model') return <NuclearModelVisual />
+  if (type === 'particle-table') return <ParticleTableVisual />
+  if (type === 'electric-field') return <ElectricFieldVisual />
+  if (type === 'radius-trends') return <RadiusTrendVisual />
+  return null
+}
+
+const atomPresets = [
+  { label: 'Carbon-12 atom', z: 6, mass: 12, charge: 0 },
+  { label: 'Magnesium-24 ion', z: 12, mass: 24, charge: 2 },
+  { label: 'Chloride-35 ion', z: 17, mass: 35, charge: -1 },
+  { label: 'Oxygen-16 ion', z: 8, mass: 16, charge: -2 },
+]
+
+function formatIonCharge(charge) {
+  if (charge === 0) return '0'
+  return charge > 0 ? `${charge}+` : `${Math.abs(charge)}-`
+}
+
+function ParticleCounter() {
+  const [values, setValues] = useState({ z: 12, mass: 24, charge: 2 })
+  const protons = Number(values.z)
+  const massNumber = Number(values.mass)
+  const charge = Number(values.charge)
+  const neutrons = massNumber - protons
+  const electrons = protons - charge
+  const valid = Number.isFinite(protons) && Number.isFinite(massNumber) && Number.isFinite(charge) && protons > 0 && massNumber >= protons && electrons >= 0
+
+  function updateValue(key, value) {
+    setValues(previous => ({ ...previous, [key]: value }))
+  }
+
+  return (
+    <div className="lesson-interactive particle-counter">
+      <div className="interactive-inputs">
+        <div className="preset-row">
+          {atomPresets.map(preset => (
+            <button key={preset.label} type="button" onClick={() => setValues({ z: preset.z, mass: preset.mass, charge: preset.charge })}>
+              {preset.label}
+            </button>
+          ))}
+        </div>
+        <label>
+          <span>Atomic number, Z</span>
+          <input type="number" value={values.z} onChange={event => updateValue('z', event.target.value)} />
+        </label>
+        <label>
+          <span>Mass number, A</span>
+          <input type="number" value={values.mass} onChange={event => updateValue('mass', event.target.value)} />
+        </label>
+        <label>
+          <span>Ion charge</span>
+          <input type="number" value={values.charge} onChange={event => updateValue('charge', event.target.value)} />
+        </label>
+      </div>
+      <div className="particle-results">
+        <article><span>Protons</span><strong>{valid ? protons : '?'}</strong><small>same as atomic number</small></article>
+        <article><span>Neutrons</span><strong>{valid ? neutrons : '?'}</strong><small>A - Z</small></article>
+        <article><span>Electrons</span><strong>{valid ? electrons : '?'}</strong><small>Z - charge</small></article>
+        <article><span>Overall charge</span><strong>{valid ? formatIonCharge(charge) : '?'}</strong><small>protons minus electrons</small></article>
+      </div>
+      <p className={valid ? 'feedback good' : 'feedback needs-work'}>
+        {valid
+          ? `This species has ${protons} protons, ${neutrons} neutrons and ${electrons} electrons.`
+          : 'Check that mass number is at least the atomic number and electron number is not negative.'}
+      </p>
+    </div>
+  )
+}
+
+const beamParticles = {
+  proton: {
+    name: 'Proton',
+    charge: '+1',
+    mass: '1',
+    path: 'M25 95 C155 92 245 58 392 35',
+    explanation: 'A proton is positive, so it bends towards the negative plate. It is much heavier than an electron, so the deflection is smaller.',
+  },
+  neutron: {
+    name: 'Neutron',
+    charge: '0',
+    mass: '1',
+    path: 'M25 95 L392 95',
+    explanation: 'A neutron has no charge, so the electric field does not deflect it.',
+  },
+  electron: {
+    name: 'Electron',
+    charge: '-1',
+    mass: '1/1836',
+    path: 'M25 95 C135 105 230 148 392 168',
+    explanation: 'An electron is negative, so it bends towards the positive plate. Its very small mass means a much larger deflection.',
+  },
+}
+
+function BeamDeflectionExplorer() {
+  const [particleKey, setParticleKey] = useState('electron')
+  const particle = beamParticles[particleKey]
+
+  return (
+    <div className="lesson-interactive beam-explorer">
+      <div className="preset-row">
+        {Object.entries(beamParticles).map(([key, item]) => (
+          <button className={key === particleKey ? 'active' : ''} key={key} type="button" onClick={() => setParticleKey(key)}>
+            {item.name}
+          </button>
+        ))}
+      </div>
+      <div className="field-visual interactive-field">
+        <span className="plate negative">negative plate</span>
+        <svg viewBox="0 0 420 190" role="img" aria-label={`${particle.name} beam path`}>
+          <path className={`beam ${particleKey} active`} d={particle.path} />
+        </svg>
+        <span className="plate positive">positive plate</span>
+      </div>
+      <div className="beam-readout">
+        <article><span>Particle</span><strong>{particle.name}</strong></article>
+        <article><span>Relative charge</span><strong>{particle.charge}</strong></article>
+        <article><span>Relative mass</span><strong>{particle.mass}</strong></article>
+      </div>
+      <p className="feedback good">{particle.explanation}</p>
+    </div>
+  )
+}
+
+const radiusModes = {
+  period: {
+    title: 'Across a period',
+    summary: 'Atomic radius decreases from left to right.',
+    reason: 'Proton number increases, so nuclear charge increases. Electrons are added to the same principal shell, so shielding changes little. The outer shell is pulled closer.',
+  },
+  group: {
+    title: 'Down a group',
+    summary: 'Atomic radius increases down the group.',
+    reason: 'Each step down adds another occupied shell. The outer electron is further from the nucleus and more shielded.',
+  },
+  ions: {
+    title: 'Atoms and ions',
+    summary: 'Cations are smaller than their atoms; anions are larger.',
+    reason: 'Cations lose electrons and may lose a whole outer shell. Anions gain electrons, increasing electron-electron repulsion.',
+  },
+}
+
+function RadiusTrendExplorer() {
+  const [mode, setMode] = useState('period')
+  const active = radiusModes[mode]
+
+  return (
+    <div className="lesson-interactive radius-explorer">
+      <div className="preset-row">
+        {Object.entries(radiusModes).map(([key, item]) => (
+          <button className={key === mode ? 'active' : ''} key={key} type="button" onClick={() => setMode(key)}>
+            {item.title}
+          </button>
+        ))}
+      </div>
+      <RadiusTrendVisual />
+      <div className="radius-explanation">
+        <strong>{active.summary}</strong>
+        <p>{active.reason}</p>
+      </div>
+    </div>
+  )
+}
+
+function InteractiveBlock({ item }) {
+  return (
+    <article className="interactive-block">
+      <div className="lesson-section-heading">
+        <p className="eyebrow">Interactive</p>
+        <h3>{item.title}</h3>
+        <p>{item.description}</p>
+      </div>
+      {item.type === 'particle-counter' && <ParticleCounter />}
+      {item.type === 'beam-deflection' && <BeamDeflectionExplorer />}
+      {item.type === 'radius-trends' && <RadiusTrendExplorer />}
+    </article>
+  )
+}
+
+function CheckpointQuestion({ question, index }) {
+  const [response, setResponse] = useState('')
+  const [showHint, setShowHint] = useState(false)
+  const [showAnswer, setShowAnswer] = useState(false)
+
+  return (
+    <article className="checkpoint-question-card">
+      <span>Checkpoint {index + 1}</span>
+      <strong>{question.prompt}</strong>
+      <textarea value={response} onChange={event => setResponse(event.target.value)} placeholder="Write your explanation or calculation here." rows="4" />
+      <div className="checkpoint-actions">
+        <button className="btn" type="button" onClick={() => setShowHint(true)}>Hint</button>
+        <button className="btn primary" type="button" onClick={() => setShowAnswer(true)}>Reveal answer</button>
+      </div>
+      {showHint && <p className="feedback needs-work">Hint: {question.hint}</p>}
+      {showAnswer && <p className="feedback good">Answer: {question.answer}</p>}
+    </article>
+  )
+}
+
+function WebLessonExperience({ lesson }) {
+  return (
+    <section className="web-lesson-experience">
+      <div className="web-lesson-title">
+        <p className="eyebrow">Web lesson</p>
+        <h3>{lesson.title}</h3>
+        <p>{lesson.subtitle}</p>
+      </div>
+
+      <ChoiceCheck
+        title="Warm-up check"
+        subtitle="Answer these before starting the new content. Feedback appears immediately."
+        items={lesson.priorKnowledge}
+      />
+
+      <section className="web-lesson-card">
+        <div className="lesson-section-heading">
+          <p className="eyebrow">Content</p>
+          <h3>Core ideas students must be able to explain</h3>
+        </div>
+        <div className="concept-card-grid">
+          {lesson.teachingSections.map(section => (
+            <article className="concept-card" key={section.title}>
+              <div>
+                <span>{section.tag}</span>
+                <h4>{section.title}</h4>
+                <p>{section.body}</p>
+              </div>
+              <ConceptVisual type={section.visual} />
+              <ul>
+                {section.keyPoints.map(point => <li key={point}>{point}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="web-lesson-card">
+        <div className="lesson-section-heading">
+          <p className="eyebrow">Activities</p>
+          <h3>Use the models, then explain the chemistry.</h3>
+        </div>
+        <div className="interactive-grid">
+          {lesson.interactives.map(item => <InteractiveBlock item={item} key={item.type} />)}
+        </div>
+      </section>
+
+      <section className="web-lesson-card">
+        <div className="lesson-section-heading">
+          <p className="eyebrow">Checkpoints</p>
+          <h3>Try these before the exit ticket.</h3>
+        </div>
+        <div className="checkpoint-question-grid">
+          {lesson.checkpointQuestions.map((question, index) => (
+            <CheckpointQuestion question={question} index={index} key={question.id} />
+          ))}
+        </div>
+      </section>
+
+      <ChoiceCheck
+        title="Exit ticket"
+        subtitle="Submit when you are ready. Aim for at least 4 out of 5 before moving on."
+        items={lesson.exitTicket}
+        mode="exit"
+      />
+    </section>
+  )
+}
+
 export default function LessonTemplate({ topic, template, currentUser }) {
   const [activeSubtopicId, setActiveSubtopicId] = useState(template.subtopics[0]?.ref || '')
   const [assets, setAssets] = useState(() => normaliseAssets(getSavedAssets(topic.id)))
@@ -216,6 +618,8 @@ export default function LessonTemplate({ topic, template, currentUser }) {
               <span>Check</span>
             </div>
           </section>
+
+          {activeSubtopic.webLesson && <WebLessonExperience lesson={activeSubtopic.webLesson} />}
 
           <section className="lesson-template-section">
             <div className="lesson-section-heading">
