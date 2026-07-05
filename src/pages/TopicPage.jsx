@@ -4,13 +4,25 @@ import LessonBlock from '../components/LessonBlock.jsx'
 import Flashcards from '../components/Flashcards.jsx'
 import QuizBlock from '../components/QuizBlock.jsx'
 import AmountOfSubstanceTopic from '../components/AmountOfSubstanceTopic.jsx'
+import LessonTemplate from '../components/LessonTemplate.jsx'
 import { lessonContent } from '../data/lessons.js'
+import { lessonTemplates } from '../data/lessonTemplates.js'
 import { quizzes } from '../data/quizzes.js'
 
-export default function TopicPage({ topic, navigate }) {
+export default function TopicPage({ topic, navigate, currentUser }) {
   const lesson = lessonContent[topic.id]
+  const lessonTemplate = lessonTemplates[topic.id]
   const pathwayPage = topic.pathway || (topic.level === 'A2' || topic.level === 'A Level' ? 'a2' : topic.level === 'IGCSE' ? 'igcse' : 'as')
   const displayTitle = topic.syllabusNumber ? `${topic.syllabusNumber} ${topic.title}` : topic.title
+
+  if (lessonTemplate) {
+    return (
+      <div className="page lesson-template-page">
+        <button className="btn" onClick={() => navigate(pathwayPage)}>Back to pathway</button>
+        <LessonTemplate topic={topic} template={lessonTemplate} currentUser={currentUser} />
+      </div>
+    )
+  }
 
   if (!lesson) {
     return (

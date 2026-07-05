@@ -104,7 +104,7 @@ export default function App() {
         {currentPage === 'as' && <ASChemistry navigate={navigate} />}
         {currentPage === 'a2' && <A2Chemistry navigate={navigate} />}
         {currentPage === 'igcse' && <IGCSEChemistry navigate={navigate} />}
-        {currentPage === 'topic' && <TopicPage topic={selectedTopic} navigate={navigate} />}
+        {currentPage === 'topic' && <TopicPage topic={selectedTopic} navigate={navigate} currentUser={currentUser} />}
         {currentPage === 'tools' && <InteractiveTools navigate={navigate} />}
         {currentPage === 'stoich-flow-tool' && <StoichiometryFlowToolPage navigate={navigate} />}
         {currentPage === 'mole-relationship-tool' && <MoleRelationshipToolPage navigate={navigate} />}
