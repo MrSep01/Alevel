@@ -2105,7 +2105,7 @@ p {
 .stoich-visual-map {
   position: relative;
   min-width: 1680px;
-  min-height: 1040px;
+  min-height: 1120px;
   overflow: hidden;
   border: 1px solid #d7e6f5;
   border-radius: 24px;
@@ -2173,7 +2173,7 @@ p {
   z-index: 5;
   display: grid;
   gap: 4px;
-  min-width: 210px;
+  min-width: 190px;
   transform: translate(-50%, -50%);
   border: 1px solid #dbe7f5;
   border-radius: 14px;
@@ -2226,6 +2226,10 @@ p {
   vector-effect: non-scaling-stroke;
 }
 
+.stoich-visual-line.inactive {
+  opacity: 0.14;
+}
+
 .stoich-visual-line.selected {
   stroke: #4e9fe5;
   stroke-width: 1.05;
@@ -2239,7 +2243,7 @@ p {
 }
 
 .stoich-visual-line.disabled {
-  opacity: 0.06;
+  display: none;
 }
 
 .stoich-visual-link-label {
@@ -2384,6 +2388,10 @@ p {
 .stoich-visual-node.disabled {
   cursor: not-allowed;
   opacity: 0.24;
+}
+
+.stoich-visual-node.reactant-node.disabled {
+  display: none;
 }
 
 .stoich-visual-node.product-output-node.disabled {
