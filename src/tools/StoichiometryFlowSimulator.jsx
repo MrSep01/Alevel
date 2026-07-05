@@ -371,6 +371,46 @@ function inputDetailLine(reactant) {
   return `${reactant.directMoles ?? '?'} mol`
 }
 
+function inputWorkingLine(reactant, moles, sigFigs) {
+  if (!Number.isFinite(moles)) return inputDetailLine(reactant)
+  const molesText = `${formatValue(moles, sigFigs)} mol`
+  if (reactant.inputType === 'mass') return `${reactant.mass ?? '?'} ÷ ${reactant.molarMass ?? '?'} = ${molesText}`
+  if (reactant.inputType === 'solution') return `${reactant.concentration ?? '?'} × ${reactant.solutionVolume ?? '?'} ÷ 1000 = ${molesText}`
+  if (reactant.inputType === 'gas') return `${reactant.gasVolume ?? '?'} ÷ 24.0 = ${molesText}`
+  if (reactant.inputType === 'particles') return `${reactant.particles ?? '?'} ÷ Nₐ = ${molesText}`
+  if (reactant.inputType === 'pure-volume') return `${reactant.pureVolume ?? '?'} × ${reactant.density ?? '?'} ÷ ${reactant.molarMass ?? '?'} = ${molesText}`
+  return `${reactant.directMoles ?? '?'} mol`
+}
+
+function capacityWorkingLine(prefix, result, values, sigFigs) {
+  if (result === null) return 'n ÷ coefficient'
+  const formula = values[`${prefix}Formula`]
+  const coefficient = values[`${prefix}Coefficient`]
+  const moles = prefix === 'a' ? result.molesA : result.molesB
+  const capacity = prefix === 'a' ? result.capacityA : result.capacityB
+  return `${formula}: ${formatValue(moles, sigFigs)} ÷ ${coefficient} = ${formatValue(capacity, sigFigs)}`
+}
+
+function productMolesWorkingLine(result, values, sigFigs) {
+  if (result === null) return 'extent × product coefficient'
+  return `${formatValue(result.extent, sigFigs)} × ${values.productCoefficient} = ${formatValue(result.productMoles, sigFigs)} mol`
+}
+
+function productAnswerWorkingLine(result, values, sigFigs) {
+  if (!result?.answer) return 'Complete previous step'
+  const productMoles = formatValue(result.productMoles, sigFigs)
+  const answer = `${formatValue(result.answer.value, sigFigs)} ${result.answer.unit}`
+  if (values.productOutputType === 'mass') return `${productMoles} mol × ${values.productMolarMass} = ${answer}`
+  if (values.productOutputType === 'gas') return `${productMoles} mol × 24.0 = ${answer}`
+  if (values.productOutputType === 'solution') {
+    const finalVolume = result.answer.finalVolume || automaticSolutionVolume(values)
+    return `${productMoles} mol ÷ (${finalVolume} ÷ 1000) = ${answer}`
+  }
+  if (values.productOutputType === 'particles') return `${productMoles} mol × Nₐ = ${answer}`
+  if (values.productOutputType === 'pure-volume') return `${productMoles} mol × ${values.productMolarMass} ÷ ${values.productDensity} = ${answer}`
+  return answer
+}
+
 function measuredInputs(values) {
   const inputs = []
   ;['a', 'b'].forEach(prefix => {
@@ -765,6 +805,8 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
     const left = 34
     const top = prefix === 'a' ? 31 : 73
     const species = speciesForPrefix(values, prefix)
+    const reactant = result?.[`reactant${prefix.toUpperCase()}`] || getReactant(values, prefix)
+    const moles = prefix === 'a' ? result?.molesA : result?.molesB
 
     return (
       <button
@@ -774,8 +816,11 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
         type="button"
       >
         <span>Moles of {species}</span>
-        <strong>{result === null ? 'Check values' : `${formatValue(prefix === 'a' ? result.molesA : result.molesB, sigFigs)} mol`}</strong>
-        <small>{inputCalculationLine(result?.[`reactant${prefix.toUpperCase()}`] || getReactant(values, prefix))}</small>
+        <strong>{result === null ? 'Check values' : `${formatValue(moles, sigFigs)} mol`}</strong>
+        <small className="stoich-node-working">
+          <b>{inputCalculationLine(reactant)}</b>
+          <em>{inputWorkingLine(reactant, moles, sigFigs)}</em>
+        </small>
       </button>
     )
   }
@@ -796,7 +841,16 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
       >
         <span>{node.label}</span>
         <strong>{available && selected ? outputDisplay(result, values, sigFigs) : getOutputTypeLabel(node.type)}</strong>
-        <small>{available ? values.productFormula : 'Not used here'}</small>
+        <small className={selected ? 'stoich-node-working' : ''}>
+          {selected ? (
+            <>
+              <b>{result?.answer?.line || getOutputTypeLabel(node.type)}</b>
+              <em>{productAnswerWorkingLine(result, values, sigFigs)}</em>
+            </>
+          ) : (
+            available ? values.productFormula : 'Not used here'
+          )}
+        </small>
       </button>
     )
   }
@@ -998,8 +1052,8 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
                 ? 'Compare n ÷ coefficient'
                 : (
                   <span className="stoich-capacity-mini">
-                    <b>{values.aFormula}: {formatValue(result.capacityA, sigFigs)}</b>
-                    <b>{values.bFormula}: {formatValue(result.capacityB, sigFigs)}</b>
+                    <b>{capacityWorkingLine('a', result, values, sigFigs)}</b>
+                    <b>{capacityWorkingLine('b', result, values, sigFigs)}</b>
                   </span>
                 )}
             </small>
@@ -1013,7 +1067,10 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
           >
             <span>Moles of {values.productFormula}</span>
             <strong>{result === null ? 'Check values' : `${formatValue(result.productMoles, sigFigs)} mol`}</strong>
-            <small>{values.productFormula}</small>
+            <small className="stoich-node-working">
+              <b>Use limiting extent</b>
+              <em>{productMolesWorkingLine(result, values, sigFigs)}</em>
+            </small>
           </button>
 
           {productMapNodes.map(renderProductMapNode)}

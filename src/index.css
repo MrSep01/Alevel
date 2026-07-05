@@ -2354,6 +2354,33 @@ p {
   word-break: normal;
 }
 
+.stoich-node-working {
+  display: grid;
+  gap: 3px;
+  justify-items: center;
+  width: 100%;
+}
+
+.stoich-node-working b,
+.stoich-node-working em {
+  display: block;
+  max-width: 100%;
+  color: #627086;
+  font-style: normal;
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+}
+
+.stoich-node-working b {
+  font-size: 0.72rem;
+  font-weight: 950;
+}
+
+.stoich-node-working em {
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
 .stoich-capacity-mini {
   display: grid;
   gap: 3px;
@@ -2382,14 +2409,14 @@ p {
 
 .stoich-visual-node.moles-node,
 .stoich-visual-node.product-moles-node {
-  width: 190px;
-  min-height: 122px;
+  width: 204px;
+  min-height: 144px;
   background: #ffe4d4;
 }
 
 .stoich-visual-node.limiting-node {
-  width: 260px;
-  min-height: 132px;
+  width: 292px;
+  min-height: 142px;
   border-color: #5ba8e8;
   background: #eef8ff;
 }
@@ -2400,8 +2427,8 @@ p {
 }
 
 .stoich-visual-node.product-output-node {
-  width: 170px;
-  min-height: 112px;
+  width: 190px;
+  min-height: 132px;
 }
 
 .stoich-visual-node.selected {
