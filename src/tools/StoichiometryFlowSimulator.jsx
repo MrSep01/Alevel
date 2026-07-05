@@ -880,14 +880,19 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
       <div className="stoich-visual-map-shell">
         <div className="stoich-visual-map-header">
           <div className="stoich-reaction-board" aria-label="Balanced reaction with reactants and products">
-            <div className="stoich-reaction-side">
+            <div className="stoich-reaction-zone reactants">
               <span>Reactants</span>
-              <div className="stoich-reaction-species">
-                <strong>{formatReactionTerm(values.aCoefficient, values.aFormula)}</strong>
-                <b>+</b>
-                <strong>{formatReactionTerm(values.bCoefficient, values.bFormula)}</strong>
+              <div className="stoich-reaction-lane-grid">
+                <div className="stoich-reaction-token">
+                  <span>Reactant 1</span>
+                  <strong>{formatReactionTerm(values.aCoefficient, values.aFormula)}</strong>
+                </div>
+                <b className="stoich-reaction-plus">+</b>
+                <div className="stoich-reaction-token">
+                  <span>Reactant 2</span>
+                  <strong>{formatReactionTerm(values.bCoefficient, values.bFormula)}</strong>
+                </div>
               </div>
-              <small>{reactionParts.reactants || 'Reactants from the balanced equation'}</small>
             </div>
 
             <div className="stoich-reaction-arrow-card">
@@ -895,12 +900,13 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
               <strong>→</strong>
             </div>
 
-            <div className="stoich-reaction-side products">
+            <div className="stoich-reaction-zone products">
               <span>Products</span>
-              <div className="stoich-reaction-species">
-                <strong>{reactionParts.products || formatReactionTerm(values.productCoefficient, values.productFormula)}</strong>
+              <div className="stoich-reaction-token product">
+                <span>Product target</span>
+                <strong>{formatReactionTerm(values.productCoefficient, values.productFormula)}</strong>
+                <small>{reactionParts.products || formatReactionTerm(values.productCoefficient, values.productFormula)}</small>
               </div>
-              <small>Target product: {formatReactionTerm(values.productCoefficient, values.productFormula)}</small>
             </div>
           </div>
         </div>
