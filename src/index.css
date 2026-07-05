@@ -6664,13 +6664,6 @@ p {
   box-shadow: inset 5px 0 0 var(--primary), var(--shadow-sm);
 }
 
-.outcome-match-panel {
-  border-color: #c6efe2;
-  background:
-    linear-gradient(135deg, rgba(244, 251, 247, 0.9), rgba(255, 255, 255, 0.96)),
-    #ffffff;
-}
-
 .lesson-section-heading {
   display: grid;
   gap: 4px;
@@ -6710,60 +6703,6 @@ p {
   color: #344158;
   font-weight: 760;
   line-height: 1.42;
-}
-
-.outcome-match-grid {
-  display: grid;
-  gap: 10px;
-}
-
-.outcome-match-card {
-  display: grid;
-  grid-template-columns: minmax(64px, auto) repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  align-items: stretch;
-  min-width: 0;
-  border: 1px solid #dbe7f5;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.82);
-  padding: 10px;
-}
-
-.outcome-match-card > span {
-  display: grid;
-  place-items: center;
-  border: 1px solid #bde3ff;
-  border-radius: 12px;
-  background: #eef8ff;
-  color: var(--primary-dark);
-  font-size: 0.85rem;
-  font-weight: 950;
-}
-
-.outcome-match-card div {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-  border: 1px solid #edf2f8;
-  border-radius: 12px;
-  background: #ffffff;
-  padding: 10px;
-}
-
-.outcome-match-card strong {
-  color: #1f8f72;
-  font-size: 0.74rem;
-  font-weight: 950;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-
-.outcome-match-card p {
-  color: #43516a;
-  font-size: 0.88rem;
-  font-weight: 800;
-  line-height: 1.32;
-  overflow-wrap: anywhere;
 }
 
 .outcome-tag-row {
@@ -7048,6 +6987,329 @@ p {
   font-size: 0.78rem;
   font-weight: 850;
   text-transform: capitalize;
+}
+
+.workbook-experience {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.workbook-lesson-picker {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.workbook-lesson-picker button {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  min-height: 96px;
+  border: 1px solid #dbe7f5;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #43516a;
+  padding: 13px;
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+}
+
+.workbook-lesson-picker button:hover,
+.workbook-lesson-picker button.active {
+  border-color: #8bc8f6;
+  background: #f1f9ff;
+  box-shadow: inset 4px 0 0 var(--primary), var(--shadow-sm);
+}
+
+.workbook-lesson-picker span,
+.workbook-lesson-picker small {
+  color: #64748b;
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.workbook-lesson-picker strong {
+  color: #172033;
+  line-height: 1.22;
+}
+
+.workbook-hero-card,
+.workbook-goals-card,
+.workbook-section-card {
+  border: 1px solid #dbe7f5;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.workbook-hero-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px;
+  gap: 18px;
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(238, 248, 255, 0.92), rgba(255, 248, 234, 0.7)),
+    #ffffff;
+  padding: clamp(18px, 2.6vw, 28px);
+}
+
+.workbook-hero-card h3 {
+  color: #172033;
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  line-height: 1.08;
+}
+
+.workbook-hero-card p:not(.eyebrow) {
+  margin-top: 6px;
+  color: #53627a;
+  font-weight: 780;
+  line-height: 1.45;
+}
+
+.workbook-duration {
+  display: grid;
+  place-items: center;
+  min-height: 112px;
+  border: 1px solid #bde3ff;
+  border-radius: 20px;
+  background: #eef8ff;
+  color: var(--primary-dark);
+}
+
+.workbook-duration span {
+  font-size: 2.2rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.workbook-duration strong {
+  font-size: 0.82rem;
+  font-weight: 950;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.workbook-goals-card {
+  display: grid;
+  gap: 14px;
+  padding: clamp(16px, 2vw, 22px);
+}
+
+.workbook-goal-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.workbook-goal-list article {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  min-width: 0;
+  border: 1px solid #edf2f8;
+  border-radius: 14px;
+  background: #f9fbfd;
+  padding: 12px;
+}
+
+.workbook-goal-list span {
+  border-radius: 999px;
+  background: #eef8ff;
+  color: var(--primary-dark);
+  padding: 5px 8px;
+  font-size: 0.76rem;
+  font-weight: 950;
+}
+
+.workbook-goal-list p {
+  color: #344158;
+  font-weight: 760;
+  line-height: 1.4;
+}
+
+.workbook-route-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workbook-route-strip span {
+  border: 1px solid #dbe7f5;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #53627a;
+  padding: 7px 11px;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.workbook-section-list {
+  display: grid;
+  gap: 14px;
+}
+
+.workbook-section-card {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 0;
+  overflow: hidden;
+}
+
+.workbook-section-time {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 8px;
+  border-right: 1px solid #dbe7f5;
+  background: #f8fbff;
+  padding: 18px 10px;
+}
+
+.workbook-section-time span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 950;
+}
+
+.workbook-section-time strong {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.workbook-section-body {
+  display: grid;
+  gap: 13px;
+  min-width: 0;
+  padding: clamp(16px, 2vw, 22px);
+}
+
+.workbook-section-body h3 {
+  color: #172033;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  line-height: 1.15;
+}
+
+.workbook-section-intro {
+  color: #53627a;
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+.workbook-section-body .atom-visual,
+.workbook-section-body .particle-table-visual,
+.workbook-section-body .field-visual,
+.workbook-section-body .radius-visual {
+  min-height: 240px;
+}
+
+.workbook-key-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.workbook-key-list li {
+  color: #43516a;
+  font-weight: 780;
+  line-height: 1.4;
+}
+
+.workbook-choice-list,
+.workbook-written-list {
+  display: grid;
+  gap: 12px;
+}
+
+.workbook-choice-row,
+.workbook-written-row {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+  border-top: 1px solid #edf2f8;
+  padding-top: 12px;
+}
+
+.workbook-choice-row:first-child,
+.workbook-written-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.workbook-choice-row > strong,
+.workbook-written-row label > span {
+  color: #172033;
+  font-weight: 900;
+  line-height: 1.32;
+}
+
+.workbook-option-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.workbook-option-row button {
+  min-height: 42px;
+  border: 1px solid #dbe7f5;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #43516a;
+  padding: 9px 10px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.workbook-option-row button:hover,
+.workbook-option-row button.selected {
+  border-color: #a4d5fa;
+  background: #f3fbff;
+  color: var(--primary-dark);
+}
+
+.workbook-option-row button.correct {
+  border-color: #86dfc7;
+  background: #eafaf4;
+  color: #137058;
+}
+
+.workbook-option-row button.incorrect {
+  border-color: #f3b7b7;
+  background: #fff4f4;
+  color: #a22828;
+}
+
+.workbook-written-row label {
+  display: grid;
+  gap: 8px;
+}
+
+.workbook-written-row textarea {
+  min-height: 92px;
+  resize: vertical;
+  border: 1px solid #dbe7f5;
+  border-radius: 12px;
+  background: #f9fbfd;
+  color: #172033;
+  padding: 10px 11px;
+  font: inherit;
+  font-weight: 760;
+  line-height: 1.42;
+}
+
+.workbook-written-row .btn {
+  justify-self: start;
 }
 
 .web-lesson-experience {
@@ -7717,6 +7979,7 @@ p {
   .lesson-template-layout,
   .lesson-subtopic-header,
   .lesson-template-two-col,
+  .workbook-hero-card,
   .grid-2,
   .grid-3,
   .grid-4 {
@@ -7762,6 +8025,9 @@ p {
   .lesson-embed-grid,
   .lesson-media-builder,
   .lesson-resource-grid,
+  .workbook-lesson-picker,
+  .workbook-goal-list,
+  .workbook-option-row,
   .concept-card-grid,
   .choice-option-grid,
   .particle-results,
@@ -7770,12 +8036,8 @@ p {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .outcome-match-card {
-    grid-template-columns: 72px minmax(0, 1fr);
-  }
-
-  .outcome-match-card > span {
-    grid-row: 1 / span 3;
+  .workbook-section-card {
+    grid-template-columns: 78px minmax(0, 1fr);
   }
 }
 
@@ -7799,11 +8061,15 @@ p {
   .lesson-outcome-grid,
   .lesson-activity-timeline,
   .lesson-embed-grid,
-  .lesson-media-builder,
-  .lesson-resource-grid,
-  .concept-card-grid,
-  .choice-option-grid,
-  .interactive-inputs,
+    .lesson-media-builder,
+    .lesson-resource-grid,
+    .workbook-lesson-picker,
+    .workbook-goal-list,
+    .workbook-option-row,
+    .workbook-section-card,
+    .concept-card-grid,
+    .choice-option-grid,
+    .interactive-inputs,
   .particle-results,
   .beam-readout,
   .checkpoint-question-grid {
@@ -7814,13 +8080,16 @@ p {
     grid-template-rows: auto;
   }
 
-  .outcome-match-card {
-    grid-template-columns: 1fr;
+  .workbook-section-time {
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-content: start;
+    border-right: 0;
+    border-bottom: 1px solid #dbe7f5;
   }
 
-  .outcome-match-card > span {
-    grid-row: auto;
-    min-height: 40px;
+  .workbook-duration {
+    min-height: 88px;
   }
 
   .radius-visual div {

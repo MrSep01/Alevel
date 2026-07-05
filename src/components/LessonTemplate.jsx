@@ -145,48 +145,186 @@ function LearningOutcomesPanel({ outcomes }) {
   )
 }
 
-function OutcomeMatchPanel({ outcomes, lesson, activities = [] }) {
-  if (!lesson) return null
+function WorkbookInteractive({ type }) {
+  if (type === 'particle-counter') return <ParticleCounter />
+  if (type === 'beam-deflection') return <BeamDeflectionExplorer />
+  if (type === 'radius-trends') return <RadiusTrendExplorer />
+  return null
+}
 
-  const matchesFor = (items = [], code, labelKey = 'title') => (
-    items
-      .filter(item => item.outcomeCodes?.includes(code))
-      .map(item => item[labelKey])
-  )
+function WorkbookChoiceQuestions({ questions = [], mode = 'practice' }) {
+  const [answers, setAnswers] = useState({})
+  const [submitted, setSubmitted] = useState(false)
+  const isExit = mode === 'exit'
+  const score = questions.reduce((total, question) => total + (answers[question.id] === question.answer ? 1 : 0), 0)
+  const showFeedback = !isExit || submitted
+
+  function choose(questionId, option) {
+    setAnswers(previous => ({ ...previous, [questionId]: option }))
+    if (isExit) setSubmitted(false)
+  }
 
   return (
-    <section className="lesson-template-section outcome-match-panel">
-      <div className="lesson-section-heading">
-        <p className="eyebrow">Lesson map</p>
-        <h3>Each outcome has content, practice and a check.</h3>
-      </div>
-      <div className="outcome-match-grid">
-        {outcomes.map(outcome => {
-          const content = matchesFor(lesson.teachingSections, outcome.code)
-          const activityMatches = matchesFor(activities, outcome.code)
-          const checks = [
-            ...matchesFor(lesson.checkpointQuestions, outcome.code, 'prompt'),
-            ...matchesFor(lesson.exitTicket, outcome.code, 'prompt'),
-          ]
+    <div className={`workbook-choice-list ${mode}`}>
+      {questions.map((question, index) => {
+        const selected = answers[question.id]
+        const isCorrect = selected === question.answer
 
-          return (
-            <article className="outcome-match-card" key={outcome.code}>
+        return (
+          <div className="workbook-choice-row" key={question.id}>
+            <strong>{index + 1}. {question.prompt}</strong>
+            <div className="workbook-option-row">
+              {question.options.map(option => (
+                <button
+                  className={`${selected === option ? 'selected' : ''} ${showFeedback && selected === option ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
+                  key={option}
+                  type="button"
+                  onClick={() => choose(question.id, option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            {showFeedback && selected && (
+              <p className={isCorrect ? 'feedback good' : 'feedback needs-work'}>
+                {isCorrect ? 'Correct.' : `Review: ${question.feedback || question.explanation}`}
+              </p>
+            )}
+          </div>
+        )
+      })}
+
+      {isExit && (
+        <div className="exit-ticket-actions">
+          <button className="btn primary" type="button" onClick={() => setSubmitted(true)}>Submit exit ticket</button>
+          {submitted && (
+            <p className={score >= Math.ceil(questions.length * 0.8) ? 'feedback good' : 'feedback needs-work'}>
+              Score: {score}/{questions.length}. {score >= Math.ceil(questions.length * 0.8) ? 'Ready to move on.' : 'Review the workbook lesson and try again.'}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function WorkbookWrittenTask({ task, index }) {
+  const [response, setResponse] = useState('')
+  const [showAnswer, setShowAnswer] = useState(false)
+
+  return (
+    <div className="workbook-written-row">
+      <label>
+        <span>{index + 1}. {task.prompt}</span>
+        <textarea value={response} onChange={event => setResponse(event.target.value)} rows="3" placeholder={task.placeholder || 'Write your answer here.'} />
+      </label>
+      {task.answer && (
+        <button className="btn" type="button" onClick={() => setShowAnswer(previous => !previous)}>
+          {showAnswer ? 'Hide model answer' : 'Show model answer'}
+        </button>
+      )}
+      {showAnswer && <p className="feedback good">{task.answer}</p>}
+    </div>
+  )
+}
+
+function WorkbookSection({ section, index }) {
+  return (
+    <section className={`workbook-section-card ${section.type || 'task'}`}>
+      <div className="workbook-section-time">
+        <span>{String(index + 1).padStart(2, '0')}</span>
+        <strong>{section.minutes} min</strong>
+      </div>
+      <div className="workbook-section-body">
+        <p className="eyebrow">{section.phase}</p>
+        <h3>{section.title}</h3>
+        {section.body && <p className="workbook-section-intro">{section.body}</p>}
+        {section.visual && <ConceptVisual type={section.visual} />}
+        {section.keyPoints && (
+          <ul className="workbook-key-list">
+            {section.keyPoints.map(point => <li key={point}>{point}</li>)}
+          </ul>
+        )}
+        {section.interactive && <WorkbookInteractive type={section.interactive} />}
+        {section.questions && <WorkbookChoiceQuestions questions={section.questions} mode={section.type === 'exit' ? 'exit' : 'practice'} />}
+        {section.prompts && (
+          <div className="workbook-written-list">
+            {section.prompts.map((task, taskIndex) => <WorkbookWrittenTask task={task} index={taskIndex} key={task.id} />)}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function WorkbookLessonExperience({ subtopic }) {
+  const lessons = subtopic.workbookLessons || []
+  const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id || '')
+
+  useEffect(() => {
+    setActiveLessonId(lessons[0]?.id || '')
+  }, [subtopic.ref, lessons])
+
+  if (!lessons.length) return null
+
+  const activeLesson = lessons.find(lesson => lesson.id === activeLessonId) || lessons[0]
+  const totalMinutes = activeLesson.sections.reduce((sum, section) => sum + section.minutes, 0)
+  const outcomeDetails = activeLesson.outcomeCodes
+    .map(code => subtopic.outcomes.find(outcome => outcome.code === code))
+    .filter(Boolean)
+
+  return (
+    <section className="workbook-experience">
+      <div className="workbook-lesson-picker" aria-label="Workbook lessons">
+        {lessons.map(lesson => (
+          <button
+            className={lesson.id === activeLesson.id ? 'active' : ''}
+            key={lesson.id}
+            type="button"
+            onClick={() => setActiveLessonId(lesson.id)}
+          >
+            <span>Lesson {lesson.lessonNumber}</span>
+            <strong>{lesson.title}</strong>
+            <small>{lesson.duration}</small>
+          </button>
+        ))}
+      </div>
+
+      <section className="workbook-hero-card">
+        <div>
+          <p className="eyebrow">Interactive workbook</p>
+          <h3>{activeLesson.title}</h3>
+          <p>{activeLesson.question}</p>
+        </div>
+        <div className="workbook-duration">
+          <span>{totalMinutes}</span>
+          <strong>minutes</strong>
+        </div>
+      </section>
+
+      <section className="workbook-goals-card">
+        <div className="lesson-section-heading">
+          <p className="eyebrow">Today you will be able to</p>
+          <h3>{activeLesson.goal}</h3>
+        </div>
+        <div className="workbook-goal-list">
+          {outcomeDetails.map(outcome => (
+            <article key={outcome.code}>
               <span>{outcome.code}</span>
-              <div>
-                <strong>Learn</strong>
-                <p>{content.join(' • ') || 'No content linked yet'}</p>
-              </div>
-              <div>
-                <strong>Do</strong>
-                <p>{activityMatches.join(' • ') || 'No activity linked yet'}</p>
-              </div>
-              <div>
-                <strong>Check</strong>
-                <p>{checks[0] || 'No check linked yet'}</p>
-              </div>
+              <p>{outcome.text}</p>
             </article>
-          )
-        })}
+          ))}
+        </div>
+      </section>
+
+      <div className="workbook-route-strip">
+        {activeLesson.sections.map(section => (
+          <span key={`${activeLesson.id}-${section.phase}`}>{section.minutes} min • {section.phase}</span>
+        ))}
+      </div>
+
+      <div className="workbook-section-list">
+        {activeLesson.sections.map((section, index) => <WorkbookSection section={section} index={index} key={`${activeLesson.id}-${section.phase}-${section.title}`} />)}
       </div>
     </section>
   )
@@ -715,12 +853,16 @@ export default function LessonTemplate({ topic, template, currentUser }) {
             </div>
           </section>
 
-          <LearningOutcomesPanel outcomes={activeSubtopic.outcomes} />
-          <OutcomeMatchPanel outcomes={activeSubtopic.outcomes} lesson={activeSubtopic.webLesson} activities={activeSubtopic.activities} />
+          {activeSubtopic.workbookLessons ? (
+            <WorkbookLessonExperience subtopic={activeSubtopic} />
+          ) : (
+            <>
+              <LearningOutcomesPanel outcomes={activeSubtopic.outcomes} />
+              {activeSubtopic.webLesson && <WebLessonExperience lesson={activeSubtopic.webLesson} activities={activeSubtopic.activities} />}
+            </>
+          )}
 
-          {activeSubtopic.webLesson && <WebLessonExperience lesson={activeSubtopic.webLesson} activities={activeSubtopic.activities} />}
-
-          {!activeSubtopic.webLesson && (
+          {!activeSubtopic.workbookLessons && !activeSubtopic.webLesson && (
             <section className="lesson-template-section">
               <div className="lesson-section-heading">
                 <p className="eyebrow">Suggested teaching activities</p>
