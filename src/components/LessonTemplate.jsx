@@ -208,6 +208,102 @@ function WorkbookChoiceQuestions({ questions = [], mode = 'practice' }) {
   )
 }
 
+function normaliseWorkbookAnswer(value) {
+  return String(value || '').trim().toLowerCase().replace(/[.,]/g, '')
+}
+
+function WorkbookFillBlanks({ wordBank = [], blanks = [] }) {
+  const [answers, setAnswers] = useState({})
+
+  function updateAnswer(id, value) {
+    setAnswers(previous => ({ ...previous, [id]: value }))
+  }
+
+  return (
+    <div className="workbook-fill-area">
+      {wordBank.length > 0 && (
+        <div className="workbook-word-bank" aria-label="Word bank">
+          {wordBank.map(word => <span key={word}>{word}</span>)}
+        </div>
+      )}
+      <div className="workbook-fill-list">
+        {blanks.map((blank, index) => {
+          const response = answers[blank.id] || ''
+          const accepted = Array.isArray(blank.answer) ? blank.answer : [blank.answer]
+          const isCorrect = response && accepted.some(answer => normaliseWorkbookAnswer(answer) === normaliseWorkbookAnswer(response))
+
+          return (
+            <label className="workbook-fill-row" key={blank.id}>
+              <span>{index + 1}. {blank.prompt}</span>
+              <input value={response} onChange={event => updateAnswer(blank.id, event.target.value)} placeholder="Type the missing word" />
+              {response && <small className={isCorrect ? 'correct' : 'incorrect'}>{isCorrect ? 'Correct' : `Try again. Answer: ${accepted[0]}`}</small>}
+            </label>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function WorkbookMatchingTask({ options = [], items = [] }) {
+  const [matches, setMatches] = useState({})
+
+  function updateMatch(id, value) {
+    setMatches(previous => ({ ...previous, [id]: value }))
+  }
+
+  return (
+    <div className="workbook-match-area">
+      <div className="workbook-match-options">
+        {options.map(option => (
+          <article key={option.id}>
+            <span>{option.id}</span>
+            <p>{option.text}</p>
+          </article>
+        ))}
+      </div>
+      <div className="workbook-match-list">
+        {items.map(item => {
+          const selected = matches[item.id] || ''
+          const isCorrect = selected && selected === item.answer
+
+          return (
+            <label className="workbook-match-row" key={item.id}>
+              <span>{item.term}</span>
+              <select value={selected} onChange={event => updateMatch(item.id, event.target.value)}>
+                <option value="">Choose</option>
+                {options.map(option => <option key={option.id} value={option.id}>{option.id}</option>)}
+              </select>
+              {selected && <small className={isCorrect ? 'correct' : 'incorrect'}>{isCorrect ? 'Correct' : `Answer: ${item.answer}`}</small>}
+            </label>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function WorkbookDataTable({ table }) {
+  if (!table) return null
+
+  return (
+    <div className="workbook-data-table">
+      <table>
+        <thead>
+          <tr>{table.headers.map(header => <th key={header}>{header}</th>)}</tr>
+        </thead>
+        <tbody>
+          {table.rows.map(row => (
+            <tr key={row.join('-')}>
+              {row.map(cell => <td key={cell}>{cell}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 function WorkbookWrittenTask({ task, index }) {
   const [response, setResponse] = useState('')
   const [showAnswer, setShowAnswer] = useState(false)
@@ -240,11 +336,14 @@ function WorkbookSection({ section, index }) {
         <h3>{section.title}</h3>
         {section.body && <p className="workbook-section-intro">{section.body}</p>}
         {section.visual && <ConceptVisual type={section.visual} />}
+        {section.table && <WorkbookDataTable table={section.table} />}
         {section.keyPoints && (
           <ul className="workbook-key-list">
             {section.keyPoints.map(point => <li key={point}>{point}</li>)}
           </ul>
         )}
+        {section.fillBlanks && <WorkbookFillBlanks wordBank={section.wordBank} blanks={section.fillBlanks} />}
+        {section.matching && <WorkbookMatchingTask options={section.matching.options} items={section.matching.items} />}
         {section.interactive && <WorkbookInteractive type={section.interactive} />}
         {section.questions && <WorkbookChoiceQuestions questions={section.questions} mode={section.type === 'exit' ? 'exit' : 'practice'} />}
         {section.prompts && (
@@ -445,6 +544,77 @@ function ElectricFieldVisual() {
   )
 }
 
+function AlphaScatteringVisual() {
+  return (
+    <div className="alpha-scattering-visual" aria-label="Alpha particles fired at gold foil">
+      <svg viewBox="0 0 640 260" role="img" aria-label="Alpha-particle paths A, B and C through gold foil">
+        <defs>
+          <marker id="arrowHead" markerHeight="8" markerWidth="8" orient="auto" refX="6" refY="4">
+            <path d="M0,0 L8,4 L0,8 Z" />
+          </marker>
+        </defs>
+        <g className="gold-atoms">
+          {[130, 180, 230].map((y, row) => (
+            [410, 460, 510].map((x, column) => (
+              <g key={`${row}-${column}`} transform={`translate(${x + (row % 2) * 26} ${y})`}>
+                <circle r="22" />
+                <circle r="7" />
+              </g>
+            ))
+          ))}
+        </g>
+        <line className="alpha-path straight" x1="42" y1="92" x2="590" y2="92" markerEnd="url(#arrowHead)" />
+        <path className="alpha-path slight" d="M42 132 C210 132 360 128 590 78" markerEnd="url(#arrowHead)" />
+        <path className="alpha-path back" d="M42 176 C230 176 360 205 302 224 C260 236 196 212 152 192" markerEnd="url(#arrowHead)" />
+        <text x="100" y="82">A</text>
+        <text x="100" y="122">B</text>
+        <text x="100" y="166">C</text>
+        <text x="410" y="40">gold foil</text>
+      </svg>
+      <div>
+        <span>A mostly passes straight through</span>
+        <span>B deflects slightly</span>
+        <span>C rarely deflects backwards</span>
+      </div>
+    </div>
+  )
+}
+
+function LithiumAtomVisual() {
+  const nucleus = ['p⁺', 'n⁰', 'p⁺', 'n⁰', 'n⁰', 'p⁺', 'n⁰']
+
+  return (
+    <div className="lithium-atom-visual" aria-label="Lithium-7 atom with three protons, four neutrons and three electrons">
+      <div className="lithium-ring inner" />
+      <div className="lithium-ring outer" />
+      <div className="lithium-nucleus">
+        {nucleus.map((particle, index) => <span key={`${particle}-${index}`}>{particle}</span>)}
+      </div>
+      <span className="lithium-electron e1">e⁻</span>
+      <span className="lithium-electron e2">e⁻</span>
+      <span className="lithium-electron e3">e⁻</span>
+      <strong>⁷₃Li</strong>
+    </div>
+  )
+}
+
+function IsotopeNotationVisual() {
+  return (
+    <div className="isotope-notation-visual" aria-label="Isotope notation">
+      <div className="isotope-symbol">
+        <span className="mass-number">A</span>
+        <span className="atomic-number">Z</span>
+        <strong>X</strong>
+      </div>
+      <ul>
+        <li>A = mass number = protons + neutrons</li>
+        <li>Z = atomic number = proton number</li>
+        <li>For a neutral atom, electrons = protons</li>
+      </ul>
+    </div>
+  )
+}
+
 function RadiusTrendVisual() {
   return (
     <div className="radius-visual" aria-label="Atomic radius trends">
@@ -468,6 +638,9 @@ function ConceptVisual({ type }) {
   if (type === 'nuclear-model') return <NuclearModelVisual />
   if (type === 'particle-table') return <ParticleTableVisual />
   if (type === 'electric-field') return <ElectricFieldVisual />
+  if (type === 'alpha-scattering') return <AlphaScatteringVisual />
+  if (type === 'lithium-atom') return <LithiumAtomVisual />
+  if (type === 'isotope-notation') return <IsotopeNotationVisual />
   if (type === 'radius-trends') return <RadiusTrendVisual />
   return null
 }
