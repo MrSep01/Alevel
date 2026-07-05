@@ -203,40 +203,46 @@ const scenarioLibrary = {
 const stageOrder = ['equation', 'moles-a', 'moles-b', 'compare', 'product', 'answer', 'excess']
 
 const reactantMapNodes = [
-  { type: 'gas', label: 'Gas volume', kind: 'volume', a: { x: 8, y: 16 }, b: { x: 92, y: 16 } },
-  { type: 'mass', label: 'Mass', kind: 'mass', a: { x: 27, y: 16 }, b: { x: 73, y: 16 } },
-  { type: 'solution', label: 'Solution volume', kind: 'volume', a: { x: 8, y: 48 }, b: { x: 92, y: 48 } },
-  { type: 'pure-volume', label: 'Pure volume', kind: 'volume', a: { x: 8, y: 77 }, b: { x: 92, y: 77 } },
-  { type: 'particles', label: 'Particles', kind: 'particles', a: { x: 27, y: 82 }, b: { x: 73, y: 82 } },
+  { type: 'gas', label: 'Gas volume', kind: 'volume', a: { x: 8, y: 16 }, b: { x: 8, y: 63 } },
+  { type: 'mass', label: 'Mass', kind: 'mass', a: { x: 22, y: 16 }, b: { x: 22, y: 63 } },
+  { type: 'solution', label: 'Solution volume', kind: 'volume', a: { x: 8, y: 32 }, b: { x: 8, y: 79 } },
+  { type: 'pure-volume', label: 'Pure volume', kind: 'volume', a: { x: 8, y: 48 }, b: { x: 8, y: 93 } },
+  { type: 'particles', label: 'Particles', kind: 'particles', a: { x: 22, y: 48 }, b: { x: 22, y: 93 } },
 ]
 
 const productMapNodes = [
-  { type: 'mass', label: 'Mass', kind: 'mass', x: 28, y: 91 },
-  { type: 'gas', label: 'Gas volume', kind: 'volume', x: 39, y: 91 },
-  { type: 'solution', label: 'Final concentration', kind: 'volume', x: 50, y: 91 },
-  { type: 'particles', label: 'Particles', kind: 'particles', x: 61, y: 91 },
-  { type: 'pure-volume', label: 'Pure volume', kind: 'volume', x: 72, y: 91 },
+  { type: 'mass', label: 'Product mass', kind: 'mass', x: 77, y: 24 },
+  { type: 'gas', label: 'Product gas volume', kind: 'volume', x: 91, y: 24 },
+  { type: 'solution', label: 'Product concentration', kind: 'volume', x: 77, y: 75 },
+  { type: 'particles', label: 'Product particles', kind: 'particles', x: 91, y: 75 },
+  { type: 'pure-volume', label: 'Product pure volume', kind: 'volume', x: 84, y: 91 },
+]
+
+const visualLaneLabels = [
+  { id: 'reactant-a', prefix: 'a', zone: 'reactant', label: 'Reactant route', x: 19, y: 7 },
+  { id: 'reactant-b', prefix: 'b', zone: 'reactant', label: 'Reactant route', x: 19, y: 54 },
+  { id: 'product', zone: 'product', label: 'Product answer route', x: 78, y: 7 },
 ]
 
 const visualLines = [
-  { id: 'a-gas', prefix: 'a', type: 'gas', stage: 'moles-a', x1: 15, y1: 22, x2: 28, y2: 42, label: 'V ÷ 24.0', lx: 21, ly: 29 },
-  { id: 'a-mass', prefix: 'a', type: 'mass', stage: 'moles-a', x1: 27, y1: 24, x2: 32, y2: 39, label: '÷ Mᵣ', lx: 31, ly: 31 },
-  { id: 'a-solution', prefix: 'a', type: 'solution', stage: 'moles-a', x1: 15, y1: 48, x2: 26, y2: 48, label: 'c × V', lx: 21, ly: 43 },
-  { id: 'a-pure-volume', prefix: 'a', type: 'pure-volume', stage: 'moles-a', x1: 15, y1: 75, x2: 27, y2: 58, label: 'density then Mᵣ', lx: 20, ly: 65 },
-  { id: 'a-particles', prefix: 'a', type: 'particles', stage: 'moles-a', x1: 27, y1: 75, x2: 31, y2: 60, label: '÷ Nₐ', lx: 31, ly: 68 },
-  { id: 'b-gas', prefix: 'b', type: 'gas', stage: 'moles-b', x1: 85, y1: 22, x2: 72, y2: 42, label: 'V ÷ 24.0', lx: 79, ly: 29 },
-  { id: 'b-mass', prefix: 'b', type: 'mass', stage: 'moles-b', x1: 73, y1: 24, x2: 68, y2: 39, label: '÷ Mᵣ', lx: 69, ly: 31 },
-  { id: 'b-solution', prefix: 'b', type: 'solution', stage: 'moles-b', x1: 85, y1: 48, x2: 74, y2: 48, label: 'c × V', lx: 79, ly: 43 },
-  { id: 'b-pure-volume', prefix: 'b', type: 'pure-volume', stage: 'moles-b', x1: 85, y1: 75, x2: 73, y2: 58, label: 'density then Mᵣ', lx: 80, ly: 65 },
-  { id: 'b-particles', prefix: 'b', type: 'particles', stage: 'moles-b', x1: 73, y1: 75, x2: 69, y2: 60, label: '÷ Nₐ', lx: 69, ly: 68 },
-  { id: 'a-compare', stage: 'compare', x1: 38, y1: 48, x2: 43, y2: 36, label: 'n ÷ coefficient', lx: 40, ly: 38 },
-  { id: 'b-compare', stage: 'compare', x1: 62, y1: 48, x2: 57, y2: 36, label: 'n ÷ coefficient', lx: 60, ly: 38 },
-  { id: 'compare-product', stage: 'product', x1: 50, y1: 39, x2: 50, y2: 58, label: 'limiting × product ratio', lx: 50, ly: 49 },
-  { id: 'product-mass', outputType: 'mass', stage: 'answer', x1: 48, y1: 68, x2: 28, y2: 84, label: '× Mᵣ', lx: 35, ly: 76 },
-  { id: 'product-gas', outputType: 'gas', stage: 'answer', x1: 49, y1: 69, x2: 39, y2: 84, label: '× 24.0', lx: 42, ly: 77 },
-  { id: 'product-solution', outputType: 'solution', stage: 'answer', x1: 50, y1: 69, x2: 50, y2: 84, label: '÷ total V', lx: 54, ly: 77 },
-  { id: 'product-particles', outputType: 'particles', stage: 'answer', x1: 51, y1: 69, x2: 61, y2: 84, label: '× Nₐ', lx: 58, ly: 77 },
-  { id: 'product-pure-volume', outputType: 'pure-volume', stage: 'answer', x1: 52, y1: 68, x2: 72, y2: 84, label: 'density', lx: 66, ly: 76 },
+  { id: 'a-gas', prefix: 'a', type: 'gas', stage: 'moles-a', x1: 15, y1: 18, x2: 31, y2: 27, label: 'V ÷ 24.0', lx: 23, ly: 21 },
+  { id: 'a-mass', prefix: 'a', type: 'mass', stage: 'moles-a', x1: 27, y1: 18, x2: 31, y2: 27, label: '÷ Mᵣ', lx: 29, ly: 21 },
+  { id: 'a-solution', prefix: 'a', type: 'solution', stage: 'moles-a', x1: 15, y1: 32, x2: 29, y2: 32, label: 'c × V', lx: 22, ly: 29 },
+  { id: 'a-pure-volume', prefix: 'a', type: 'pure-volume', stage: 'moles-a', x1: 15, y1: 47, x2: 30, y2: 37, label: 'density then Mᵣ', lx: 22, ly: 42 },
+  { id: 'a-particles', prefix: 'a', type: 'particles', stage: 'moles-a', x1: 27, y1: 47, x2: 31, y2: 37, label: '÷ Nₐ', lx: 29, ly: 42 },
+  { id: 'b-gas', prefix: 'b', type: 'gas', stage: 'moles-b', x1: 15, y1: 63, x2: 31, y2: 72, label: 'V ÷ 24.0', lx: 23, ly: 66 },
+  { id: 'b-mass', prefix: 'b', type: 'mass', stage: 'moles-b', x1: 27, y1: 63, x2: 31, y2: 72, label: '÷ Mᵣ', lx: 29, ly: 66 },
+  { id: 'b-solution', prefix: 'b', type: 'solution', stage: 'moles-b', x1: 15, y1: 79, x2: 29, y2: 77, label: 'c × V', lx: 22, ly: 76 },
+  { id: 'b-pure-volume', prefix: 'b', type: 'pure-volume', stage: 'moles-b', x1: 15, y1: 91, x2: 30, y2: 83, label: 'density then Mᵣ', lx: 22, ly: 87 },
+  { id: 'b-particles', prefix: 'b', type: 'particles', stage: 'moles-b', x1: 27, y1: 91, x2: 31, y2: 83, label: '÷ Nₐ', lx: 29, ly: 87 },
+  { id: 'a-compare', stage: 'compare', x1: 39, y1: 32, x2: 45, y2: 45, label: 'n ÷ coefficient', lx: 42, ly: 39 },
+  { id: 'b-compare', stage: 'compare', x1: 39, y1: 76, x2: 45, y2: 55, label: 'n ÷ coefficient', lx: 42, ly: 65 },
+  { id: 'compare-product', stage: 'product', x1: 54, y1: 50, x2: 62, y2: 50, label: 'limiting × product ratio', lx: 58, ly: 44 },
+  { id: 'product-mass', outputType: 'mass', stage: 'answer', x1: 69, y1: 47, x2: 75, y2: 30, label: '× Mᵣ', lx: 72, ly: 38 },
+  { id: 'product-gas', outputType: 'gas', stage: 'answer', x1: 70, y1: 47, x2: 89, y2: 30, label: '× 24.0', lx: 80, ly: 38 },
+  { id: 'product-solution', outputType: 'solution', stage: 'answer', x1: 69, y1: 53, x2: 75, y2: 69, label: '÷ total V', lx: 72, ly: 62 },
+  { id: 'product-particles', outputType: 'particles', stage: 'answer', x1: 70, y1: 53, x2: 89, y2: 69, label: '× Nₐ', lx: 80, ly: 62 },
+  { id: 'product-pure-volume', outputType: 'pure-volume', stage: 'answer', x1: 70, y1: 55, x2: 84, y2: 84, label: 'density', lx: 78, ly: 72 },
 ]
 
 function readPositive(value) {
@@ -751,7 +757,8 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
     const canUseDirectMoles = reactantDefinition?.availableInputs.includes('moles')
     const selected = values[`${prefix}InputType`] === 'moles'
     const active = activeStage === `moles-${prefix}`
-    const left = prefix === 'a' ? 32 : 68
+    const left = 34
+    const top = prefix === 'a' ? 32 : 76
     const species = speciesForPrefix(values, prefix)
 
     return (
@@ -759,7 +766,7 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
         className={`stoich-visual-node moles-node ${selected ? 'selected' : ''} ${active ? 'active' : ''}`}
         disabled={!canUseDirectMoles}
         onClick={() => selectInputType(prefix, 'moles')}
-        style={{ left: `${left}%`, top: '48%' }}
+        style={{ left: `${left}%`, top: `${top}%` }}
         type="button"
       >
         <span>Moles of {species}</span>
@@ -901,6 +908,29 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
         </div>
 
         <div className="stoich-visual-map" aria-label="Visual stoichiometry map with limiting reactant and excess">
+          <div className="stoich-map-zone reactants" aria-hidden="true">
+            <span>Reactant side</span>
+          </div>
+          <div className="stoich-map-zone products" aria-hidden="true">
+            <span>Product side</span>
+          </div>
+          <div className="stoich-map-zone-divider" aria-hidden="true" />
+
+          {visualLaneLabels.map(lane => (
+            <div
+              className={`stoich-map-lane-label ${lane.zone}`}
+              key={lane.id}
+              style={{ left: `${lane.x}%`, top: `${lane.y}%` }}
+            >
+              <span>{lane.label}</span>
+              <strong>
+                {lane.zone === 'product'
+                  ? formatReactionTerm(values.productCoefficient, values.productFormula)
+                  : formatReactionTerm(values[`${lane.prefix}Coefficient`], speciesForPrefix(values, lane.prefix))}
+              </strong>
+            </div>
+          ))}
+
           <svg className="stoich-visual-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             <defs>
               <marker id="stoichVisualArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -937,15 +967,20 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
           <button
             className={`stoich-visual-node limiting-node ${activeStage === 'compare' ? 'active' : ''}`}
             onClick={() => { setIsPlaying(false); setActiveStageIndex(3) }}
-            style={{ left: '50%', top: '32%' }}
+            style={{ left: '48%', top: '50%' }}
             type="button"
           >
-            <span>Limiting check</span>
+            <span>Reactant limiting/excess check</span>
             <strong>{limitingReactantLabel(result, values)}</strong>
             <small>
               {result === null
                 ? 'Compare n ÷ coefficient'
-                : `${values.aFormula}: ${formatValue(result.capacityA, sigFigs)} | ${values.bFormula}: ${formatValue(result.capacityB, sigFigs)}`}
+                : (
+                  <span className="stoich-capacity-mini">
+                    <b>{values.aFormula}: {formatValue(result.capacityA, sigFigs)}</b>
+                    <b>{values.bFormula}: {formatValue(result.capacityB, sigFigs)}</b>
+                  </span>
+                )}
             </small>
           </button>
 
@@ -953,23 +988,23 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
             className={`stoich-visual-node product-moles-node ${values.productOutputType === 'moles' ? 'selected' : ''} ${activeStage === 'product' ? 'active' : ''}`}
             disabled={!scenario.product.availableOutputs.includes('moles')}
             onClick={() => selectProductOutput('moles')}
-            style={{ left: '50%', top: '64%' }}
+            style={{ left: '66%', top: '50%' }}
             type="button"
           >
-            <span>Moles of product</span>
+            <span>Moles of {values.productFormula}</span>
             <strong>{result === null ? 'Check values' : `${formatValue(result.productMoles, sigFigs)} mol`}</strong>
             <small>{values.productFormula}</small>
           </button>
 
           {productMapNodes.map(renderProductMapNode)}
 
-          <div className={`stoich-leftover-badge a ${activeStage === 'excess' ? 'active' : ''}`} style={{ left: '32%', top: '65%' }}>
+          <div className={`stoich-leftover-badge a ${activeStage === 'excess' ? 'active' : ''}`} style={{ left: '48%', top: '30%' }}>
             <span>{values.aFormula} left</span>
             <strong>{result === null ? '?' : `${formatValue(result.excessA, sigFigs)} mol`}</strong>
             <small>{result === null ? '' : formatConvertedValue(result.excessADisplay, sigFigs)}</small>
           </div>
 
-          <div className={`stoich-leftover-badge b ${activeStage === 'excess' ? 'active' : ''}`} style={{ left: '68%', top: '65%' }}>
+          <div className={`stoich-leftover-badge b ${activeStage === 'excess' ? 'active' : ''}`} style={{ left: '48%', top: '72%' }}>
             <span>{values.bFormula} left</span>
             <strong>{result === null ? '?' : `${formatValue(result.excessB, sigFigs)} mol`}</strong>
             <small>{result === null ? '' : formatConvertedValue(result.excessBDisplay, sigFigs)}</small>
