@@ -1297,6 +1297,54 @@ p {
     #fbfdff;
 }
 
+.concentration-photo-card {
+  margin: 0;
+  padding: 12px;
+  place-items: stretch;
+  align-content: start;
+  gap: 12px;
+  background: #ffffff;
+}
+
+.concentration-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid #dbe7f5;
+  border-radius: 14px;
+  object-fit: cover;
+  object-position: center;
+  box-shadow: 0 14px 34px rgba(37, 48, 68, 0.12);
+}
+
+.concentration-photo-notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.concentration-photo-notes span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #536274;
+  padding: 10px 11px;
+  font-size: 0.82rem;
+  font-weight: 760;
+  line-height: 1.28;
+}
+
+.concentration-photo-notes strong {
+  color: #1d2a3d;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 .concentration-svg {
   width: 100%;
   max-width: 700px;
@@ -2019,7 +2067,8 @@ p {
 
 @media (max-width: 720px) {
   .concentration-visual-panel,
-  .concentration-term-grid {
+  .concentration-term-grid,
+  .concentration-photo-notes {
     grid-template-columns: 1fr;
   }
 

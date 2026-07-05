@@ -1,28 +1,19 @@
-const particlePositions = [
-  [212, 226], [238, 208], [268, 228], [302, 206], [332, 232],
-  [226, 254], [262, 264], [294, 248], [338, 262], [246, 238],
-  [316, 224], [280, 270], [352, 246], [220, 276], [304, 278],
-]
-
-const dilutionParticles = [
-  [450, 218], [474, 232], [500, 222], [432, 246], [462, 258], [494, 250],
-  [520, 266], [446, 282], [486, 288],
-]
-
 const sceneCopy = {
   concentration: {
     title: 'Solution = solute + solvent',
-    note: 'The same moles in a smaller volume gives a more concentrated solution.',
+    note: 'A solution is prepared by measuring the solute, adding solvent, then mixing until the solute dissolves.',
+    imageKey: 'solution',
     terms: [
-      ['Solute', 'the chemical dissolved in the liquid'],
-      ['Solvent', 'the liquid that dissolves the solute'],
-      ['Solution', 'solute particles spread through solvent'],
+      ['Solute', 'the measured solid that dissolves'],
+      ['Solvent', 'the liquid used to make the solution'],
+      ['Solution', 'the dissolved mixture in the beaker'],
       ['Meniscus', 'read the bottom of the curve at eye level'],
     ],
   },
   moles: {
     title: 'Moles in a measured solution',
-    note: 'Concentration tells you how many moles are present in each dm³.',
+    note: 'Concentration tells you how many moles of dissolved solute are present in each dm³.',
+    imageKey: 'solution',
     terms: [
       ['Aliquot', 'a measured sample of solution'],
       ['Volume', 'convert cm³ to dm³ using × 10⁻³'],
@@ -32,7 +23,8 @@ const sceneCopy = {
   },
   volume: {
     title: 'Volume needed for a chosen number of moles',
-    note: 'A more concentrated solution needs a smaller volume to supply the same moles.',
+    note: 'A more concentrated solution needs a smaller measured volume to supply the same moles.',
+    imageKey: 'solution',
     terms: [
       ['Required volume', 'the volume of solution you need to measure'],
       ['Concentration', 'moles of solute in each dm³'],
@@ -42,7 +34,8 @@ const sceneCopy = {
   },
   dilution: {
     title: 'Dilution keeps moles but increases volume',
-    note: 'Adding solvent spreads the same solute particles through a larger volume.',
+    note: 'A measured volume of stock solution is transferred, then solvent is added to the calibration mark.',
+    imageKey: 'dilution',
     terms: [
       ['Stock solution', 'the concentrated starting solution'],
       ['Volumetric flask', 'made up exactly to the calibration mark'],
@@ -52,12 +45,43 @@ const sceneCopy = {
   },
   titration: {
     title: 'Titre is volume delivered from the burette',
-    note: 'The titre is the burette volume used to reach the endpoint.',
+    note: 'The titre is the measured burette volume needed to reach the indicator endpoint.',
+    imageKey: 'titration',
     terms: [
       ['Burette', 'delivers measured volume into the flask'],
       ['Titre', 'final reading − initial reading'],
       ['Endpoint', 'indicator colour change'],
       ['Aliquot', 'known volume in the conical flask'],
+    ],
+  },
+}
+
+const sceneImages = {
+  solution: {
+    src: '/assets/images/tools/concentration-solution-prep.png',
+    alt: 'Realistic chemistry lab setup with a beaker of blue solution, solid solute on a weighing boat, spatula, and solvent bottle.',
+    focus: [
+      ['Solid measured first', 'The solute is weighed before it is dissolved.'],
+      ['Solvent added after', 'The solvent is used to make up the solution volume.'],
+      ['Final mixture', 'The beaker shows the dissolved solution, not particles being poured in.'],
+    ],
+  },
+  dilution: {
+    src: '/assets/images/tools/concentration-dilution.png',
+    alt: 'Realistic dilution setup with a beaker of stock solution, pipette, and volumetric flask containing diluted solution.',
+    focus: [
+      ['Stock solution', 'Start with a measured volume of the concentrated solution.'],
+      ['Transfer', 'Use a pipette to move a known volume accurately.'],
+      ['Make to mark', 'Add solvent until the flask reaches the calibration line.'],
+    ],
+  },
+  titration: {
+    src: '/assets/images/tools/concentration-titration.png',
+    alt: 'Realistic titration setup with a burette clamped above a conical flask containing pale pink endpoint solution.',
+    focus: [
+      ['Burette reading', 'The titre comes from final reading minus initial reading.'],
+      ['Aliquot in flask', 'The conical flask contains a known measured volume.'],
+      ['Endpoint', 'The colour change shows when the reaction is just complete.'],
     ],
   },
 }
@@ -72,262 +96,14 @@ function formatResult(value, unit) {
   return number ? `${number.toPrecision(3)} ${unit}` : 'waiting for values'
 }
 
-function solutionLevel(modeId, values) {
-  if (modeId === 'dilution') return 0.82
-  if (modeId === 'titration') return 0.38
-  const volume = numberOrNull(values.volumeCm3 || values.finalVolume || values.titre)
-  if (!volume) return 0.56
-  return Math.min(0.86, Math.max(0.34, volume / 320))
-}
-
-function particleOpacity(modeId) {
-  if (modeId === 'dilution') return 0.46
-  if (modeId === 'titration') return 0.58
-  if (modeId === 'moles') return 0.70
-  return 0.82
-}
-
-function Callout({ x, y, label, tone = 'blue', width = 98 }) {
-  return (
-    <g className={`lab-callout ${tone}`} transform={`translate(${x} ${y})`}>
-      <rect className="lab-callout-box" width={width} height="30" rx="9" />
-      <text className="lab-callout-text" x="10" y="20">{label}</text>
-    </g>
-  )
-}
-
-function BeakerScene({ modeId, values }) {
-  const level = solutionLevel(modeId, values)
-  const solutionTop = 278 - (level * 142)
-  const opacity = particleOpacity(modeId)
-
-  return (
-    <svg className="concentration-svg lab-svg realistic-beaker-svg" viewBox="0 0 700 360" role="img" aria-label="Realistic beaker model showing solute, solvent, solution, and meniscus">
-      <defs>
-        <linearGradient id="labSolutionGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#d9f6ff" stopOpacity="0.56" />
-          <stop offset="48%" stopColor="#9ce4fa" stopOpacity="0.50" />
-          <stop offset="100%" stopColor="#45acd6" stopOpacity="0.56" />
-        </linearGradient>
-        <linearGradient id="labGlassGradient" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.72" />
-          <stop offset="38%" stopColor="#f8fbff" stopOpacity="0.18" />
-          <stop offset="72%" stopColor="#dbeafe" stopOpacity="0.16" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.42" />
-        </linearGradient>
-        <radialGradient id="labLiquidReflection" cx="50%" cy="0%" r="70%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.48" />
-          <stop offset="46%" stopColor="#ffffff" stopOpacity="0.12" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="benchGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#f8fafc" />
-          <stop offset="100%" stopColor="#edf2f7" />
-        </linearGradient>
-        <filter id="softGlassShadow" x="-20%" y="-20%" width="140%" height="145%">
-          <feDropShadow dx="0" dy="12" floodColor="#64748b" floodOpacity="0.16" stdDeviation="10" />
-        </filter>
-        <clipPath id="beakerInteriorClip">
-          <path d="M210 86 C276 74 424 74 490 86 L462 294 C414 314 286 314 238 294 Z" />
-        </clipPath>
-      </defs>
-
-      <rect className="lab-bench-plane" x="0" y="245" width="700" height="115" />
-      <ellipse className="lab-bench-shadow deep" cx="350" cy="312" rx="202" ry="25" />
-
-      <g className="lab-beaker realistic" filter="url(#softGlassShadow)">
-        <g clipPath="url(#beakerInteriorClip)">
-          <path className="lab-liquid realistic" d={`M206 ${solutionTop} C274 ${solutionTop - 4} 424 ${solutionTop + 5} 494 ${solutionTop} L486 318 L214 318 Z`} />
-          <path className="lab-liquid-reflection" d={`M230 ${solutionTop + 10} C286 ${solutionTop - 2} 416 ${solutionTop + 8} 466 ${solutionTop + 2} L452 278 C404 292 294 292 248 278 Z`} />
-          <path className="lab-swirl" d={`M282 ${solutionTop + 54} C314 ${solutionTop + 40} 382 ${solutionTop + 42} 410 ${solutionTop + 58}`} />
-          {particlePositions.map(([x, y], index) => (
-            <circle
-              className="lab-particle subtle"
-              cx={x + 64}
-              cy={Math.max(solutionTop + 20, y + 4)}
-              key={`${x}-${y}`}
-              r={1.8 + (index % 3) * 0.4}
-              style={{ animationDelay: `${index * 0.18}s`, opacity: opacity * 0.36 }}
-            />
-          ))}
-        </g>
-        <path className="lab-glass realistic" d="M210 86 C276 74 424 74 490 86 L462 294 C414 314 286 314 238 294 Z" />
-        <path className="lab-back-rim" d="M210 86 C276 74 424 74 490 86" />
-        <path className="lab-front-rim" d="M210 86 C278 100 422 100 490 86" />
-        <path className="lab-spout realistic" d="M489 86 C514 87 516 111 486 112" />
-        <path className="lab-bottom-ellipse" d="M238 294 C286 313 414 313 462 294" />
-        <path className="lab-meniscus realistic" d={`M206 ${solutionTop} C274 ${solutionTop - 4} 424 ${solutionTop + 5} 494 ${solutionTop}`} />
-        <path className="lab-highlight realistic" d="M250 108 C248 158 246 219 252 282" />
-        <path className="lab-highlight thin realistic" d="M438 112 C436 168 430 226 420 282" />
-        {[0, 1, 2, 3, 4, 5].map(index => (
-          <line
-            className="lab-graduation realistic"
-            key={index}
-            x1={414}
-            x2={index % 2 ? 446 : 462}
-            y1={122 + index * 26}
-            y2={122 + index * 26}
-          />
-        ))}
-      </g>
-
-      <g className="lab-weighing-station" transform="translate(60 274)">
-        <path className="lab-spatula" d="M18 -26 L126 -54" />
-        <path className="lab-spatula-scoop" d="M116 -58 C132 -66 152 -60 162 -48 C146 -42 128 -44 116 -58 Z" />
-        <path className="lab-weigh-boat" d="M0 18 C30 -3 104 -3 134 18 C102 39 32 39 0 18 Z" />
-        {[0, 1, 2, 3, 4, 5, 6, 7].map(index => (
-          <circle
-            className="lab-powder-grain"
-            cx={43 + (index % 4) * 13}
-            cy={13 + Math.floor(index / 4) * 7}
-            key={index}
-            r={2.4 + (index % 2) * 0.5}
-          />
-        ))}
-      </g>
-      <path className="lab-callout-line amber quiet" d="M128 214 L124 286" />
-      <Callout x="72" y="188" label="Solute weighed" tone="amber" width="122" />
-
-      <g className="lab-solvent-bottle" transform="translate(542 218)">
-        <path className="lab-bottle-body" d="M28 8 L64 8 C80 22 84 70 70 96 L24 96 C10 70 12 22 28 8 Z" />
-        <path className="lab-bottle-water" d="M18 58 C34 50 60 50 76 58 L70 96 L24 96 Z" />
-        <rect className="lab-bottle-cap" x="34" y="-3" width="24" height="13" rx="3" />
-        <path className="lab-bottle-nozzle" d="M54 2 C72 -14 96 -16 118 -8" />
-      </g>
-      <path className="lab-callout-line quiet" d="M574 198 L578 238" />
-      <Callout x="518" y="168" label="Solvent measured" tone="blue" width="128" />
-
-      <path className="lab-callout-line green quiet" d={`M148 256 L244 ${Math.max(solutionTop + 66, 228)}`} />
-      <Callout x="96" y="244" label="Solution" tone="green" width="86" />
-      <path className="lab-callout-line purple quiet" d={`M584 ${Math.max(solutionTop - 16, 112)} L494 ${solutionTop}`} />
-      <Callout x="582" y={Math.max(solutionTop - 30, 96)} label="Meniscus" tone="purple" width="90" />
-    </svg>
-  )
-}
-
-function DilutionScene() {
-  return (
-    <svg className="concentration-svg lab-svg dilution-svg" viewBox="0 0 660 340" role="img" aria-label="Realistic dilution model showing stock solution transferred to a volumetric flask">
-      <defs>
-        <linearGradient id="dilutionFill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#bff4ff" stopOpacity="0.86" />
-          <stop offset="100%" stopColor="#5cc4ee" stopOpacity="0.74" />
-        </linearGradient>
-        <marker id="labArrow" markerHeight="8" markerWidth="10" orient="auto" refX="9" refY="4">
-          <path d="M0,0 L10,4 L0,8 Z" fill="#6b2cb2" />
-        </marker>
-      </defs>
-
-      <ellipse className="lab-bench-shadow" cx="156" cy="281" rx="92" ry="13" />
-      <ellipse className="lab-bench-shadow" cx="488" cy="286" rx="98" ry="15" />
-
-      <g className="lab-small-beaker">
-        <path className="lab-glass" d="M78 112 C112 106 196 106 230 112 L212 260 C186 270 124 270 98 260 Z" />
-        <path className="lab-liquid compact" d="M94 168 C122 162 188 162 214 168 L212 260 C186 270 124 270 98 260 Z" />
-        <path className="lab-meniscus" d="M94 168 C122 162 188 162 214 168" />
-        <path className="lab-highlight" d="M110 124 L118 248" />
-      </g>
-      <Callout x="48" y="70" label="Stock solution" tone="blue" width="122" />
-      <path className="lab-callout-line" d="M128 100 L130 150" />
-
-      <g className="lab-pipette">
-        <path className="lab-pipette-line" d="M248 126 C322 82 386 82 458 126" />
-        <ellipse className="lab-pipette-bulb" cx="354" cy="94" rx="24" ry="13" />
-        <path className="lab-transfer-flow" d="M250 128 C322 100 386 100 456 128" />
-      </g>
-      <Callout x="268" y="144" label="Measured transfer" tone="purple" width="140" />
-
-      <g className="lab-volumetric-flask">
-        <path className="lab-glass" d="M482 56 L518 56 L518 154 C562 191 556 260 522 286 C502 302 464 302 444 286 C410 260 404 191 448 154 L448 56 Z" />
-        <line className="lab-calibration-mark" x1="438" x2="528" y1="136" y2="136" />
-        <path className="lab-liquid flask-fill" d="M426 238 C456 216 510 216 540 238 L522 286 C502 302 464 302 444 286 Z" />
-        <path className="lab-meniscus" d="M426 238 C456 216 510 216 540 238" />
-        <path className="lab-highlight flask" d="M456 74 L456 270" />
-        {dilutionParticles.map(([x, y], index) => (
-          <circle
-            className="lab-particle diluted"
-            cx={x}
-            cy={y}
-            key={`${x}-${y}`}
-            r={3.2}
-            style={{ animationDelay: `${index * 0.18}s` }}
-          />
-        ))}
-      </g>
-      <Callout x="506" y="84" label="Calibration mark" tone="amber" width="134" />
-      <path className="lab-callout-line amber" d="M518 116 L528 136" />
-      <Callout x="438" y="306" label="Diluted solution" tone="green" width="132" />
-    </svg>
-  )
-}
-
-function TitrationScene() {
-  return (
-    <svg className="concentration-svg lab-svg titration-svg" viewBox="0 0 660 340" role="img" aria-label="Realistic titration model showing a burette, titre, endpoint, and aliquot">
-      <defs>
-        <linearGradient id="endpointFill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#ffd8eb" stopOpacity="0.84" />
-          <stop offset="100%" stopColor="#f3a3cb" stopOpacity="0.72" />
-        </linearGradient>
-      </defs>
-
-      <ellipse className="lab-bench-shadow" cx="352" cy="292" rx="134" ry="16" />
-
-      <g className="lab-stand">
-        <line className="lab-metal" x1="118" x2="118" y1="38" y2="296" />
-        <line className="lab-metal base" x1="70" x2="170" y1="296" y2="296" />
-        <line className="lab-metal clamp" x1="118" x2="256" y1="82" y2="82" />
-        <rect className="lab-clamp-pad" x="244" y="68" width="38" height="28" rx="7" />
-      </g>
-
-      <g className="lab-burette">
-        <rect className="lab-glass" x="278" y="32" width="38" height="194" rx="15" />
-        <path className="lab-liquid burette-fill" d="M284 48 L310 48 L310 202 L284 202 Z" />
-        {[0, 1, 2, 3, 4, 5, 6, 7].map(index => (
-          <line
-            className="lab-graduation"
-            key={index}
-            x1={316}
-            x2={index % 2 ? 332 : 342}
-            y1={62 + index * 20}
-            y2={62 + index * 20}
-          />
-        ))}
-        <path className="lab-stopcock" d="M272 228 L322 228" />
-        <circle className="lab-stopcock-knob" cx="296" cy="228" r="8" />
-        <path className="lab-nozzle" d="M288 236 L304 236 L300 258 L292 258 Z" />
-      </g>
-      <Callout x="350" y="54" label="Burette" tone="blue" width="84" />
-      <path className="lab-callout-line" d="M350 76 L316 88" />
-      <Callout x="358" y="146" label="Titre volume" tone="purple" width="118" />
-      <path className="lab-callout-line purple" d="M356 166 L318 170" />
-
-      <circle className="lab-drop one" cx="296" cy="266" r="4.5" />
-      <circle className="lab-drop two" cx="296" cy="286" r="3.8" />
-
-      <g className="lab-conical-flask">
-        <path className="lab-glass" d="M220 292 L426 292 L370 166 L276 166 Z" />
-        <path className="lab-liquid endpoint" d="M240 258 C286 240 360 240 406 258 L426 292 L220 292 Z" />
-        <path className="lab-meniscus endpoint-line" d="M240 258 C286 240 360 240 406 258" />
-        <path className="lab-highlight flask" d="M280 182 L244 282" />
-      </g>
-      <Callout x="126" y="182" label="Aliquot + indicator" tone="amber" width="150" />
-      <path className="lab-callout-line amber" d="M270 202 L302 228" />
-      <Callout x="416" y="246" label="Endpoint" tone="green" width="94" />
-      <path className="lab-callout-line green" d="M414 262 L378 258" />
-    </svg>
-  )
-}
-
-export default function ConcentrationVisual({ modeId, values, result, resultUnit }) {
+export default function ConcentrationVisual({ modeId, result, resultUnit }) {
   const copy = sceneCopy[modeId] || sceneCopy.concentration
-  const isTitration = modeId === 'titration'
-  const isDilution = modeId === 'dilution'
+  const image = sceneImages[copy.imageKey] || sceneImages.solution
 
   return (
     <section className={`concentration-visual-panel ${modeId}`}>
       <div className="concentration-visual-copy">
-        <span>Visual model</span>
+        <span>Real lab view</span>
         <h3>{copy.title}</h3>
         <p>{copy.note}</p>
         <div className="concentration-result-chip">
@@ -336,9 +112,17 @@ export default function ConcentrationVisual({ modeId, values, result, resultUnit
         </div>
       </div>
 
-      <div className="concentration-scene-card">
-        {isTitration ? <TitrationScene /> : isDilution ? <DilutionScene /> : <BeakerScene modeId={modeId} values={values} />}
-      </div>
+      <figure className="concentration-scene-card concentration-photo-card">
+        <img className="concentration-photo" src={image.src} alt={image.alt} />
+        <figcaption className="concentration-photo-notes">
+          {image.focus.map(([label, detail]) => (
+            <span key={label}>
+              <strong>{label}</strong>
+              {detail}
+            </span>
+          ))}
+        </figcaption>
+      </figure>
 
       <div className="concentration-term-grid">
         {copy.terms.map(([term, definition]) => (
