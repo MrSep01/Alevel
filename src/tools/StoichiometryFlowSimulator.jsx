@@ -38,7 +38,7 @@ const scenarioLibrary = {
     reactants: [
       {
         id: 'a',
-        label: 'Reactant A',
+        label: 'Measured reactant',
         formula: 'Mg(s)',
         coefficient: 2,
         molarMass: 24.3,
@@ -48,7 +48,7 @@ const scenarioLibrary = {
       },
       {
         id: 'b',
-        label: 'Reactant B',
+        label: 'Measured reactant',
         formula: 'O₂(g)',
         coefficient: 1,
         molarMass: 32.0,
@@ -73,7 +73,7 @@ const scenarioLibrary = {
     reactants: [
       {
         id: 'a',
-        label: 'Reactant A',
+        label: 'Measured reactant',
         formula: 'AgNO₃(aq)',
         coefficient: 1,
         molarMass: 169.9,
@@ -83,7 +83,7 @@ const scenarioLibrary = {
       },
       {
         id: 'b',
-        label: 'Reactant B',
+        label: 'Measured reactant',
         formula: 'NaCl(aq)',
         coefficient: 1,
         molarMass: 58.5,
@@ -108,7 +108,7 @@ const scenarioLibrary = {
     reactants: [
       {
         id: 'a',
-        label: 'Reactant A',
+        label: 'Measured reactant',
         formula: 'CaCO₃(s)',
         coefficient: 1,
         molarMass: 100.1,
@@ -118,7 +118,7 @@ const scenarioLibrary = {
       },
       {
         id: 'b',
-        label: 'Reactant B',
+        label: 'Measured reactant',
         formula: 'HCl(aq)',
         coefficient: 2,
         molarMass: 36.5,
@@ -143,7 +143,7 @@ const scenarioLibrary = {
     reactants: [
       {
         id: 'a',
-        label: 'Reactant A',
+        label: 'Measured reactant',
         formula: 'N₂(g)',
         coefficient: 1,
         molarMass: 28.0,
@@ -153,7 +153,7 @@ const scenarioLibrary = {
       },
       {
         id: 'b',
-        label: 'Reactant B',
+        label: 'Measured reactant',
         formula: 'H₂(g)',
         coefficient: 3,
         molarMass: 2.0,
@@ -178,7 +178,7 @@ const scenarioLibrary = {
     reactants: [
       {
         id: 'a',
-        label: 'Reactant A',
+        label: 'Measured reactant',
         formula: 'HCl(aq)',
         coefficient: 1,
         molarMass: 36.5,
@@ -188,7 +188,7 @@ const scenarioLibrary = {
       },
       {
         id: 'b',
-        label: 'Reactant B',
+        label: 'Measured reactant',
         formula: 'NaOH(aq)',
         coefficient: 1,
         molarMass: 40.0,
@@ -255,6 +255,26 @@ function getInputTypeLabel(type) {
 
 function getOutputTypeLabel(type) {
   return productOutputOptions.find(option => option.value === type)?.label || 'Answer'
+}
+
+function formatReactionTerm(coefficient, formula) {
+  const coefficientText = String(coefficient ?? '').trim()
+  if (!coefficientText || coefficientText === '1') return formula
+  return `${coefficientText}${formula}`
+}
+
+function splitEquation(equation) {
+  const [reactants = '', products = ''] = String(equation).split(/\s*(?:→|->|=)\s*/)
+  return {
+    reactants: reactants.trim(),
+    products: products.trim(),
+  }
+}
+
+function limitingReactantLabel(result, values) {
+  if (result === null) return 'Check values'
+  if (result.limitingKey === 'both') return 'Exact reacting ratio'
+  return `${result.limitingKey === 'a' ? values.aFormula : values.bFormula} limits`
 }
 
 function createScenarioValues(scenarioId) {
@@ -476,6 +496,10 @@ function outputDisplay(result, values, sigFigs) {
   return result?.answer ? `${formatValue(result.answer.value, sigFigs)} ${result.answer.unit}` : 'Check values'
 }
 
+function speciesForPrefix(values, prefix) {
+  return values[`${prefix}Formula`]
+}
+
 function renderInputFields(prefix, values, updateValue) {
   const inputType = values[`${prefix}InputType`]
 
@@ -576,6 +600,7 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
 
   const scenario = scenarioLibrary[scenarioId]
   const sigFigs = fewestSigFigs(...measuredInputs(values)) || 3
+  const reactionParts = splitEquation(values.equation)
 
   const result = useMemo(() => {
     const reactantA = getReactant(values, 'a')
@@ -690,12 +715,20 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
     return `stoich-visual-link-label ${selected && available ? 'selected' : ''} ${available ? '' : 'disabled'}`
   }
 
+  function visualLineText(line) {
+    if (line.id === 'a-compare') return `n(${values.aFormula}) ÷ ${values.aCoefficient}`
+    if (line.id === 'b-compare') return `n(${values.bFormula}) ÷ ${values.bCoefficient}`
+    if (line.id === 'compare-product') return `× ${values.productCoefficient} ${values.productFormula}`
+    return line.label
+  }
+
   function renderReactantMapNode(prefix, node) {
     const reactantDefinition = scenario.reactants.find(reactant => reactant.id === prefix)
     const available = reactantDefinition?.availableInputs.includes(node.type)
     const selected = values[`${prefix}InputType`] === node.type
     const active = selected && activeStage === `moles-${prefix}`
     const coords = node[prefix]
+    const species = speciesForPrefix(values, prefix)
 
     return (
       <button
@@ -706,8 +739,8 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
         style={{ left: `${coords.x}%`, top: `${coords.y}%` }}
         type="button"
       >
-        <span>{node.label} of {prefix.toUpperCase()}</span>
-        <strong>{values[`${prefix}Formula`]}</strong>
+        <span>{node.label}</span>
+        <strong>{species}</strong>
         <small>{selected ? measurementDisplay(values, prefix) : getInputTypeLabel(node.type)}</small>
       </button>
     )
@@ -719,6 +752,7 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
     const selected = values[`${prefix}InputType`] === 'moles'
     const active = activeStage === `moles-${prefix}`
     const left = prefix === 'a' ? 32 : 68
+    const species = speciesForPrefix(values, prefix)
 
     return (
       <button
@@ -728,7 +762,7 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
         style={{ left: `${left}%`, top: '48%' }}
         type="button"
       >
-        <span>Moles of {prefix.toUpperCase()}</span>
+        <span>Moles of {species}</span>
         <strong>{result === null ? 'Check values' : `${formatValue(prefix === 'a' ? result.molesA : result.molesB, sigFigs)} mol`}</strong>
         <small>{selected ? 'Given directly' : inputCalculationLine(result?.[`reactant${prefix.toUpperCase()}`] || getReactant(values, prefix))}</small>
       </button>
@@ -763,7 +797,7 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
     return (
       <article className="stoich-reactant-input-card" key={prefix}>
         <div className="stoich-card-heading">
-          <span>{reactantDefinition.label}</span>
+          <span>Measured reactant</span>
           <strong>{values[`${prefix}Formula`]}</strong>
         </div>
 
@@ -838,9 +872,30 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
 
       <div className="stoich-visual-map-shell">
         <div className="stoich-visual-map-header">
-          <div>
-            <span>Balanced reaction</span>
-            <strong>{values.equation}</strong>
+          <div className="stoich-reaction-board" aria-label="Balanced reaction with reactants and products">
+            <div className="stoich-reaction-side">
+              <span>Reactants</span>
+              <div className="stoich-reaction-species">
+                <strong>{formatReactionTerm(values.aCoefficient, values.aFormula)}</strong>
+                <b>+</b>
+                <strong>{formatReactionTerm(values.bCoefficient, values.bFormula)}</strong>
+              </div>
+              <small>{reactionParts.reactants || 'Reactants from the balanced equation'}</small>
+            </div>
+
+            <div className="stoich-reaction-arrow-card">
+              <span>Balanced reaction</span>
+              <strong>→</strong>
+              <small>{values.equation}</small>
+            </div>
+
+            <div className="stoich-reaction-side products">
+              <span>Products</span>
+              <div className="stoich-reaction-species">
+                <strong>{reactionParts.products || formatReactionTerm(values.productCoefficient, values.productFormula)}</strong>
+              </div>
+              <small>Target product: {formatReactionTerm(values.productCoefficient, values.productFormula)}</small>
+            </div>
           </div>
           <p>{scenario.description}</p>
         </div>
@@ -870,7 +925,7 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
               key={`${line.id}-label`}
               style={{ left: `${line.lx}%`, top: `${line.ly}%` }}
             >
-              {line.label}
+              {visualLineText(line)}
             </span>
           ))}
 
@@ -886,11 +941,11 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
             type="button"
           >
             <span>Limiting check</span>
-            <strong>{result === null ? 'Check values' : result.limitingKey === 'both' ? 'Exact ratio' : `${result.limitingKey.toUpperCase()} limits`}</strong>
+            <strong>{limitingReactantLabel(result, values)}</strong>
             <small>
               {result === null
                 ? 'Compare n ÷ coefficient'
-                : `A: ${formatValue(result.capacityA, sigFigs)} | B: ${formatValue(result.capacityB, sigFigs)}`}
+                : `${values.aFormula}: ${formatValue(result.capacityA, sigFigs)} | ${values.bFormula}: ${formatValue(result.capacityB, sigFigs)}`}
             </small>
           </button>
 
@@ -909,13 +964,13 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
           {productMapNodes.map(renderProductMapNode)}
 
           <div className={`stoich-leftover-badge a ${activeStage === 'excess' ? 'active' : ''}`} style={{ left: '32%', top: '65%' }}>
-            <span>A left</span>
+            <span>{values.aFormula} left</span>
             <strong>{result === null ? '?' : `${formatValue(result.excessA, sigFigs)} mol`}</strong>
             <small>{result === null ? '' : formatConvertedValue(result.excessADisplay, sigFigs)}</small>
           </div>
 
           <div className={`stoich-leftover-badge b ${activeStage === 'excess' ? 'active' : ''}`} style={{ left: '68%', top: '65%' }}>
-            <span>B left</span>
+            <span>{values.bFormula} left</span>
             <strong>{result === null ? '?' : `${formatValue(result.excessB, sigFigs)} mol`}</strong>
             <small>{result === null ? '' : formatConvertedValue(result.excessBDisplay, sigFigs)}</small>
           </div>
@@ -1014,14 +1069,14 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
       <div className="calculator-working stoich-working-grid">
         <div>
           <span>Limiting reactant</span>
-          <strong>{result === null ? 'Check values' : result.limitingKey === 'both' ? 'Neither, exact reacting ratio' : result.limitingKey === 'a' ? values.aFormula : values.bFormula}</strong>
+          <strong>{limitingReactantLabel(result, values)}</strong>
         </div>
         <div>
-          <span>Reactant A used</span>
+          <span>{values.aFormula} used</span>
           <strong>{result === null ? 'Check values' : `${formatValue(result.usedA, sigFigs)} mol of ${values.aFormula}`}</strong>
         </div>
         <div>
-          <span>Reactant B used</span>
+          <span>{values.bFormula} used</span>
           <strong>{result === null ? 'Check values' : `${formatValue(result.usedB, sigFigs)} mol of ${values.bFormula}`}</strong>
         </div>
         <div>

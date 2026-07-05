@@ -1971,6 +1971,84 @@ p {
   margin: 0;
 }
 
+.stoich-reaction-board {
+  display: grid;
+  grid-template-columns: minmax(340px, 1fr) minmax(220px, 0.5fr) minmax(360px, 1.15fr);
+  gap: 12px;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.stoich-reaction-side,
+.stoich-reaction-arrow-card {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  padding: 12px 14px;
+}
+
+.stoich-reaction-side.products {
+  border-color: #baefdd;
+  background: linear-gradient(180deg, #ffffff 0%, #f3fff8 100%);
+}
+
+.stoich-reaction-arrow-card {
+  justify-items: center;
+  border-color: #c8e7fb;
+  background: #eef8ff;
+  text-align: center;
+}
+
+.stoich-reaction-side > span,
+.stoich-reaction-arrow-card > span {
+  color: #718096;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.stoich-reaction-species {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.stoich-reaction-species strong {
+  color: #253044;
+  font-size: clamp(1.1rem, 1.15vw, 1.35rem);
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+}
+
+.stoich-reaction-species b {
+  color: #7a879a;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.stoich-reaction-side small,
+.stoich-reaction-arrow-card small {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 850;
+  line-height: 1.32;
+  overflow-wrap: anywhere;
+}
+
+.stoich-reaction-arrow-card strong {
+  color: var(--primary-dark);
+  font-size: clamp(1.8rem, 2.2vw, 2.6rem);
+  line-height: 1;
+}
+
 .stoich-visual-map {
   position: relative;
   min-width: 1680px;
