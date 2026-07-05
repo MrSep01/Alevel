@@ -3642,9 +3642,43 @@ p {
   margin-inline: auto;
 }
 
+.yield-economy-tool-app .calculator-topline h2 {
+  max-width: 720px;
+  color: #172033;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.14;
+}
+
+.yield-economy-tool-app .formula-strip {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.yield-economy-tool-app .formula-strip-card {
+  border-radius: 14px;
+  padding: 13px 15px;
+}
+
+.yield-economy-tool-app .formula-strip-card strong {
+  font-size: clamp(1rem, 1.45vw, 1.22rem);
+  line-height: 1.22;
+}
+
+.yield-economy-tool-app .formula-strip-card.yield-reaction-formula {
+  grid-column: 1 / -1;
+}
+
+.yield-economy-tool-app .formula-strip-card.yield-reaction-formula strong {
+  display: block;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+  font-size: clamp(1.12rem, 2vw, 1.42rem);
+}
+
 .yield-reaction-panel {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   border: 1px solid #dbe7f5;
   border-radius: 18px;
   background:
@@ -3674,10 +3708,14 @@ p {
 
 .yield-reaction-heading strong {
   color: #1d2a3d;
-  font-size: clamp(1.2rem, 2vw, 1.75rem);
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  font-size: clamp(1.1rem, 2vw, 1.55rem);
   font-weight: 950;
   line-height: 1.16;
-  overflow-wrap: anywhere;
 }
 
 .yield-reaction-flow {
@@ -3689,18 +3727,20 @@ p {
 
 .yield-reaction-group {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
 .yield-formula-pill {
   display: grid;
-  gap: 6px;
+  grid-template-columns: minmax(86px, 0.7fr) minmax(0, 1.25fr) auto;
+  align-items: center;
+  gap: 8px;
   min-width: 0;
   border: 1px solid #dbe7f5;
   border-radius: 14px;
   background: #ffffff;
-  padding: 12px;
+  padding: 10px 12px;
   box-shadow: var(--shadow-sm);
 }
 
@@ -3714,7 +3754,7 @@ p {
 
 .yield-formula-pill strong {
   color: #1d2a3d;
-  font-size: clamp(1.08rem, 1.7vw, 1.42rem);
+  font-size: clamp(0.98rem, 1.35vw, 1.16rem);
   font-weight: 950;
   line-height: 1.12;
   overflow-wrap: anywhere;
@@ -3722,6 +3762,7 @@ p {
 
 .yield-formula-pill small {
   color: #64748b;
+  white-space: nowrap;
   font-weight: 850;
 }
 
@@ -3755,12 +3796,12 @@ p {
 .yield-arrow {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: #253044;
   color: #ffffff;
-  font-size: 1.5rem;
+  font-size: 1.28rem;
   font-weight: 950;
   line-height: 1;
 }
@@ -3798,7 +3839,7 @@ p {
 
 .yield-card-heading strong {
   color: #1d2a3d;
-  font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+  font-size: clamp(0.98rem, 1.2vw, 1.12rem);
   font-weight: 950;
   line-height: 1.24;
 }
@@ -3827,7 +3868,7 @@ p {
 
 .yield-route-card strong {
   color: #253044;
-  font-size: clamp(1rem, 1.3vw, 1.16rem);
+  font-size: clamp(0.96rem, 1.15vw, 1.06rem);
   font-weight: 950;
   line-height: 1.28;
   overflow-wrap: anywhere;
@@ -3850,7 +3891,7 @@ p {
 }
 
 .yield-answer-card .calculated-value {
-  font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+  font-size: clamp(1.25rem, 1.9vw, 1.65rem);
 }
 
 .yield-answer-card.practical .calculated-value {
@@ -8970,6 +9011,7 @@ body {
 
   .calculator-menu,
   .formula-breakdown,
+  .yield-economy-tool-app .formula-strip,
   .yield-reaction-group,
   .yield-input-grid,
   .hess-reaction-controls {

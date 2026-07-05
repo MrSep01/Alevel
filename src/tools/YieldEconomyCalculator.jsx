@@ -65,7 +65,7 @@ export default function YieldEconomyCalculator() {
       <FormulaStrip items={[
         { label: 'Percentage yield', value: 'actual yield ÷ theoretical yield × 100', tone: 'formula' },
         { label: 'Atom economy', value: 'useful product Mᵣ ÷ total reactants Mᵣ × 100', tone: 'conversion' },
-        { label: 'Example reaction', value: reactionText, tone: 'substitution' },
+        { label: 'Example reaction', value: reactionText, tone: 'substitution yield-reaction-formula' },
       ]} />
 
       <div className="yield-reaction-panel" aria-label="Example reaction">
