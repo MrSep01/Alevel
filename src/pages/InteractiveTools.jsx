@@ -1,4 +1,4 @@
-import { Atom, Beaker, Calculator, FlaskConical, GitBranch, LineChart, Percent, Workflow, Gauge, FlaskRound, Scale, RefreshCw, BatteryCharging, Route, Pyramid } from 'lucide-react'
+import { Atom, Beaker, Calculator, FlaskConical, GitBranch, LineChart, Percent, Workflow, FlaskRound, Scale, RefreshCw, BatteryCharging, Route, Pyramid } from 'lucide-react'
 import { useState } from 'react'
 import ConcentrationCalculator from '../tools/ConcentrationCalculator.jsx'
 import FormulaMassCalculator from '../tools/FormulaMassCalculator.jsx'
@@ -10,7 +10,6 @@ import MolecularFormulaCalculator from '../tools/MolecularFormulaCalculator.jsx'
 import TitrationSolver from '../tools/TitrationSolver.jsx'
 import PHCalculator from '../tools/PHCalculator.jsx'
 import EquilibriumKcCalculator from '../tools/EquilibriumKcCalculator.jsx'
-import GasVolumeCalculator from '../tools/GasVolumeCalculator.jsx'
 import YieldEconomyCalculator from '../tools/YieldEconomyCalculator.jsx'
 import UnitConverter from '../tools/UnitConverter.jsx'
 import ElectrochemicalCellCalculator from '../tools/ElectrochemicalCellCalculator.jsx'
@@ -27,7 +26,7 @@ const calculatorApps = [
   {
     id: 'moles',
     group: 'stoichiometry',
-    title: 'Mole Relationship Calculator',
+    title: 'Mass, Moles and Particles Calculator',
     subtitle: 'Open the full-page mass, moles, particles, and gas-volume converter',
     icon: Calculator,
     page: 'mole-relationship-tool',
@@ -36,7 +35,7 @@ const calculatorApps = [
     id: 'concentration',
     group: 'core',
     title: 'Concentration Calculator',
-    subtitle: 'Concentration, amount, volume, dilution, and titration links',
+    subtitle: 'Concentration, moles, volume, dilution, and titre-to-moles links',
     icon: FlaskConical,
   },
   {
@@ -59,13 +58,6 @@ const calculatorApps = [
     title: 'Molecular Formula Calculator',
     subtitle: 'Empirical formula and Mᵣ to molecular formula',
     icon: Atom,
-  },
-  {
-    id: 'gas',
-    group: 'stoichiometry',
-    title: 'Gas Volume Calculator',
-    subtitle: 'Moles, molar gas volume, and reacting gas ratios',
-    icon: Gauge,
   },
   {
     id: 'stoich-equation',
@@ -175,7 +167,7 @@ const calculatorGroups = [
 
 const toolGuidance = {
   moles: {
-    bestFor: 'Moving between mass, amount, particles, and gas volume.',
+    bestFor: 'Moving between mass, moles, particles, and gas volume.',
     examHabit: 'Write the equation triangle first, then substitute with units.',
     watchFor: 'Use dm³ for gases and solutions unless the question gives cm³.',
   },
@@ -185,7 +177,7 @@ const toolGuidance = {
     watchFor: 'Mass, cV, gas volume, particles, and density all enter the same mole bridge.',
   },
   'stoich-equation': {
-    bestFor: 'Using a balanced equation to calculate an unknown mass, mole amount, or gas volume.',
+    bestFor: 'Using a balanced equation to calculate an unknown mass, moles, or gas volume.',
     examHabit: 'Convert the known substance to moles before using the coefficient ratio.',
     watchFor: 'Never use grams directly in the ratio step.',
   },
@@ -195,7 +187,7 @@ const toolGuidance = {
     watchFor: 'The reactant with the smallest reaction capacity is limiting.',
   },
   concentration: {
-    bestFor: 'Solution concentration, dilution, and titration amount links.',
+    bestFor: 'Solution concentration, moles, dilution, and titre-to-moles links.',
     examHabit: 'Convert cm³ to dm³ before using concentration equations.',
     watchFor: 'Keep concentration units consistent: mol dm⁻³ or g dm⁻³.',
   },
@@ -213,11 +205,6 @@ const toolGuidance = {
     bestFor: 'Using empirical formula and Mᵣ to find the molecular formula.',
     examHabit: 'Find the empirical formula mass before scaling the subscripts.',
     watchFor: 'The multiplier should be a whole number in exam questions.',
-  },
-  gas: {
-    bestFor: 'Gas volume questions and reacting gas ratios.',
-    examHabit: 'Use the mole ratio from the balanced equation.',
-    watchFor: 'Molar gas volume depends on conditions, usually 24.0 dm³ mol⁻¹ at RTP.',
   },
   titration: {
     bestFor: 'Visualising equivalence point, buffer region, and indicator choice.',
@@ -285,7 +272,6 @@ export default function InteractiveTools({ navigate }) {
     formula: FormulaMassCalculator,
     empirical: EmpiricalFormulaBuilder,
     molecular: MolecularFormulaCalculator,
-    gas: GasVolumeCalculator,
     titration: TitrationCurveSimulator,
     'titration-solver': TitrationSolver,
     ph: PHCalculator,

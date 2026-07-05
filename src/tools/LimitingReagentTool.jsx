@@ -4,7 +4,7 @@ import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
 const molarGasVolume = 24.0
 
 const unitOptions = [
-  { id: 'mol', label: 'mol', name: 'Amount / mol' },
+  { id: 'mol', label: 'mol', name: 'Moles / mol' },
   { id: 'g', label: 'g', name: 'Mass / g' },
   { id: 'gas', label: 'dm³', name: 'Gas volume at RTP / dm³' },
   { id: 'solution', label: 'c,V', name: 'Solution concentration / mol dm⁻³' },
@@ -110,7 +110,7 @@ function getInitialReactants(example) {
 }
 
 function conversionText(unit, substance) {
-  if (unit === 'mol') return 'Use amount directly'
+  if (unit === 'mol') return 'Use moles directly'
   if (unit === 'g') return `n = mass ÷ Mᵣ (${substance.molarMass} g mol⁻¹)`
   if (unit === 'gas') return 'n = gas volume ÷ 24.0'
   return 'n = concentration × volume in dm³'
@@ -198,7 +198,7 @@ export default function LimitingReagentTool({ standalone = false }) {
           <p className="eyebrow">Limiting reagent tool</p>
           <h2>Compare available moles against the balanced equation ratio</h2>
         </div>
-        <span className="calculator-badge">smallest moles / coefficient limits the reaction</span>
+        <span className="calculator-badge">smallest moles ÷ coefficient limits the reaction</span>
       </div>
 
       <div className="calculator-mode-grid">
@@ -325,13 +325,13 @@ export default function LimitingReagentTool({ standalone = false }) {
           <div className="stoich-equation-card">
             <span>Balanced equation</span>
             <strong>{activeExample.equation}</strong>
-            <small>Divide each reactant amount by its coefficient. The smallest value is the limiting reagent.</small>
+            <small>Divide each reactant moles by its coefficient. The smallest value is the limiting reagent.</small>
           </div>
 
           <div className="calculator-display compact-display">
             <span>Limiting reagent</span>
             <strong>{result.limiting ? result.limiting.formula : 'Check values'}</strong>
-            <small>{result.limiting ? `${result.limiting.name} controls the maximum amount of ${product.formula}.` : 'Enter valid reactant amounts.'}</small>
+            <small>{result.limiting ? `${result.limiting.name} controls the maximum product from ${product.formula}.` : 'Enter valid reactant measurements.'}</small>
           </div>
 
           <div className="stoich-yield-card">
@@ -392,7 +392,7 @@ export default function LimitingReagentTool({ standalone = false }) {
             <strong>
               {row.moles === null
                 ? 'Check values'
-                : `${formatValue(row.moles, sigFigs)} mol / ${row.coefficient} = ${formatValue(row.reactionExtent, sigFigs)} reaction units`}
+                : `${formatValue(row.moles, sigFigs)} mol ÷ ${row.coefficient} = ${formatValue(row.reactionExtent, sigFigs)} reaction units`}
             </strong>
             <small>
               {row.leftoverMoles === undefined

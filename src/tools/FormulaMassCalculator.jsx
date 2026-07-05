@@ -352,7 +352,7 @@ export default function FormulaMassCalculator() {
               <strong>{result.parts.map(part => `${part.symbol}: ${part.count > 1 ? `${part.mass.toFixed(1)} × ${part.count}` : part.mass.toFixed(1)}`).join(' + ')}</strong>
             </div>
             <div>
-              <span>Sample amount</span>
+              <span>Sample moles</span>
               <strong>{sampleMass} g / {result.total.toFixed(1)} g mol⁻¹</strong>
             </div>
           </div>

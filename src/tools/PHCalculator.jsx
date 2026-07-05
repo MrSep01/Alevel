@@ -43,8 +43,8 @@ export default function PHCalculator() {
           {(mode === 'weak-acid' || mode === 'buffer') && <label className="calculator-field"><span>Kₐ</span><div><input type="text" value={ka} onChange={event => setKa(event.target.value)} /><b>Kₐ</b></div></label>}
           {mode === 'buffer' && (
             <>
-              <label className="calculator-field"><span>Acid amount</span><div><input type="number" step="any" value={acidMoles} onChange={event => setAcidMoles(event.target.value)} /><b>mol</b></div></label>
-              <label className="calculator-field"><span>Salt amount</span><div><input type="number" step="any" value={saltMoles} onChange={event => setSaltMoles(event.target.value)} /><b>mol</b></div></label>
+              <label className="calculator-field"><span>Acid moles</span><div><input type="number" step="any" value={acidMoles} onChange={event => setAcidMoles(event.target.value)} /><b>mol</b></div></label>
+              <label className="calculator-field"><span>Salt moles</span><div><input type="number" step="any" value={saltMoles} onChange={event => setSaltMoles(event.target.value)} /><b>mol</b></div></label>
             </>
           )}
         </div>

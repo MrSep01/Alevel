@@ -495,7 +495,7 @@ function productToAnswer(productMoles, values) {
   return {
     value: productMoles,
     unit: 'mol',
-    line: `amount is already in moles`,
+    line: `moles are given directly`,
     detail: `${productMoles} mol`,
   }
 }
@@ -629,7 +629,7 @@ function renderInputFields(prefix, values, updateValue) {
 
   return (
     <label className="calculator-field">
-      <span>Amount</span>
+      <span>Moles</span>
       <div>
         <input type="number" step="any" value={values[`${prefix}Moles`]} onChange={event => updateValue(`${prefix}Moles`, event.target.value)} />
         <b>mol</b>

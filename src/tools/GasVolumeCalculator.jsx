@@ -11,18 +11,18 @@ export default function GasVolumeCalculator() {
     return Number(moles) * Number(molarVolume) * Number(ratio)
   }, [molarVolume, moles, ratio])
 
-  const answer = volume ? volume.toPrecision(3) : 'Check values'
+  const answer = volume ? `${volume.toPrecision(3)} dm³` : 'Check values'
 
   return (
     <section className="calculator-app">
       <div className="calculator-topline"><p className="eyebrow">Gas volume calculator</p><span className="calculator-badge">V = n × molar volume</span></div>
       <div className="calculator-body">
         <div className="calculator-input-panel">
-          <label className="calculator-field"><span>Amount</span><div><input type="number" step="any" value={moles} onChange={event => setMoles(event.target.value)} /><b>mol</b></div></label>
+          <label className="calculator-field"><span>Moles</span><div><input type="number" step="any" value={moles} onChange={event => setMoles(event.target.value)} /><b>mol</b></div></label>
           <label className="calculator-field"><span>Molar gas volume</span><div><input type="number" step="any" value={molarVolume} onChange={event => setMolarVolume(event.target.value)} /><b>dm³ mol⁻¹</b></div></label>
           <label className="calculator-field"><span>Equation ratio multiplier</span><div><input type="number" step="any" value={ratio} onChange={event => setRatio(event.target.value)} /><b>ratio</b></div></label>
         </div>
-        <div className="calculator-display"><span>Gas volume</span><strong>{answer}</strong><small>dm³</small></div>
+        <div className="calculator-display"><span>Gas volume</span><strong>{answer}</strong><small>at selected molar gas volume</small></div>
       </div>
 
       <div className="tool-logic-grid">
@@ -38,7 +38,7 @@ export default function GasVolumeCalculator() {
         </article>
         <article className="tool-logic-card">
           <span>Answer</span>
-          <strong>{answer} dm³</strong>
+          <strong>{answer}</strong>
           <small>At the stated molar gas volume.</small>
         </article>
       </div>

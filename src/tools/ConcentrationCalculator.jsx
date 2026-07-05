@@ -9,17 +9,17 @@ const modes = [
     resultLabel: 'Concentration',
     unit: 'mol dm⁻³',
     fields: [
-      { id: 'moles', label: 'Amount', unit: 'mol', defaultValue: '0.0250' },
+      { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.0250' },
       { id: 'volumeCm3', label: 'Volume', unit: 'cm³', defaultValue: '250' },
     ],
     calculate: values => Number(values.moles) / (Number(values.volumeCm3) / 1000),
     working: values => `${values.moles} mol / (${values.volumeCm3} ÷ 1000) dm³`,
   },
   {
-    id: 'amount',
-    label: 'Find amount',
+    id: 'moles',
+    label: 'Find moles',
     equation: 'n = c × V',
-    resultLabel: 'Amount',
+    resultLabel: 'Moles',
     unit: 'mol',
     fields: [
       { id: 'concentration', label: 'Concentration', unit: 'mol dm⁻³', defaultValue: '0.100' },
@@ -35,7 +35,7 @@ const modes = [
     resultLabel: 'Volume',
     unit: 'cm³',
     fields: [
-      { id: 'moles', label: 'Amount', unit: 'mol', defaultValue: '0.00250' },
+      { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.00250' },
       { id: 'concentration', label: 'Concentration', unit: 'mol dm⁻³', defaultValue: '0.100' },
     ],
     calculate: values => (Number(values.moles) / Number(values.concentration)) * 1000,
@@ -57,9 +57,9 @@ const modes = [
   },
   {
     id: 'titration',
-    label: 'Titration link',
+    label: 'Titre to moles',
     equation: 'n = c × V',
-    resultLabel: 'Reactant amount',
+    resultLabel: 'Reactant moles',
     unit: 'mol',
     fields: [
       { id: 'titre', label: 'Titre', unit: 'cm³', defaultValue: '24.80' },
@@ -142,8 +142,8 @@ export default function ConcentrationCalculator() {
 
         <div className="calculator-display">
           <span>{mode.resultLabel}</span>
-          <strong>{result === null ? 'Check values' : formatToSigFigs(result, resultSigFigs)}</strong>
-          <small>{result === null ? mode.equation : `${mode.unit} · ${resultSigFigs} significant figures`}</small>
+          <strong>{result === null ? 'Check values' : `${formatToSigFigs(result, resultSigFigs)} ${mode.unit}`}</strong>
+          <small>{result === null ? mode.equation : `${resultSigFigs} significant figures`}</small>
         </div>
       </div>
 

@@ -9,7 +9,7 @@ const modes = [
     id: 'moles-from-mass',
     label: 'Mass to moles',
     equation: 'n = m / Mᵣ',
-    resultLabel: 'Amount of substance',
+    resultLabel: 'Moles',
     unit: 'mol',
     fields: [
       { id: 'mass', label: 'Mass', unit: 'g', defaultValue: '10.0' },
@@ -25,7 +25,7 @@ const modes = [
     resultLabel: 'Mass',
     unit: 'g',
     fields: [
-      { id: 'moles', label: 'Amount', unit: 'mol', defaultValue: '0.250' },
+      { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.250' },
       { id: 'molarMass', label: 'Molar mass', unit: 'g mol⁻¹', defaultValue: '40.0' },
     ],
     calculate: values => Number(values.moles) * Number(values.molarMass),
@@ -39,7 +39,7 @@ const modes = [
     unit: 'g mol⁻¹',
     fields: [
       { id: 'mass', label: 'Mass', unit: 'g', defaultValue: '5.00' },
-      { id: 'moles', label: 'Amount', unit: 'mol', defaultValue: '0.125' },
+      { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.125' },
     ],
     calculate: values => Number(values.mass) / Number(values.moles),
     working: values => `${values.mass} g / ${values.moles} mol`,
@@ -51,7 +51,7 @@ const modes = [
     resultLabel: 'Number of particles',
     unit: 'particles',
     fields: [
-      { id: 'moles', label: 'Amount', unit: 'mol', defaultValue: '0.250' },
+      { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.250' },
     ],
     calculate: values => Number(values.moles) * avogadroConstant,
     working: values => `${values.moles} mol × 6.022 × 10²³ mol⁻¹`,
@@ -60,7 +60,7 @@ const modes = [
     id: 'moles-from-particles',
     label: 'Particles to moles',
     equation: 'n = particles / Nₐ',
-    resultLabel: 'Amount of substance',
+    resultLabel: 'Moles',
     unit: 'mol',
     fields: [
       { id: 'particles', label: 'Number of particles', unit: 'particles', defaultValue: '3.011e23' },
@@ -75,7 +75,7 @@ const modes = [
     resultLabel: 'Gas volume at RTP',
     unit: 'dm³',
     fields: [
-      { id: 'moles', label: 'Amount', unit: 'mol', defaultValue: '0.250' },
+      { id: 'moles', label: 'Moles', unit: 'mol', defaultValue: '0.250' },
     ],
     calculate: values => Number(values.moles) * molarGasVolumeDm3,
     working: values => `${values.moles} mol × 24.0 dm³ mol⁻¹`,
@@ -84,7 +84,7 @@ const modes = [
     id: 'moles-from-gas-volume',
     label: 'Gas volume to moles',
     equation: 'n = V / 24.0',
-    resultLabel: 'Amount of gas at RTP',
+    resultLabel: 'Moles of gas at RTP',
     unit: 'mol',
     fields: [
       { id: 'volume', label: 'Gas volume at RTP', unit: 'dm³', defaultValue: '6.00' },
@@ -167,8 +167,8 @@ export default function MoleCalculator({ standalone = false }) {
 
         <div className="calculator-display">
           <span>{mode.resultLabel}</span>
-          <strong>{result === null ? 'Check values' : formatToSigFigs(result, displaySigFigs)}</strong>
-          <small>{result === null ? mode.equation : `${mode.unit} · ${displaySigFigs} significant figures`}</small>
+          <strong>{result === null ? 'Check values' : `${formatToSigFigs(result, displaySigFigs)} ${mode.unit}`}</strong>
+          <small>{result === null ? mode.equation : `${displaySigFigs} significant figures`}</small>
         </div>
       </div>
 

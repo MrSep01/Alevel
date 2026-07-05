@@ -19,7 +19,7 @@ export default function TitrationSolver() {
     return { knownMoles, unknownMoles, concentration: unknownMoles / vUnknown }
   }, [knownConcentration, knownRatio, knownVolume, unknownRatio, unknownVolume])
 
-  const answer = result ? result.concentration.toPrecision(3) : 'Check values'
+  const answer = result ? `${result.concentration.toPrecision(3)} mol dm⁻³` : 'Check values'
 
   return (
     <section className="calculator-app">
@@ -40,26 +40,26 @@ export default function TitrationSolver() {
         <div className="calculator-display">
           <span>Unknown concentration</span>
           <strong>{answer}</strong>
-          <small>mol dm⁻³</small>
+          <small>from titre and balanced equation ratio</small>
         </div>
       </div>
 
       {result && (
         <div className="tool-logic-grid">
           <article className="tool-logic-card">
-            <span>1. Known amount</span>
+            <span>1. Known moles</span>
             <strong>{knownConcentration} × {knownVolume} ÷ 1000 = {result.knownMoles.toPrecision(3)} mol</strong>
             <small>Convert cm³ to dm³ before using cV.</small>
           </article>
           <article className="tool-logic-card">
             <span>2. Mole ratio</span>
-            <strong>{result.knownMoles.toPrecision(3)} × {unknownRatio}/{knownRatio} = {result.unknownMoles.toPrecision(3)} mol</strong>
+            <strong>{result.knownMoles.toPrecision(3)} × {unknownRatio} ÷ {knownRatio} = {result.unknownMoles.toPrecision(3)} mol</strong>
             <small>Use the balanced equation ratio.</small>
           </article>
           <article className="tool-logic-card">
             <span>3. Unknown concentration</span>
             <strong>{result.unknownMoles.toPrecision(3)} ÷ ({unknownVolume} ÷ 1000) = {answer}</strong>
-            <small>Final unit: mol dm⁻³.</small>
+            <small>Final concentration includes the unit.</small>
           </article>
         </div>
       )}

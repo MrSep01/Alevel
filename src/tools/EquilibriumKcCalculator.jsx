@@ -31,7 +31,7 @@ export default function EquilibriumKcCalculator() {
 
   return (
     <section className="calculator-app">
-      <div className="calculator-topline"><p className="eyebrow">Kc calculator</p><span className="calculator-badge">products / reactants</span></div>
+      <div className="calculator-topline"><p className="eyebrow">Kc calculator</p><span className="calculator-badge">products ÷ reactants</span></div>
       <div className="tool-summary-grid">
         {[
           ['[A]', a, setA, aPower, setAPower],
@@ -46,7 +46,7 @@ export default function EquilibriumKcCalculator() {
           </article>
         ))}
       </div>
-      <div className="calculator-display compact-display"><span>Kc</span><strong>{kc ? kc.toPrecision(3) : 'Check values'}</strong><small>Kc = [C]ᶜ[D]ᵈ / [A]ᵃ[B]ᵇ</small></div>
+      <div className="calculator-display compact-display"><span>Kc</span><strong>{kc ? kc.toPrecision(3) : 'Check values'}</strong><small>Kc = [C]ᶜ[D]ᵈ ÷ [A]ᵃ[B]ᵇ</small></div>
       <div className="tool-logic-grid">
         <article className="tool-logic-card">
           <span>Products</span>

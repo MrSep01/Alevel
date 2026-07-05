@@ -9,7 +9,7 @@ export default function MoleRelationshipToolPage({ navigate }) {
           <ArrowLeft size={18} /> Back to tools
         </button>
         <div>
-          <p className="eyebrow"><Calculator size={18} /> Mole Relationships</p>
+          <p className="eyebrow"><Calculator size={18} /> Mass, Moles and Particles</p>
           <h1>Convert between mass, moles, particles, and gas volume</h1>
           <p>
             Start every stoichiometry question by getting into moles. This tool shows the formula,

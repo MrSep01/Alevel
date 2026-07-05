@@ -4,7 +4,7 @@ import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
 const molarGasVolume = 24.0
 
 const unitOptions = [
-  { id: 'mol', label: 'mol', name: 'Amount / mol' },
+  { id: 'mol', label: 'mol', name: 'Moles / mol' },
   { id: 'g', label: 'g', name: 'Mass / g' },
   { id: 'gas', label: 'dm³', name: 'Gas volume at RTP / dm³' },
   { id: 'solution', label: 'c,V', name: 'Solution concentration / mol dm⁻³' },
@@ -107,7 +107,7 @@ function formatValue(value, sigFigs = 3) {
 }
 
 function conversionText(unit, substance) {
-  if (unit === 'mol') return 'Use amount directly'
+  if (unit === 'mol') return 'Use moles directly'
   if (unit === 'g') return `n = mass ÷ Mᵣ (${substance.molarMass} g mol⁻¹)`
   if (unit === 'gas') return 'n = gas volume ÷ 24.0'
   return 'n = concentration × volume in dm³'
@@ -173,7 +173,7 @@ export default function StoichiometryEquationSolver({ standalone = false }) {
           <p className="eyebrow">Balanced equation stoichiometry</p>
           <h2>Use a mole ratio to move from one substance to another</h2>
         </div>
-        <span className="calculator-badge">known moles × target coefficient / known coefficient</span>
+        <span className="calculator-badge">known moles × target coefficient ÷ known coefficient</span>
       </div>
 
       <div className="calculator-mode-grid">
@@ -322,7 +322,7 @@ export default function StoichiometryEquationSolver({ standalone = false }) {
           <span>Mole ratio</span>
           <strong>{knownSubstance.coefficient} : {targetSubstance.coefficient}</strong>
           <small>Multiply by target coefficient ÷ known coefficient.</small>
-          <b>× {targetSubstance.coefficient} / {knownSubstance.coefficient}</b>
+          <b>× {targetSubstance.coefficient} ÷ {knownSubstance.coefficient}</b>
         </div>
         <div className="stoich-flow-step">
           <span>Product moles</span>
@@ -345,7 +345,7 @@ export default function StoichiometryEquationSolver({ standalone = false }) {
         </div>
         <div>
           <span>2. Apply mole ratio</span>
-          <strong>× {targetSubstance.coefficient} / {knownSubstance.coefficient}</strong>
+          <strong>× {targetSubstance.coefficient} ÷ {knownSubstance.coefficient}</strong>
         </div>
         <div>
           <span>3. Target moles</span>
