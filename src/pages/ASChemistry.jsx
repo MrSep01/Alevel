@@ -7,8 +7,8 @@ export default function ASChemistry({ navigate }) {
       <div className="section-header">
         <div>
           <p className="eyebrow">AS Chemistry</p>
-          <h1>AS Chemistry Topic Pathway</h1>
-          <p>Foundation and core AS topics organised as interactive topic cards.</p>
+          <h1>AS Chemistry Topics 1-22</h1>
+          <p>Cambridge International AS Level Chemistry 9701 topics organised by syllabus number, teaching time, and teaching order.</p>
         </div>
       </div>
 

@@ -9,7 +9,8 @@ import { quizzes } from '../data/quizzes.js'
 
 export default function TopicPage({ topic, navigate }) {
   const lesson = lessonContent[topic.id]
-  const pathwayPage = topic.level === 'A2' ? 'a2' : topic.level === 'IGCSE' ? 'igcse' : 'as'
+  const pathwayPage = topic.pathway || (topic.level === 'A2' || topic.level === 'A Level' ? 'a2' : topic.level === 'IGCSE' ? 'igcse' : 'as')
+  const displayTitle = topic.syllabusNumber ? `${topic.syllabusNumber} ${topic.title}` : topic.title
 
   if (!lesson) {
     return (
@@ -17,7 +18,7 @@ export default function TopicPage({ topic, navigate }) {
         <button className="btn" onClick={() => navigate(pathwayPage)}>Back</button>
         <section className="hero">
           <p className="eyebrow">{topic.level} • {topic.unit}</p>
-          <h1>{topic.title}</h1>
+          <h1>{displayTitle}</h1>
           <p>This topic page is ready for content. Add the lesson data in <code>src/data/lessons.js</code>.</p>
         </section>
       </div>
@@ -30,7 +31,7 @@ export default function TopicPage({ topic, navigate }) {
 
       <section className="section hero">
         <p className="eyebrow">{topic.level} • {topic.unit}</p>
-        <h1>{topic.title}</h1>
+        <h1>{displayTitle}</h1>
         <p>{topic.description}</p>
       </section>
 

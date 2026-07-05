@@ -14,7 +14,6 @@ import {
   SlidersHorizontal,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { a2Topics, asTopics, igcseTopics } from '../data/topics.js'
 import { useLocalStorage } from '../utils/useLocalStorage.js'
 
 function getDueStatus(dueDate, status = 'Not started') {

@@ -7,8 +7,8 @@ export default function A2Chemistry({ navigate }) {
       <div className="section-header">
         <div>
           <p className="eyebrow">A2 Chemistry</p>
-          <h1>A2 Chemistry Topic Pathway</h1>
-          <p>Advanced A Level chemistry topics with space for calculations, simulations, and exam practice.</p>
+          <h1>A Level Chemistry Topics 23-37</h1>
+          <p>Cambridge International A Level Chemistry 9701 extension topics organised by syllabus number, teaching time, and teaching order.</p>
         </div>
       </div>
 

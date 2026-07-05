@@ -89,9 +89,9 @@ export default function TeacherResources({ currentUser, navigate }) {
   const assignableItems = useMemo(() => [
     ...allTopics.map(topic => ({
       id: topic.id,
-      title: topic.title,
+      title: topic.syllabusNumber ? `${topic.syllabusNumber} ${topic.title}` : topic.title,
       type: `${topic.level} topic`,
-      course: topic.level === 'IGCSE' ? 'IGCSE Chemistry CIE' : `${topic.level} Chemistry`,
+      course: topic.course || (topic.level === 'IGCSE' ? 'IGCSE Chemistry CIE' : `${topic.level} Chemistry`),
     })),
     ...starterActivities,
   ], [])
