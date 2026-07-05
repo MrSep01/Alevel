@@ -3637,6 +3637,238 @@ p {
   color: #0d6688;
 }
 
+.yield-economy-tool-app {
+  max-width: 1180px;
+  margin-inline: auto;
+}
+
+.yield-reaction-panel {
+  display: grid;
+  gap: 14px;
+  border: 1px solid #dbe7f5;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(238, 248, 255, 0.82), rgba(242, 251, 246, 0.82)),
+    #ffffff;
+  padding: clamp(14px, 1.8vw, 18px);
+}
+
+.yield-reaction-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.yield-reaction-heading span,
+.yield-card-heading span,
+.yield-route-card span,
+.yield-answer-card > span {
+  color: #66758c;
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.yield-reaction-heading strong {
+  color: #1d2a3d;
+  font-size: clamp(1.2rem, 2vw, 1.75rem);
+  font-weight: 950;
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+}
+
+.yield-reaction-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.yield-reaction-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.yield-formula-pill {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.yield-formula-pill span {
+  color: #66758c;
+  font-size: 0.7rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.yield-formula-pill strong {
+  color: #1d2a3d;
+  font-size: clamp(1.08rem, 1.7vw, 1.42rem);
+  font-weight: 950;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.yield-formula-pill small {
+  color: #64748b;
+  font-weight: 850;
+}
+
+.yield-formula-pill.reactant {
+  border-color: #bde3ff;
+  background: #eef8ff;
+}
+
+.yield-formula-pill.useful {
+  border-color: #baefdd;
+  background: #f2fbf6;
+}
+
+.yield-formula-pill.waste {
+  border-color: #fde6b6;
+  background: #fff8ea;
+}
+
+.yield-formula-pill.reactant strong {
+  color: #126fb1;
+}
+
+.yield-formula-pill.useful strong {
+  color: #16835f;
+}
+
+.yield-formula-pill.waste strong {
+  color: #986a14;
+}
+
+.yield-arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #253044;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.yield-two-lane {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.yield-work-card {
+  display: grid;
+  gap: 13px;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: clamp(14px, 1.7vw, 18px);
+  box-shadow: var(--shadow-sm);
+}
+
+.yield-work-card.practical {
+  border-color: #bde3ff;
+}
+
+.yield-work-card.economy {
+  border-color: #baefdd;
+}
+
+.yield-card-heading {
+  display: grid;
+  gap: 5px;
+}
+
+.yield-card-heading strong {
+  color: #1d2a3d;
+  font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+  font-weight: 950;
+  line-height: 1.24;
+}
+
+.yield-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.yield-input-grid .calculator-field b {
+  min-width: 54px;
+}
+
+.yield-route-card,
+.yield-answer-card,
+.yield-warning {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 14px;
+  background: #f9fbfd;
+  padding: 12px 13px;
+}
+
+.yield-route-card strong {
+  color: #253044;
+  font-size: clamp(1rem, 1.3vw, 1.16rem);
+  font-weight: 950;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+.yield-route-card small {
+  color: #64748b;
+  font-weight: 800;
+  line-height: 1.38;
+}
+
+.yield-answer-card.practical {
+  border-color: #bde3ff;
+  background: #eef8ff;
+}
+
+.yield-answer-card.economy {
+  border-color: #baefdd;
+  background: #f2fbf6;
+}
+
+.yield-answer-card .calculated-value {
+  font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+}
+
+.yield-answer-card.practical .calculated-value {
+  color: #126fb1;
+}
+
+.yield-answer-card.economy .calculated-value {
+  color: #16835f;
+}
+
+.yield-warning {
+  border-color: #fedfa7;
+  background: #fff8eb;
+  color: #986a14;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
 .compact-display {
   min-height: 124px;
 }
@@ -8595,6 +8827,8 @@ body {
   .calculator-working,
   .titration-layout,
   .tool-summary-grid,
+  .yield-reaction-flow,
+  .yield-two-lane,
   .electrochem-layout,
   .electrochem-summary,
   .enthalpy-tool-layout,
@@ -8685,6 +8919,11 @@ body {
   .stoich-sim-card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .yield-arrow {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
 }
 
 @media (max-width: 760px) {
@@ -8731,6 +8970,8 @@ body {
 
   .calculator-menu,
   .formula-breakdown,
+  .yield-reaction-group,
+  .yield-input-grid,
   .hess-reaction-controls {
     grid-template-columns: 1fr;
   }
