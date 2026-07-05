@@ -72,9 +72,10 @@ button {
 }
 
 .nav-inner {
-  max-width: 1720px;
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: 8px 24px;
+  padding: 8px clamp(16px, 2vw, 40px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -269,19 +270,22 @@ button {
 }
 
 .page {
-  max-width: 1220px;
-  margin: 0 auto;
-  padding: 38px 22px 80px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 38px clamp(16px, 2.2vw, 44px) 80px;
 }
 
 .tool-page-wide {
-  max-width: 1880px;
-  padding: 24px 18px 80px;
+  width: 100%;
+  max-width: none;
+  padding: 24px clamp(12px, 1.6vw, 34px) 80px;
 }
 
 .stoich-standalone-page {
-  max-width: min(100vw - 16px, 2200px);
-  padding-inline: 10px;
+  width: 100%;
+  max-width: none;
+  padding-inline: clamp(10px, 1.3vw, 28px);
 }
 
 .standalone-tool-header {
@@ -299,11 +303,11 @@ button {
 }
 
 .standalone-tool-header h1 {
-  max-width: 980px;
+  max-width: none;
 }
 
 .standalone-tool-header p:not(.eyebrow) {
-  max-width: 860px;
+  max-width: min(100%, 1180px);
   margin: 10px 0 0;
   color: #64748b;
   font-weight: 800;
@@ -747,8 +751,8 @@ p {
 
 .calculator-suite {
   display: grid;
-  grid-template-columns: 310px minmax(0, 1fr);
-  gap: 20px;
+  grid-template-columns: minmax(320px, 0.22fr) minmax(0, 1fr);
+  gap: clamp(18px, 1.6vw, 32px);
   align-items: start;
 }
 
@@ -836,7 +840,7 @@ p {
 
 .tool-guidance-panel {
   display: grid;
-  grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1fr);
+  grid-template-columns: minmax(300px, 0.34fr) minmax(0, 1fr);
   gap: 16px;
   align-items: stretch;
   border: 1px solid #dbe7f5;
@@ -890,6 +894,8 @@ p {
 .calculator-app {
   display: grid;
   gap: 18px;
+  width: 100%;
+  min-width: 0;
   border: 1px solid #dbe7f5;
   border-radius: 18px;
   background: #ffffff;
@@ -954,7 +960,7 @@ p {
 
 .calculator-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.7fr);
+  grid-template-columns: minmax(360px, 0.42fr) minmax(520px, 1fr);
   gap: 18px;
   align-items: stretch;
 }
@@ -1148,7 +1154,7 @@ p {
 
 .stoich-tool-layout {
   display: grid;
-  grid-template-columns: minmax(320px, 0.48fr) minmax(480px, 1fr);
+  grid-template-columns: minmax(380px, 0.34fr) minmax(720px, 1fr);
   gap: 18px;
   align-items: stretch;
 }
@@ -1468,21 +1474,23 @@ p {
 .limiting-reagent-tool-app.standalone-tool,
 .mole-relationship-tool-app.standalone-tool {
   gap: 20px;
-  padding: 22px;
+  padding: clamp(18px, 1.4vw, 28px);
 }
 
 .stoich-equation-tool-app.standalone-tool .stoich-tool-layout,
 .limiting-reagent-tool-app.standalone-tool .stoich-tool-layout {
-  grid-template-columns: minmax(360px, 0.42fr) minmax(640px, 1fr);
+  grid-template-columns: minmax(390px, 0.28fr) minmax(900px, 1fr);
+  gap: clamp(18px, 1.5vw, 30px);
 }
 
 .mole-relationship-tool-app.standalone-tool .calculator-body {
-  grid-template-columns: minmax(360px, 0.62fr) minmax(380px, 0.5fr);
+  grid-template-columns: minmax(420px, 0.34fr) minmax(720px, 1fr);
+  gap: clamp(18px, 1.5vw, 30px);
 }
 
 .stoich-flow-simulator-app.standalone-tool {
   gap: 20px;
-  padding: 18px;
+  padding: clamp(16px, 1.2vw, 26px);
   overflow: hidden;
 }
 
@@ -3668,7 +3676,7 @@ p {
 
 .born-haber-tool-app.standalone-tool {
   gap: 20px;
-  padding: 22px;
+  padding: clamp(18px, 1.4vw, 28px);
 }
 
 .born-haber-tool-app.standalone-tool .calculator-topline {
@@ -3676,8 +3684,8 @@ p {
 }
 
 .born-haber-tool-app.standalone-tool .born-haber-layout {
-  grid-template-columns: minmax(205px, 235px) minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(220px, 0.18fr) minmax(980px, 1fr);
+  gap: clamp(18px, 1.5vw, 30px);
 }
 
 .born-haber-tool-app.standalone-tool .born-haber-graph {
@@ -4397,12 +4405,12 @@ p {
 
 .hess-law-tool-app.standalone-tool {
   gap: 20px;
-  padding: 22px;
+  padding: clamp(18px, 1.4vw, 28px);
 }
 
 .hess-law-tool-app.standalone-tool .hess-law-layout {
-  grid-template-columns: minmax(300px, 0.34fr) minmax(820px, 1fr);
-  gap: 20px;
+  grid-template-columns: minmax(320px, 0.24fr) minmax(1040px, 1fr);
+  gap: clamp(18px, 1.5vw, 30px);
 }
 
 .hess-law-tool-app.standalone-tool .hess-route-diagram {
@@ -4984,9 +4992,10 @@ body {
 }
 
 .nav-inner {
-  max-width: 1720px;
+  width: 100%;
+  max-width: none;
   min-height: 72px;
-  padding: 7px 24px;
+  padding: 7px clamp(16px, 2vw, 40px);
 }
 
 .brand {
@@ -5084,12 +5093,14 @@ body {
 }
 
 .page {
-  max-width: 1260px;
-  padding: 54px 24px 84px;
+  width: 100%;
+  max-width: none;
+  padding: 54px clamp(16px, 2.2vw, 44px) 84px;
 }
 
 .dashboard-page {
-  max-width: 1280px;
+  width: 100%;
+  max-width: none;
 }
 
 .cognito-hero {
