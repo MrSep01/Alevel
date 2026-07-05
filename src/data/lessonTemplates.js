@@ -27,12 +27,12 @@ const atomicStructureLesson = {
         { code: '1.1.7', text: 'State and explain qualitative variations in atomic radius and ionic radius across a period and down a group.' },
       ],
       activities: [
-        { phase: 'Starter', title: 'Sketch the atom students already know', detail: 'Students draw and label an atom, then compare where most mass and charge are actually located.' },
-        { phase: 'Explore', title: 'Rutherford scattering evidence', detail: 'Use a simulation or teacher model to show why most alpha particles pass through and a few are deflected.' },
-        { phase: 'Build', title: 'Particle table', detail: 'Students complete a proton, neutron and electron table for relative charge, relative mass and location.' },
-        { phase: 'Apply', title: 'Electric-field beam paths', detail: 'Students predict and sketch the paths of proton, neutron and electron beams travelling at the same speed.' },
-        { phase: 'Practice', title: 'Atoms and ions drill', detail: 'Use atomic number, nucleon number and charge to calculate protons, neutrons and electrons.' },
-        { phase: 'Extend', title: 'Atomic and ionic radius trends', detail: 'Students annotate blank periodic tables using atomic and ionic radii data, then explain the trend.' },
+        { phase: 'Starter', title: 'Sketch the atom students already know', detail: 'Students draw and label an atom, then compare where most mass and charge are actually located.', outcomeCodes: ['1.1.1', '1.1.4'] },
+        { phase: 'Explore', title: 'Rutherford scattering evidence', detail: 'Use a simulation or teacher model to show why most alpha particles pass through and a few are deflected.', outcomeCodes: ['1.1.1', '1.1.4'] },
+        { phase: 'Build', title: 'Particle table', detail: 'Students complete a proton, neutron and electron table for relative charge, relative mass and location.', outcomeCodes: ['1.1.2', '1.1.3'] },
+        { phase: 'Apply', title: 'Electric-field beam paths', detail: 'Students predict and sketch the paths of proton, neutron and electron beams travelling at the same speed.', outcomeCodes: ['1.1.5'] },
+        { phase: 'Practice', title: 'Atoms and ions drill', detail: 'Use atomic number, nucleon number and charge to calculate protons, neutrons and electrons.', outcomeCodes: ['1.1.3', '1.1.6'] },
+        { phase: 'Extend', title: 'Atomic and ionic radius trends', detail: 'Students annotate blank periodic tables using atomic and ionic radii data, then explain the trend.', outcomeCodes: ['1.1.7'] },
       ],
       checkpoints: [
         'I can explain why Rutherford scattering supports a small dense positive nucleus.',
@@ -45,6 +45,7 @@ const atomicStructureLesson = {
         priorKnowledge: [
           {
             id: 'pk-charge',
+            outcomeCodes: ['1.1.2'],
             prompt: 'Which subatomic particle has a relative charge of +1?',
             options: ['electron', 'neutron', 'proton'],
             answer: 'proton',
@@ -52,6 +53,7 @@ const atomicStructureLesson = {
           },
           {
             id: 'pk-atomic-number',
+            outcomeCodes: ['1.1.3'],
             prompt: 'What does atomic number tell you?',
             options: ['number of protons', 'number of neutrons', 'mass of one atom in grams'],
             answer: 'number of protons',
@@ -59,6 +61,7 @@ const atomicStructureLesson = {
           },
           {
             id: 'pk-ion',
+            outcomeCodes: ['1.1.6'],
             prompt: 'A Mg²⁺ ion has formed from a Mg atom. What changed?',
             options: ['it gained two protons', 'it lost two electrons', 'it lost two neutrons'],
             answer: 'it lost two electrons',
@@ -66,6 +69,7 @@ const atomicStructureLesson = {
           },
           {
             id: 'pk-radius',
+            outcomeCodes: ['1.1.7'],
             prompt: 'Going down a group, atomic radius usually:',
             options: ['decreases because atoms have fewer shells', 'increases because atoms have more occupied shells', 'stays exactly the same'],
             answer: 'increases because atoms have more occupied shells',
@@ -75,6 +79,7 @@ const atomicStructureLesson = {
         teachingSections: [
           {
             tag: '1.1.1 and 1.1.4',
+            outcomeCodes: ['1.1.1', '1.1.4'],
             title: 'The nuclear atom is mostly empty space',
             body: 'Rutherford scattering evidence changed the model of the atom. If atoms were solid, alpha particles would not mostly pass straight through gold foil. The evidence fits a model with a tiny, dense, positive nucleus and electrons occupying the space around it.',
             keyPoints: [
@@ -86,6 +91,7 @@ const atomicStructureLesson = {
           },
           {
             tag: '1.1.2 and 1.1.3',
+            outcomeCodes: ['1.1.2', '1.1.3', '1.1.6'],
             title: 'Protons define the element; neutrons define the isotope',
             body: 'The proton number, also called atomic number, identifies the element. The nucleon number, also called mass number, is protons plus neutrons. Electrons control the charge of the atom or ion.',
             keyPoints: [
@@ -97,6 +103,7 @@ const atomicStructureLesson = {
           },
           {
             tag: '1.1.5',
+            outcomeCodes: ['1.1.5'],
             title: 'Charged particle beams bend in an electric field',
             body: 'A proton beam bends towards the negative plate. An electron beam bends towards the positive plate and bends much more because electrons have a far smaller mass. A neutron beam is not deflected because neutrons have no charge.',
             keyPoints: [
@@ -108,6 +115,7 @@ const atomicStructureLesson = {
           },
           {
             tag: '1.1.7',
+            outcomeCodes: ['1.1.7'],
             title: 'Atomic and ionic radius trends need a cause',
             body: 'Across a period, nuclear charge increases while shielding is similar, so atomic radius tends to decrease. Down a group, atoms have more occupied shells, so atomic radius increases. Cations are smaller than their atoms; anions are larger than their atoms.',
             keyPoints: [
@@ -121,16 +129,19 @@ const atomicStructureLesson = {
         interactives: [
           {
             type: 'particle-counter',
+            outcomeCodes: ['1.1.2', '1.1.3', '1.1.6'],
             title: 'Build atoms and ions from proton number, mass number and charge',
             description: 'Change the values and watch the numbers of protons, neutrons and electrons update.',
           },
           {
             type: 'beam-deflection',
+            outcomeCodes: ['1.1.5'],
             title: 'Electric-field beam explorer',
             description: 'Choose a particle and connect charge, mass and direction of deflection.',
           },
           {
             type: 'radius-trends',
+            outcomeCodes: ['1.1.7'],
             title: 'Radius trend reasoning',
             description: 'Switch between period, group and ion trends, then explain the cause.',
           },
@@ -138,18 +149,21 @@ const atomicStructureLesson = {
         checkpointQuestions: [
           {
             id: 'cp-mg',
+            outcomeCodes: ['1.1.3', '1.1.6'],
             prompt: 'Calculate the number of protons, neutrons and electrons in ²⁴Mg²⁺.',
             hint: 'Magnesium has atomic number 12. Mass number = protons + neutrons. A 2+ ion has lost two electrons.',
             answer: 'Protons = 12, neutrons = 12, electrons = 10.',
           },
           {
             id: 'cp-beams',
+            outcomeCodes: ['1.1.5'],
             prompt: 'Three beams enter an electric field at the same velocity: protons, neutrons and electrons. Describe their paths.',
             hint: 'Think about charge first, then mass.',
             answer: 'Protons bend towards the negative plate; electrons bend towards the positive plate and more strongly; neutrons continue straight.',
           },
           {
             id: 'cp-radius',
+            outcomeCodes: ['1.1.7'],
             prompt: 'Explain why atomic radius decreases from sodium to chlorine across Period 3.',
             hint: 'Compare nuclear charge and shielding.',
             answer: 'Proton number increases across the period, so nuclear charge increases. Electrons are added to the same principal shell, so shielding changes little. The outer electrons are pulled closer, so radius decreases.',
@@ -158,6 +172,7 @@ const atomicStructureLesson = {
         exitTicket: [
           {
             id: 'et-empty-space',
+            outcomeCodes: ['1.1.1', '1.1.4'],
             prompt: 'Which observation from Rutherford scattering best supports the idea that atoms are mostly empty space?',
             options: ['Most alpha particles passed straight through the foil.', 'All alpha particles bounced backwards.', 'The gold foil melted.'],
             answer: 'Most alpha particles passed straight through the foil.',
@@ -165,6 +180,7 @@ const atomicStructureLesson = {
           },
           {
             id: 'et-nucleon',
+            outcomeCodes: ['1.1.3', '1.1.6'],
             prompt: 'An atom has atomic number 17 and mass number 35. How many neutrons does it have?',
             options: ['17', '18', '35'],
             answer: '18',
@@ -172,6 +188,7 @@ const atomicStructureLesson = {
           },
           {
             id: 'et-electrons',
+            outcomeCodes: ['1.1.3', '1.1.6'],
             prompt: 'How many electrons are in Al³⁺? Aluminium has atomic number 13.',
             options: ['10', '13', '16'],
             answer: '10',
@@ -179,6 +196,7 @@ const atomicStructureLesson = {
           },
           {
             id: 'et-neutron-field',
+            outcomeCodes: ['1.1.5'],
             prompt: 'Why is a neutron beam not deflected by an electric field?',
             options: ['Neutrons have no charge.', 'Neutrons have no mass.', 'Neutrons are attracted to both plates equally because they are positive.'],
             answer: 'Neutrons have no charge.',
@@ -186,6 +204,7 @@ const atomicStructureLesson = {
           },
           {
             id: 'et-radius',
+            outcomeCodes: ['1.1.7'],
             prompt: 'Why does atomic radius usually increase down Group 1?',
             options: ['Atoms have more occupied electron shells.', 'Atoms have fewer protons.', 'Electrons become protons.'],
             answer: 'Atoms have more occupied electron shells.',

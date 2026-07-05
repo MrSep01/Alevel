@@ -117,6 +117,81 @@ function EmbeddedSlide({ slide, onRemove }) {
   )
 }
 
+function OutcomeTags({ codes = [] }) {
+  if (!codes.length) return null
+  return (
+    <div className="outcome-tag-row" aria-label="Linked learning outcomes">
+      {codes.map(code => <span key={code}>{code}</span>)}
+    </div>
+  )
+}
+
+function LearningOutcomesPanel({ outcomes }) {
+  return (
+    <section className="lesson-template-section learning-outcomes-panel">
+      <div className="lesson-section-heading">
+        <p className="eyebrow">Learning outcomes first</p>
+        <h3>This lesson is built around these syllabus statements.</h3>
+      </div>
+      <div className="lesson-outcome-grid">
+        {outcomes.map(outcome => (
+          <article className="lesson-outcome-card" key={outcome.code}>
+            <span>{outcome.code}</span>
+            <p>{outcome.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function OutcomeMatchPanel({ outcomes, lesson, activities = [] }) {
+  if (!lesson) return null
+
+  const matchesFor = (items = [], code, labelKey = 'title') => (
+    items
+      .filter(item => item.outcomeCodes?.includes(code))
+      .map(item => item[labelKey])
+  )
+
+  return (
+    <section className="lesson-template-section outcome-match-panel">
+      <div className="lesson-section-heading">
+        <p className="eyebrow">Lesson map</p>
+        <h3>Each outcome has content, practice and a check.</h3>
+      </div>
+      <div className="outcome-match-grid">
+        {outcomes.map(outcome => {
+          const content = matchesFor(lesson.teachingSections, outcome.code)
+          const activityMatches = matchesFor(activities, outcome.code)
+          const checks = [
+            ...matchesFor(lesson.checkpointQuestions, outcome.code, 'prompt'),
+            ...matchesFor(lesson.exitTicket, outcome.code, 'prompt'),
+          ]
+
+          return (
+            <article className="outcome-match-card" key={outcome.code}>
+              <span>{outcome.code}</span>
+              <div>
+                <strong>Learn</strong>
+                <p>{content.join(' • ') || 'No content linked yet'}</p>
+              </div>
+              <div>
+                <strong>Do</strong>
+                <p>{activityMatches.join(' • ') || 'No activity linked yet'}</p>
+              </div>
+              <div>
+                <strong>Check</strong>
+                <p>{checks[0] || 'No check linked yet'}</p>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
 function ChoiceCheck({ title, subtitle, items, mode = 'practice' }) {
   const [answers, setAnswers] = useState({})
   const [submitted, setSubmitted] = useState(false)
@@ -144,6 +219,7 @@ function ChoiceCheck({ title, subtitle, items, mode = 'practice' }) {
           return (
             <article className="choice-question" key={item.id}>
               <span>{index + 1}</span>
+              <OutcomeTags codes={item.outcomeCodes} />
               <strong>{item.prompt}</strong>
               <div className="choice-option-grid">
                 {item.options.map(option => (
@@ -420,6 +496,7 @@ function InteractiveBlock({ item }) {
     <article className="interactive-block">
       <div className="lesson-section-heading">
         <p className="eyebrow">Interactive</p>
+        <OutcomeTags codes={item.outcomeCodes} />
         <h3>{item.title}</h3>
         <p>{item.description}</p>
       </div>
@@ -438,6 +515,7 @@ function CheckpointQuestion({ question, index }) {
   return (
     <article className="checkpoint-question-card">
       <span>Checkpoint {index + 1}</span>
+      <OutcomeTags codes={question.outcomeCodes} />
       <strong>{question.prompt}</strong>
       <textarea value={response} onChange={event => setResponse(event.target.value)} placeholder="Write your explanation or calculation here." rows="4" />
       <div className="checkpoint-actions">
@@ -450,7 +528,7 @@ function CheckpointQuestion({ question, index }) {
   )
 }
 
-function WebLessonExperience({ lesson }) {
+function WebLessonExperience({ lesson, activities = [] }) {
   return (
     <section className="web-lesson-experience">
       <div className="web-lesson-title">
@@ -475,6 +553,7 @@ function WebLessonExperience({ lesson }) {
             <article className="concept-card" key={section.title}>
               <div>
                 <span>{section.tag}</span>
+                <OutcomeTags codes={section.outcomeCodes} />
                 <h4>{section.title}</h4>
                 <p>{section.body}</p>
               </div>
@@ -482,6 +561,23 @@ function WebLessonExperience({ lesson }) {
               <ul>
                 {section.keyPoints.map(point => <li key={point}>{point}</li>)}
               </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="web-lesson-card">
+        <div className="lesson-section-heading">
+          <p className="eyebrow">Outcome-aligned activities</p>
+          <h3>Each activity has a clear syllabus purpose.</h3>
+        </div>
+        <div className="lesson-activity-timeline web-activity-plan">
+          {activities.map(activity => (
+            <article className="lesson-activity-card" key={`${activity.phase}-${activity.title}`}>
+              <OutcomeTags codes={activity.outcomeCodes} />
+              <span>{activity.phase}</span>
+              <strong>{activity.title}</strong>
+              <p>{activity.detail}</p>
             </article>
           ))}
         </div>
@@ -575,7 +671,7 @@ export default function LessonTemplate({ topic, template, currentUser }) {
     <div className="lesson-template">
       <section className="lesson-template-hero">
         <div>
-          <p className="eyebrow">Lesson template • Topic {template.syllabusNumber}</p>
+          <p className="eyebrow">Web lesson • Topic {template.syllabusNumber}</p>
           <h2>{template.title}</h2>
           <p>{template.lessonGoal}</p>
         </div>
@@ -619,38 +715,29 @@ export default function LessonTemplate({ topic, template, currentUser }) {
             </div>
           </section>
 
-          {activeSubtopic.webLesson && <WebLessonExperience lesson={activeSubtopic.webLesson} />}
+          <LearningOutcomesPanel outcomes={activeSubtopic.outcomes} />
+          <OutcomeMatchPanel outcomes={activeSubtopic.outcomes} lesson={activeSubtopic.webLesson} activities={activeSubtopic.activities} />
 
-          <section className="lesson-template-section">
-            <div className="lesson-section-heading">
-              <p className="eyebrow">Learning outcomes</p>
-              <h3>Build the lesson around these statements.</h3>
-            </div>
-            <div className="lesson-outcome-grid">
-              {activeSubtopic.outcomes.map(outcome => (
-                <article className="lesson-outcome-card" key={outcome.code}>
-                  <span>{outcome.code}</span>
-                  <p>{outcome.text}</p>
-                </article>
-              ))}
-            </div>
-          </section>
+          {activeSubtopic.webLesson && <WebLessonExperience lesson={activeSubtopic.webLesson} activities={activeSubtopic.activities} />}
 
-          <section className="lesson-template-section">
-            <div className="lesson-section-heading">
-              <p className="eyebrow">Suggested teaching activities</p>
-              <h3>Turn the Scheme of Work into a classroom sequence.</h3>
-            </div>
-            <div className="lesson-activity-timeline">
-              {activeSubtopic.activities.map(activity => (
-                <article className="lesson-activity-card" key={`${activity.phase}-${activity.title}`}>
-                  <span>{activity.phase}</span>
-                  <strong>{activity.title}</strong>
-                  <p>{activity.detail}</p>
-                </article>
-              ))}
-            </div>
-          </section>
+          {!activeSubtopic.webLesson && (
+            <section className="lesson-template-section">
+              <div className="lesson-section-heading">
+                <p className="eyebrow">Suggested teaching activities</p>
+                <h3>Turn the Scheme of Work into a classroom sequence.</h3>
+              </div>
+              <div className="lesson-activity-timeline">
+                {activeSubtopic.activities.map(activity => (
+                  <article className="lesson-activity-card" key={`${activity.phase}-${activity.title}`}>
+                    <OutcomeTags codes={activity.outcomeCodes} />
+                    <span>{activity.phase}</span>
+                    <strong>{activity.title}</strong>
+                    <p>{activity.detail}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section className="lesson-template-section">
             <div className="lesson-section-heading">

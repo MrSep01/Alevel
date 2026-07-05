@@ -6656,6 +6656,21 @@ p {
   box-shadow: var(--shadow-sm);
 }
 
+.learning-outcomes-panel {
+  border-color: #a4d5fa;
+  background:
+    linear-gradient(135deg, rgba(238, 248, 255, 0.92), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+  box-shadow: inset 5px 0 0 var(--primary), var(--shadow-sm);
+}
+
+.outcome-match-panel {
+  border-color: #c6efe2;
+  background:
+    linear-gradient(135deg, rgba(244, 251, 247, 0.9), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
 .lesson-section-heading {
   display: grid;
   gap: 4px;
@@ -6695,6 +6710,84 @@ p {
   color: #344158;
   font-weight: 760;
   line-height: 1.42;
+}
+
+.outcome-match-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.outcome-match-card {
+  display: grid;
+  grid-template-columns: minmax(64px, auto) repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: stretch;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 10px;
+}
+
+.outcome-match-card > span {
+  display: grid;
+  place-items: center;
+  border: 1px solid #bde3ff;
+  border-radius: 12px;
+  background: #eef8ff;
+  color: var(--primary-dark);
+  font-size: 0.85rem;
+  font-weight: 950;
+}
+
+.outcome-match-card div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  border: 1px solid #edf2f8;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 10px;
+}
+
+.outcome-match-card strong {
+  color: #1f8f72;
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.outcome-match-card p {
+  color: #43516a;
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.32;
+  overflow-wrap: anywhere;
+}
+
+.outcome-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.outcome-tag-row span,
+.concept-card .outcome-tag-row span,
+.lesson-activity-card .outcome-tag-row span {
+  display: inline-flex;
+  width: fit-content;
+  border: 1px solid #bde3ff;
+  border-radius: 999px;
+  background: #eef8ff;
+  color: var(--primary-dark);
+  padding: 4px 8px;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.1;
+  text-transform: none;
 }
 
 .lesson-activity-timeline {
@@ -7676,6 +7769,14 @@ p {
   .checkpoint-question-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .outcome-match-card {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .outcome-match-card > span {
+    grid-row: 1 / span 3;
+  }
 }
 
 @media (max-width: 620px) {
@@ -7711,6 +7812,15 @@ p {
 
   .concept-card {
     grid-template-rows: auto;
+  }
+
+  .outcome-match-card {
+    grid-template-columns: 1fr;
+  }
+
+  .outcome-match-card > span {
+    grid-row: auto;
+    min-height: 40px;
   }
 
   .radius-visual div {
