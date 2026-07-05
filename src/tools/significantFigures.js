@@ -12,11 +12,16 @@ export function countSignificantFigures(input) {
     return significant.length || null
   }
 
+  if (usesScientificNotation) {
+    const significant = normalized.replace(/^0+/, '')
+    return significant.length || null
+  }
+
   if (!usesScientificNotation && /0$/.test(normalized)) {
     return null
   }
 
-  const significant = normalized.replace(/^0+/, '').replace(/0+$/, '')
+  const significant = normalized.replace(/^0+/, '')
   return significant.length || null
 }
 
