@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CalculatedValue from './CalculatedValue.jsx'
+import ConcentrationVisual from './ConcentrationVisual.jsx'
 import FormulaStrip from './FormulaStrip.jsx'
 import { fewestSigFigs } from './significantFigures.js'
 
@@ -145,6 +146,8 @@ export default function ConcentrationCalculator() {
       </div>
 
       <FormulaStrip items={mode.formulaItems?.(values)} />
+
+      <ConcentrationVisual modeId={mode.id} result={result} resultUnit={mode.unit} values={values} />
 
       <div className="calculator-body">
         <div className="calculator-input-panel">
