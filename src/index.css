@@ -1293,16 +1293,275 @@ p {
   place-items: center;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(189, 227, 255, 0.3) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(189, 227, 255, 0.24) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(248, 251, 255, 0.96) 0%, rgba(248, 251, 255, 0.96) 68%, rgba(230, 238, 245, 0.82) 69%, rgba(248, 250, 252, 0.96) 100%),
     #fbfdff;
-  background-size: 34px 34px;
 }
 
 .concentration-svg {
   width: 100%;
-  max-width: 560px;
+  max-width: 660px;
   min-height: 260px;
+}
+
+.lab-svg {
+  overflow: visible;
+}
+
+.lab-svg text {
+  font-family: inherit;
+}
+
+.lab-bench-shadow {
+  fill: #cfd9e3;
+  opacity: 0.46;
+}
+
+.lab-glass,
+.lab-glass-soft {
+  fill: url(#labGlassGradient);
+  stroke: #617087;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
+}
+
+.dilution-svg .lab-glass,
+.titration-svg .lab-glass {
+  fill: rgba(255, 255, 255, 0.38);
+}
+
+.lab-glass-line,
+.lab-rim,
+.lab-spout,
+.lab-highlight,
+.lab-meniscus,
+.lab-graduation,
+.lab-calibration-mark {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.lab-glass-line,
+.lab-rim,
+.lab-spout {
+  stroke: #617087;
+  stroke-width: 2.2;
+}
+
+.lab-highlight {
+  stroke: rgba(255, 255, 255, 0.78);
+  stroke-width: 5;
+  opacity: 0.76;
+}
+
+.lab-highlight.thin,
+.lab-highlight.flask {
+  stroke-width: 3.5;
+  opacity: 0.6;
+}
+
+.lab-liquid {
+  fill: url(#labSolutionGradient);
+  opacity: 0.84;
+}
+
+.lab-liquid.compact,
+.lab-liquid.flask-fill {
+  fill: url(#dilutionFill);
+}
+
+.lab-liquid.burette-fill {
+  fill: #bcecff;
+  opacity: 0.6;
+}
+
+.lab-liquid.endpoint {
+  fill: url(#endpointFill);
+}
+
+.lab-meniscus {
+  stroke: #126fb1;
+  stroke-width: 2.4;
+}
+
+.lab-meniscus.endpoint-line {
+  stroke: #c45a95;
+}
+
+.lab-graduation {
+  stroke: #64748b;
+  stroke-width: 1.2;
+  opacity: 0.62;
+}
+
+.lab-calibration-mark {
+  stroke: #986a14;
+  stroke-width: 2.5;
+}
+
+.lab-water-stream,
+.lab-transfer-flow {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.lab-water-stream {
+  stroke: rgba(31, 157, 215, 0.72);
+  stroke-width: 5;
+  stroke-dasharray: 12 10;
+  animation: lab-stream-flow 1.55s linear infinite;
+}
+
+.lab-transfer-flow {
+  stroke: rgba(107, 44, 178, 0.58);
+  stroke-width: 4;
+  stroke-dasharray: 10 12;
+  marker-end: url(#labArrow);
+  animation: lab-transfer-pulse 1.7s linear infinite;
+}
+
+.lab-watch-glass {
+  fill: rgba(255, 255, 255, 0.56);
+  stroke: #98a2b3;
+  stroke-width: 1.8;
+}
+
+.lab-crystal {
+  fill: #fdb022;
+  stroke: #986a14;
+  stroke-width: 1.3;
+  animation: lab-crystal-glint 2.6s ease-in-out infinite;
+}
+
+.lab-crystal.muted {
+  fill: #ffd184;
+  opacity: 0.78;
+}
+
+.lab-particle {
+  fill: #7a4fd7;
+  stroke: rgba(255, 255, 255, 0.88);
+  stroke-width: 1.1;
+  animation: lab-particle-drift 4.4s ease-in-out infinite;
+}
+
+.lab-particle.diluted {
+  fill: #6b2cb2;
+  opacity: 0.48;
+}
+
+.lab-callout-line {
+  fill: none;
+  stroke: #475467;
+  stroke-dasharray: 4 4;
+  stroke-linecap: round;
+  stroke-width: 1.25;
+  opacity: 0.76;
+  vector-effect: non-scaling-stroke;
+}
+
+.lab-callout-line.amber {
+  stroke: #986a14;
+}
+
+.lab-callout-line.green {
+  stroke: #16835f;
+}
+
+.lab-callout-line.purple {
+  stroke: #6b2cb2;
+}
+
+.lab-callout-box {
+  fill: rgba(255, 255, 255, 0.92);
+  stroke: #cbd5e1;
+  stroke-width: 1.2;
+}
+
+.lab-callout-text {
+  fill: #344054;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.01em;
+}
+
+.lab-callout.blue .lab-callout-box {
+  fill: #eef8ff;
+  stroke: #9bd7ff;
+}
+
+.lab-callout.amber .lab-callout-box {
+  fill: #fff8ea;
+  stroke: #f6d58f;
+}
+
+.lab-callout.green .lab-callout-box {
+  fill: #f2fbf6;
+  stroke: #9fe5c8;
+}
+
+.lab-callout.purple .lab-callout-box {
+  fill: #f8f2ff;
+  stroke: #d8c1f5;
+}
+
+.lab-pipette-line {
+  fill: none;
+  stroke: #617087;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.lab-pipette-bulb {
+  fill: rgba(255, 255, 255, 0.52);
+  stroke: #617087;
+  stroke-width: 2;
+}
+
+.lab-metal {
+  stroke: #475467;
+  stroke-linecap: round;
+  stroke-width: 5;
+}
+
+.lab-metal.base {
+  stroke-width: 7;
+}
+
+.lab-metal.clamp {
+  stroke-width: 4;
+}
+
+.lab-clamp-pad {
+  fill: #e2e8f0;
+  stroke: #475467;
+  stroke-width: 1.8;
+}
+
+.lab-stopcock,
+.lab-nozzle {
+  fill: rgba(255, 255, 255, 0.58);
+  stroke: #475467;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.3;
+}
+
+.lab-stopcock-knob {
+  fill: #e2e8f0;
+  stroke: #475467;
+  stroke-width: 2;
+}
+
+.lab-drop {
+  fill: #8e44d8;
+  opacity: 0;
+  animation: lab-drop-fall 1.45s ease-in infinite;
+}
+
+.lab-drop.two {
+  animation-delay: 0.5s;
 }
 
 .glass-shape,
@@ -1459,6 +1718,61 @@ p {
   font-size: 0.95rem;
   font-weight: 850;
   line-height: 1.3;
+}
+
+@keyframes lab-stream-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -22;
+  }
+}
+
+@keyframes lab-transfer-pulse {
+  from {
+    stroke-dashoffset: 0;
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 0.74;
+  }
+  to {
+    stroke-dashoffset: -22;
+    opacity: 0.38;
+  }
+}
+
+@keyframes lab-particle-drift {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(3px, -4px);
+  }
+}
+
+@keyframes lab-crystal-glint {
+  0%, 100% {
+    opacity: 0.84;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes lab-drop-fall {
+  0% {
+    transform: translateY(-18px);
+    opacity: 0;
+  }
+  22% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(36px);
+    opacity: 0;
+  }
 }
 
 @keyframes solvent-flow {
