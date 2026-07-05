@@ -33,7 +33,7 @@ const scenarioLibrary = {
       coefficient: 2,
       molarMass: 40.3,
       outputType: 'mass',
-      availableOutputs: ['mass', 'moles', 'particles'],
+      availableOutputs: ['mass'],
     },
     reactants: [
       {
@@ -43,7 +43,7 @@ const scenarioLibrary = {
         coefficient: 2,
         molarMass: 24.3,
         inputType: 'mass',
-        availableInputs: ['mass', 'moles', 'particles'],
+        availableInputs: ['mass'],
         defaults: { mass: '4.86', moles: '0.200' },
       },
       {
@@ -53,7 +53,7 @@ const scenarioLibrary = {
         coefficient: 1,
         molarMass: 32.0,
         inputType: 'mass',
-        availableInputs: ['mass', 'gas', 'moles', 'particles'],
+        availableInputs: ['mass'],
         defaults: { mass: '2.00', gasVolume: '1.50', moles: '0.0625' },
       },
     ],
@@ -68,7 +68,7 @@ const scenarioLibrary = {
       coefficient: 1,
       molarMass: 143.3,
       outputType: 'mass',
-      availableOutputs: ['mass', 'moles'],
+      availableOutputs: ['mass'],
     },
     reactants: [
       {
@@ -78,7 +78,7 @@ const scenarioLibrary = {
         coefficient: 1,
         molarMass: 169.9,
         inputType: 'solution',
-        availableInputs: ['solution', 'moles', 'mass'],
+        availableInputs: ['solution'],
         defaults: { concentration: '0.100', solutionVolume: '25.0', mass: '0.425' },
       },
       {
@@ -88,7 +88,7 @@ const scenarioLibrary = {
         coefficient: 1,
         molarMass: 58.5,
         inputType: 'solution',
-        availableInputs: ['solution', 'moles', 'mass'],
+        availableInputs: ['solution'],
         defaults: { concentration: '0.0800', solutionVolume: '50.0', mass: '0.234' },
       },
     ],
@@ -103,7 +103,7 @@ const scenarioLibrary = {
       coefficient: 1,
       molarMass: 44.0,
       outputType: 'gas',
-      availableOutputs: ['gas', 'mass', 'moles'],
+      availableOutputs: ['gas'],
     },
     reactants: [
       {
@@ -113,7 +113,7 @@ const scenarioLibrary = {
         coefficient: 1,
         molarMass: 100.1,
         inputType: 'mass',
-        availableInputs: ['mass', 'moles', 'particles'],
+        availableInputs: ['mass'],
         defaults: { mass: '2.50', moles: '0.0250' },
       },
       {
@@ -123,7 +123,7 @@ const scenarioLibrary = {
         coefficient: 2,
         molarMass: 36.5,
         inputType: 'solution',
-        availableInputs: ['solution', 'moles', 'mass'],
+        availableInputs: ['solution'],
         defaults: { concentration: '0.500', solutionVolume: '40.0', mass: '1.46' },
       },
     ],
@@ -138,7 +138,7 @@ const scenarioLibrary = {
       coefficient: 2,
       molarMass: 17.0,
       outputType: 'gas',
-      availableOutputs: ['gas', 'mass', 'moles'],
+      availableOutputs: ['gas'],
     },
     reactants: [
       {
@@ -148,7 +148,7 @@ const scenarioLibrary = {
         coefficient: 1,
         molarMass: 28.0,
         inputType: 'gas',
-        availableInputs: ['gas', 'moles', 'mass'],
+        availableInputs: ['gas'],
         defaults: { gasVolume: '12.0', mass: '14.0', moles: '0.500' },
       },
       {
@@ -158,7 +158,7 @@ const scenarioLibrary = {
         coefficient: 3,
         molarMass: 2.0,
         inputType: 'gas',
-        availableInputs: ['gas', 'moles', 'mass'],
+        availableInputs: ['gas'],
         defaults: { gasVolume: '24.0', mass: '2.00', moles: '1.00' },
       },
     ],
@@ -173,7 +173,7 @@ const scenarioLibrary = {
       coefficient: 1,
       molarMass: 58.5,
       outputType: 'solution',
-      availableOutputs: ['solution', 'moles', 'mass'],
+      availableOutputs: ['solution'],
     },
     reactants: [
       {
@@ -183,7 +183,7 @@ const scenarioLibrary = {
         coefficient: 1,
         molarMass: 36.5,
         inputType: 'solution',
-        availableInputs: ['solution', 'moles', 'mass'],
+        availableInputs: ['solution'],
         defaults: { concentration: '0.100', solutionVolume: '25.0', mass: '0.0913' },
       },
       {
@@ -193,7 +193,7 @@ const scenarioLibrary = {
         coefficient: 1,
         molarMass: 40.0,
         inputType: 'solution',
-        availableInputs: ['solution', 'moles', 'mass'],
+        availableInputs: ['solution'],
         defaults: { concentration: '0.0800', solutionVolume: '50.0', mass: '0.160' },
       },
     ],
@@ -761,9 +761,6 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
   }
 
   function renderMolesMapNode(prefix) {
-    const reactantDefinition = scenario.reactants.find(reactant => reactant.id === prefix)
-    const canUseDirectMoles = reactantDefinition?.availableInputs.includes('moles')
-    const selected = values[`${prefix}InputType`] === 'moles'
     const active = activeStage === `moles-${prefix}`
     const left = 34
     const top = prefix === 'a' ? 31 : 73
@@ -771,15 +768,14 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
 
     return (
       <button
-        className={`stoich-visual-node moles-node ${selected ? 'selected' : ''} ${active ? 'active' : ''}`}
-        disabled={!canUseDirectMoles}
-        onClick={() => selectInputType(prefix, 'moles')}
+        className={`stoich-visual-node moles-node ${active ? 'active' : ''}`}
+        onClick={() => { setIsPlaying(false); setActiveStageIndex(prefix === 'a' ? 1 : 2) }}
         style={{ left: `${left}%`, top: `${top}%` }}
         type="button"
       >
         <span>Moles of {species}</span>
         <strong>{result === null ? 'Check values' : `${formatValue(prefix === 'a' ? result.molesA : result.molesB, sigFigs)} mol`}</strong>
-        <small>{selected ? 'Given directly' : inputCalculationLine(result?.[`reactant${prefix.toUpperCase()}`] || getReactant(values, prefix))}</small>
+        <small>{inputCalculationLine(result?.[`reactant${prefix.toUpperCase()}`] || getReactant(values, prefix))}</small>
       </button>
     )
   }
@@ -808,6 +804,7 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
   function renderReactantCard(reactantDefinition) {
     const prefix = reactantDefinition.id
     const activeInputOptions = inputTypeOptions.filter(option => reactantDefinition.availableInputs.includes(option.value))
+    const needsMolarMass = ['mass', 'pure-volume'].includes(values[`${prefix}InputType`])
 
     return (
       <article className="stoich-reactant-input-card" key={prefix}>
@@ -834,29 +831,41 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
         </div>
 
         <div className="stoich-mini-field-grid">
-          <label className="calculator-field">
-            <span>Mᵣ</span>
-            <div>
-              <input type="number" step="any" value={values[`${prefix}MolarMass`]} onChange={event => updateValue(`${prefix}MolarMass`, event.target.value)} />
-              <b>g mol⁻¹</b>
+          {needsMolarMass && (
+            <label className="calculator-field">
+              <span>Mᵣ</span>
+              <div>
+                <input type="number" step="any" value={values[`${prefix}MolarMass`]} onChange={event => updateValue(`${prefix}MolarMass`, event.target.value)} />
+                <b>g mol⁻¹</b>
+              </div>
+            </label>
+          )}
+          {activeInputOptions.length > 1 ? (
+            <label className="calculator-field">
+              <span>Start from</span>
+              <div>
+                <select value={values[`${prefix}InputType`]} onChange={event => updateValue(`${prefix}InputType`, event.target.value)}>
+                  {activeInputOptions.map(option => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+            </label>
+          ) : (
+            <div className="stoich-route-lock">
+              <span>Measured as</span>
+              <strong>{activeInputOptions[0]?.label || 'Measurement'}</strong>
             </div>
-          </label>
-          <label className="calculator-field">
-            <span>Start from</span>
-            <div>
-              <select value={values[`${prefix}InputType`]} onChange={event => updateValue(`${prefix}InputType`, event.target.value)}>
-                {activeInputOptions.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-          </label>
+          )}
         </div>
 
         {renderInputFields(prefix, values, updateValue)}
       </article>
     )
   }
+
+  const activeProductOutputOptions = productOutputOptions.filter(option => scenario.product.availableOutputs.includes(option.value))
+  const needsProductMolarMass = ['mass', 'pure-volume'].includes(values.productOutputType)
 
   return (
     <section className={`calculator-app stoich-flow-simulator-app ${standalone ? 'standalone-tool' : ''}`}>
@@ -997,9 +1006,8 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
           </button>
 
           <button
-            className={`stoich-visual-node product-moles-node ${values.productOutputType === 'moles' ? 'selected' : ''} ${activeStage === 'product' ? 'active' : ''}`}
-            disabled={!scenario.product.availableOutputs.includes('moles')}
-            onClick={() => selectProductOutput('moles')}
+            className={`stoich-visual-node product-moles-node ${activeStage === 'product' ? 'active' : ''}`}
+            onClick={() => { setIsPlaying(false); setActiveStageIndex(4) }}
             style={{ left: '66%', top: '52%' }}
             type="button"
           >
@@ -1064,25 +1072,32 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
             </label>
           </div>
           <div className="stoich-mini-field-grid">
-            <label className="calculator-field">
-              <span>Mᵣ</span>
-              <div>
-                <input type="number" step="any" value={values.productMolarMass} onChange={event => updateValue('productMolarMass', event.target.value)} />
-                <b>g mol⁻¹</b>
-              </div>
-            </label>
-            <label className="calculator-field">
-              <span>Answer as</span>
-              <div>
-                <select value={values.productOutputType} onChange={event => updateValue('productOutputType', event.target.value)}>
-                  {productOutputOptions
-                    .filter(option => scenario.product.availableOutputs.includes(option.value))
-                    .map(option => (
+            {needsProductMolarMass && (
+              <label className="calculator-field">
+                <span>Mᵣ</span>
+                <div>
+                  <input type="number" step="any" value={values.productMolarMass} onChange={event => updateValue('productMolarMass', event.target.value)} />
+                  <b>g mol⁻¹</b>
+                </div>
+              </label>
+            )}
+            {activeProductOutputOptions.length > 1 ? (
+              <label className="calculator-field">
+                <span>Answer as</span>
+                <div>
+                  <select value={values.productOutputType} onChange={event => updateValue('productOutputType', event.target.value)}>
+                    {activeProductOutputOptions.map(option => (
                       <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
-                </select>
+                  </select>
+                </div>
+              </label>
+            ) : (
+              <div className="stoich-route-lock">
+                <span>Answer as</span>
+                <strong>{activeProductOutputOptions[0]?.label || 'Final answer'}</strong>
               </div>
-            </label>
+            )}
           </div>
 
           {values.productOutputType === 'solution' && (

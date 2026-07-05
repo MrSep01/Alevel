@@ -1758,6 +1758,37 @@ p {
   gap: 10px;
 }
 
+.stoich-route-lock {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 14px;
+  background: #f8fbff;
+  padding: 10px 12px;
+}
+
+.stoich-mini-field-grid > .stoich-route-lock:only-child {
+  grid-column: 1 / -1;
+}
+
+.stoich-route-lock span {
+  color: #708096;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.stoich-route-lock strong {
+  color: #253044;
+  font-size: 0.92rem;
+  line-height: 1.22;
+  overflow-wrap: anywhere;
+}
+
 .stoich-limiting-flow {
   display: grid;
   grid-template-columns: repeat(7, minmax(210px, 1fr));
