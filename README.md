@@ -23,6 +23,12 @@ A React + Vite project for Mr. Sep's interactive A Level Chemistry learning web 
 - Formula mass calculator
 - Progress saved in browser with localStorage
 
+## Design rules
+
+- Use realistic images and videos for lab apparatus, practical skills, and chemical processes.
+- Avoid cartoon-style apparatus, floating objects, or decorative animations when a real lab scene would make the chemistry clearer.
+- Keep scientific labels outside the image where possible so the visual still looks like real equipment.
+
 ## How to run
 
 ```bash

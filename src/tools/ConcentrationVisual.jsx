@@ -1,12 +1,12 @@
 const sceneCopy = {
   concentration: {
-    title: 'Solution = solute + solvent',
-    note: 'A solution is prepared by measuring the solute, adding solvent, then mixing until the solute dissolves.',
+    title: 'Solution = solute dissolved in solvent',
+    note: 'The solute dissolves in the solvent to form one uniform solution; concentration uses the final volume of that solution.',
     imageKey: 'solution',
     terms: [
       ['Solute', 'the measured solid that dissolves'],
       ['Solvent', 'the liquid used to make the solution'],
-      ['Solution', 'the dissolved mixture in the beaker'],
+      ['Solution', 'solute dissolved in solvent as one uniform mixture'],
       ['Meniscus', 'read the bottom of the curve at eye level'],
     ],
   },
@@ -16,30 +16,30 @@ const sceneCopy = {
     imageKey: 'solution',
     terms: [
       ['Aliquot', 'a measured sample of solution'],
-      ['Volume', 'convert cm³ to dm³ using × 10⁻³'],
+      ['Solution volume', 'convert cm³ to dm³ using × 10⁻³'],
       ['Solute particles', 'the dissolved particles being counted'],
-      ['n = c × V', 'moles come from concentration and volume'],
+      ['n = c × V', 'V means measured solution volume'],
     ],
   },
   volume: {
-    title: 'Volume needed for a chosen number of moles',
-    note: 'A more concentrated solution needs a smaller measured volume to supply the same moles.',
+    title: 'Solution volume needed for a chosen number of moles',
+    note: 'The calculated volume is the volume of solution needed, not the amount of pure solvent to add.',
     imageKey: 'solution',
     terms: [
       ['Required volume', 'the volume of solution you need to measure'],
       ['Concentration', 'moles of solute in each dm³'],
-      ['Mark', 'the final measured volume line'],
+      ['Mark', 'the measured solution volume line'],
       ['V = n ÷ c', 'find volume in dm³, then convert to cm³'],
     ],
   },
   dilution: {
     title: 'Dilution keeps moles but increases volume',
-    note: 'A measured volume of stock solution is transferred, then solvent is added to the calibration mark.',
+    note: 'A measured volume of stock solution is transferred, then solvent is added until the final solution reaches the calibration mark.',
     imageKey: 'dilution',
     terms: [
       ['Stock solution', 'the concentrated starting solution'],
-      ['Volumetric flask', 'made up exactly to the calibration mark'],
-      ['Dilution', 'same moles of solute, more solvent'],
+      ['Volumetric flask', 'final solution volume is read at the calibration mark'],
+      ['Dilution', 'same moles of solute, larger solution volume'],
       ['c₁V₁ = c₂V₂', 'moles before dilution = moles after dilution'],
     ],
   },
@@ -62,17 +62,17 @@ const sceneImages = {
     alt: 'Realistic chemistry lab setup with a beaker of blue solution, solid solute on a weighing boat, spatula, and solvent bottle.',
     focus: [
       ['Solid measured first', 'The solute is weighed before it is dissolved.'],
-      ['Solvent added after', 'The solvent is used to make up the solution volume.'],
-      ['Final mixture', 'The beaker shows the dissolved solution, not particles being poured in.'],
+      ['Solvent added after', 'The solvent is used to make up the final solution volume.'],
+      ['Final mixture', 'A solution is solute dissolved in solvent.'],
     ],
   },
   dilution: {
     src: '/assets/images/tools/concentration-dilution.png',
     alt: 'Realistic dilution setup with a beaker of stock solution, pipette, and volumetric flask containing diluted solution.',
     focus: [
-      ['Stock solution', 'Start with a measured volume of the concentrated solution.'],
+      ['Stock solution', 'Start with a measured volume of concentrated solution.'],
       ['Transfer', 'Use a pipette to move a known volume accurately.'],
-      ['Make to mark', 'Add solvent until the flask reaches the calibration line.'],
+      ['Make to mark', 'Add solvent until the final solution reaches the calibration line.'],
     ],
   },
   titration: {
