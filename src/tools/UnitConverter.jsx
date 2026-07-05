@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 
 const conversions = {
   cm3ToDm3: { label: 'cm³ to dm³', from: 'cm³', to: 'dm³', convert: value => value / 1000 },
@@ -24,7 +25,10 @@ export default function UnitConverter() {
           <label className="calculator-field"><span>Conversion</span><div><select value={mode} onChange={event => setMode(event.target.value)}>{Object.entries(conversions).map(([id, item]) => <option key={id} value={id}>{item.label}</option>)}</select><b>type</b></div></label>
           <label className="calculator-field"><span>Value</span><div><input type="number" step="any" value={value} onChange={event => setValue(event.target.value)} /><b>{conversion.from}</b></div></label>
         </div>
-        <div className="calculator-display"><span>Converted value</span><strong>{answer}</strong><small>{conversion.label}</small></div>
+        <div className="calculator-display">
+          <span>Converted value</span>
+          <CalculatedValue value={result} sigFigs={4} unit={conversion.to} fallback="Check value" />
+        </div>
       </div>
 
       <div className="tool-logic-grid">

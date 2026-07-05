@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
+import { formatToSigFigs } from './significantFigures.js'
 
 export default function TitrationSolver() {
   const [knownConcentration, setKnownConcentration] = useState('0.100')
@@ -19,7 +21,7 @@ export default function TitrationSolver() {
     return { knownMoles, unknownMoles, concentration: unknownMoles / vUnknown }
   }, [knownConcentration, knownRatio, knownVolume, unknownRatio, unknownVolume])
 
-  const answer = result ? `${result.concentration.toPrecision(3)} mol dm⁻³` : 'Check values'
+  const answer = result ? `${formatToSigFigs(result.concentration, 3)} mol dm⁻³` : 'Check values'
 
   return (
     <section className="calculator-app">
@@ -39,8 +41,7 @@ export default function TitrationSolver() {
 
         <div className="calculator-display">
           <span>Unknown concentration</span>
-          <strong>{answer}</strong>
-          <small>from titre and balanced equation ratio</small>
+          <CalculatedValue value={result?.concentration} sigFigs={3} unit="mol dm⁻³" />
         </div>
       </div>
 

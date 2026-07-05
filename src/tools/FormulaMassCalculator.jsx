@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 import { countSignificantFigures, formatToSigFigs } from './significantFigures.js'
 
 const atomicMasses = {
@@ -322,7 +323,11 @@ export default function FormulaMassCalculator() {
         <div className="calculator-display">
           <span>Relative formula mass</span>
           <b className="displayed-formula">{displayedFormula || 'Formula'}</b>
-          <strong>{!result ? 'Enter formula' : result.error || hasIonicError ? 'Check formula' : result.total.toFixed(1)}</strong>
+          {result && !result.error && !hasIonicError ? (
+            <CalculatedValue value={result.total} sigFigs={3} scientificLabel="Scientific form of Mᵣ" />
+          ) : (
+            <strong className="calculated-value unavailable">{!result ? 'Enter formula' : 'Check formula'}</strong>
+          )}
           <small>{result?.error || ionicValidation?.message || (moles ? `${formatToSigFigs(moles, sampleSigFigs)} mol in ${sampleMass} g` : 'Add sample mass to calculate moles')}</small>
         </div>
       </div>

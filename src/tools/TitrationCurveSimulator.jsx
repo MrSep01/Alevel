@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import CalculatedValue from './CalculatedValue.jsx'
 
 const titrationTypes = [
   { id: 'strong-acid-strong-base', label: 'Strong acid with strong base' },
@@ -192,7 +193,7 @@ export default function TitrationCurveSimulator() {
       <div className="tool-summary-grid">
         <article>
           <span>Equivalence volume</span>
-          <strong>{equivalenceVolume ? `${formatValue(equivalenceVolume)} cm³` : 'Check values'}</strong>
+          <CalculatedValue value={equivalenceVolume} sigFigs={3} unit="cm³" />
         </article>
         <article>
           <span>Indicator range</span>

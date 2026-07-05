@@ -24,6 +24,10 @@
   --magenta: #e16181;
   --magenta-soft: #fceff7;
   --green-soft: #eefbf6;
+  --value-blue: #126fb1;
+  --value-cyan: #8be8ff;
+  --unit-green: #16835f;
+  --scientific-bg: #eaf8ff;
   --danger: #f04438;
   --navy: #344054;
   --sky: #ecf7ff;
@@ -1109,9 +1113,67 @@ p {
 .calculator-display strong {
   overflow-wrap: anywhere;
   word-break: break-word;
-  font-size: clamp(1.7rem, 3.1vw, 2.75rem);
+  color: var(--value-cyan);
+  font-size: clamp(2rem, 3.45vw, 3.25rem);
   line-height: 1.08;
   letter-spacing: 0;
+}
+
+.calculated-value {
+  display: block;
+  color: var(--value-blue);
+  font-size: clamp(1.18rem, 1.8vw, 1.55rem);
+  font-weight: 950;
+  line-height: 1.12;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.calculated-value.unavailable {
+  color: #98a2b3;
+}
+
+.calculated-unit {
+  color: var(--unit-green);
+  font-size: 0.82em;
+  font-weight: 950;
+}
+
+.scientific-value {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  border: 1px solid #b8e8fb;
+  border-radius: 999px;
+  background: var(--scientific-bg);
+  color: #0d6688;
+  padding: 7px 10px;
+  font-size: clamp(0.82rem, 1vw, 0.94rem);
+  font-weight: 950;
+  line-height: 1.22;
+  overflow-wrap: anywhere;
+}
+
+.calculator-display .calculated-value {
+  color: var(--value-cyan);
+  font-size: clamp(2rem, 3.45vw, 3.25rem);
+}
+
+.calculator-display .calculated-value.unavailable {
+  color: #d7e1ee;
+}
+
+.calculator-display .calculated-unit {
+  color: #adf5ce;
+}
+
+.calculator-display .scientific-value {
+  border-color: rgba(139, 232, 255, 0.32);
+  background: rgba(139, 232, 255, 0.12);
+  color: #def8ff;
+  font-size: clamp(0.88rem, 1.05vw, 1rem);
 }
 
 .calculator-working {
@@ -1222,6 +1284,21 @@ p {
   color: #26745e;
   font-size: clamp(1.05rem, 1.7vw, 1.28rem);
   line-height: 1.22;
+}
+
+.stoich-yield-card .calculated-value {
+  color: #147d5c;
+  font-size: clamp(1.28rem, 2vw, 1.75rem);
+}
+
+.stoich-yield-card .calculated-unit {
+  color: #0f684f;
+}
+
+.stoich-yield-card .scientific-value,
+.stoich-mini-result .scientific-value,
+.calculator-working .scientific-value {
+  margin-top: 3px;
 }
 
 .stoich-warning {
@@ -2583,7 +2660,8 @@ p {
 }
 
 .tool-logic-card strong {
-  font-size: 0.98rem;
+  color: var(--value-blue);
+  font-size: clamp(1.03rem, 1.18vw, 1.18rem);
   font-weight: 950;
 }
 
@@ -2624,13 +2702,27 @@ p {
   line-height: 1.4;
 }
 
+.tool-summary-grid .scientific-value,
+.tool-logic-card .scientific-value,
+.stoich-yield-card .scientific-value,
+.stoich-mini-result .scientific-value,
+.calculator-working .scientific-value {
+  display: inline-flex;
+  margin-top: 7px;
+  color: #0d6688;
+}
+
 .compact-display {
   min-height: 124px;
 }
 
 .compact-display strong {
-  font-size: clamp(1.28rem, 2.1vw, 1.9rem);
+  font-size: clamp(1.55rem, 2.45vw, 2.25rem);
   line-height: 1.12;
+}
+
+.compact-display .calculated-value {
+  font-size: clamp(1.55rem, 2.45vw, 2.25rem);
 }
 
 .rate-table {

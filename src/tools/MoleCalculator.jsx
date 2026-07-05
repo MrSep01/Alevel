@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
+import CalculatedValue from './CalculatedValue.jsx'
+import { fewestSigFigs } from './significantFigures.js'
 
 const avogadroConstant = 6.022e23
 const molarGasVolumeDm3 = 24.0
@@ -167,8 +168,7 @@ export default function MoleCalculator({ standalone = false }) {
 
         <div className="calculator-display">
           <span>{mode.resultLabel}</span>
-          <strong>{result === null ? 'Check values' : `${formatToSigFigs(result, displaySigFigs)} ${mode.unit}`}</strong>
-          <small>{result === null ? mode.equation : `${displaySigFigs} significant figures`}</small>
+          <CalculatedValue value={result} sigFigs={displaySigFigs} unit={mode.unit} />
         </div>
       </div>
 

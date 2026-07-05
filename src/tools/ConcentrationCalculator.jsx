@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
+import CalculatedValue from './CalculatedValue.jsx'
+import { fewestSigFigs } from './significantFigures.js'
 
 const modes = [
   {
@@ -142,8 +143,7 @@ export default function ConcentrationCalculator() {
 
         <div className="calculator-display">
           <span>{mode.resultLabel}</span>
-          <strong>{result === null ? 'Check values' : `${formatToSigFigs(result, resultSigFigs)} ${mode.unit}`}</strong>
-          <small>{result === null ? mode.equation : `${resultSigFigs} significant figures`}</small>
+          <CalculatedValue value={result} sigFigs={resultSigFigs || 3} unit={mode.unit} />
         </div>
       </div>
 

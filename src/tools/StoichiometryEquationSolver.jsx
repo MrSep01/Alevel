@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
 
 const molarGasVolume = 24.0
@@ -300,8 +301,7 @@ export default function StoichiometryEquationSolver({ standalone = false }) {
 
           <div className="calculator-display compact-display">
             <span>{targetSubstance.name}</span>
-            <strong>{result === null ? 'Check values' : `${formatValue(result.targetValue, sigFigs)} ${unitLabel(targetUnit)}`}</strong>
-            <small>{knownSubstance.formula} : {targetSubstance.formula} = {knownSubstance.coefficient} : {targetSubstance.coefficient}</small>
+            <CalculatedValue value={result?.targetValue} sigFigs={sigFigs} unit={unitLabel(targetUnit)} />
           </div>
         </div>
       </div>

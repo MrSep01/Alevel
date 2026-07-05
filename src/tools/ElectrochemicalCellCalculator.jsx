@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 import { formatFormula, toSuperscript } from './chemistryHelpers.js'
 
 const halfCells = [
@@ -240,7 +241,7 @@ export default function ElectrochemicalCellCalculator() {
 
           <div className="calculator-display compact-display electrochem-result">
             <span>Cell potential</span>
-            <strong>{cellData ? formatPotential(cellData.cellPotential) : 'Check values'}</strong>
+            <CalculatedValue value={cellData?.cellPotential} sigFigs={2} unit="V" />
             <small>{feasible ? 'Spontaneous galvanic cell under standard conditions.' : 'No driving force with this exact pair of values.'}</small>
           </div>
         </div>

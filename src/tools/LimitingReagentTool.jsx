@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
 
 const molarGasVolume = 24.0
@@ -336,7 +337,7 @@ export default function LimitingReagentTool({ standalone = false }) {
 
           <div className="stoich-yield-card">
             <span>Theoretical yield</span>
-            <strong>{result.productValue === undefined ? 'Check values' : `${formatValue(result.productValue, sigFigs)} ${unitLabel(productUnit)} ${product.formula}`}</strong>
+            <CalculatedValue value={result.productValue} sigFigs={sigFigs} unit={`${unitLabel(productUnit)} ${product.formula}`} />
             <small>{result.productMoles === undefined ? 'Product moles will appear here.' : `${formatValue(result.productMoles, sigFigs)} mol before final unit conversion.`}</small>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 
 export default function YieldEconomyCalculator() {
   const [actualYield, setActualYield] = useState('8.20')
@@ -30,8 +31,8 @@ export default function YieldEconomyCalculator() {
         <article><span>Total reactant Mᵣ</span><label className="calculator-field"><div><input type="number" step="any" value={totalReactantMr} onChange={event => setTotalReactantMr(event.target.value)} /><b>Mᵣ</b></div></label></article>
       </div>
       <div className="tool-summary-grid">
-        <article><span>Percentage yield</span><strong>{percentageYield}</strong></article>
-        <article><span>Atom economy</span><strong>{atomEconomy}</strong></article>
+        <article><span>Percentage yield</span><CalculatedValue value={result.percentageYield} sigFigs={3} unit="%" /></article>
+        <article><span>Atom economy</span><CalculatedValue value={result.atomEconomy} sigFigs={3} unit="%" /></article>
       </div>
       <div className="tool-logic-grid">
         <article className="tool-logic-card">

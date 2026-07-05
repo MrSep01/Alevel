@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 
 export default function GasVolumeCalculator() {
   const [moles, setMoles] = useState('0.250')
@@ -22,7 +23,10 @@ export default function GasVolumeCalculator() {
           <label className="calculator-field"><span>Molar gas volume</span><div><input type="number" step="any" value={molarVolume} onChange={event => setMolarVolume(event.target.value)} /><b>dm³ mol⁻¹</b></div></label>
           <label className="calculator-field"><span>Equation ratio multiplier</span><div><input type="number" step="any" value={ratio} onChange={event => setRatio(event.target.value)} /><b>ratio</b></div></label>
         </div>
-        <div className="calculator-display"><span>Gas volume</span><strong>{answer}</strong><small>at selected molar gas volume</small></div>
+        <div className="calculator-display">
+          <span>Gas volume</span>
+          <CalculatedValue value={volume} sigFigs={3} unit="dm³" />
+        </div>
       </div>
 
       <div className="tool-logic-grid">

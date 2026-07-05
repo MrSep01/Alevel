@@ -22,6 +22,14 @@ export function formatToSigFigs(value, sigFigs) {
   return formatScientificNotation(Number(value).toPrecision(sigFigs))
 }
 
+export function formatToScientificSigFigs(value, sigFigs) {
+  if (value === null || value === undefined || !Number.isFinite(Number(value)) || !sigFigs) {
+    return ''
+  }
+  const exponentPlaces = Math.max(0, Number(sigFigs) - 1)
+  return formatScientificNotation(Number(value).toExponential(exponentPlaces))
+}
+
 export function fewestSigFigs(...inputs) {
   const counts = inputs.map(countSignificantFigures).filter(Boolean)
   return counts.length ? Math.min(...counts) : null

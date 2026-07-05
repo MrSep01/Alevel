@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 
 function toSuperscript(value) {
   const map = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹', '.': '·' }
@@ -46,7 +47,10 @@ export default function EquilibriumKcCalculator() {
           </article>
         ))}
       </div>
-      <div className="calculator-display compact-display"><span>Kc</span><strong>{kc ? kc.toPrecision(3) : 'Check values'}</strong><small>Kc = [C]ᶜ[D]ᵈ ÷ [A]ᵃ[B]ᵇ</small></div>
+      <div className="calculator-display compact-display">
+        <span>Kc</span>
+        <CalculatedValue value={kc} sigFigs={3} />
+      </div>
       <div className="tool-logic-grid">
         <article className="tool-logic-card">
           <span>Products</span>

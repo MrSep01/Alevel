@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import CalculatedValue from './CalculatedValue.jsx'
 import { fewestSigFigs, formatToSigFigs } from './significantFigures.js'
 
 const avogadro = 6.022e23
@@ -1204,7 +1205,7 @@ export default function StoichiometryFlowSimulator({ standalone = false }) {
         </div>
         <div>
           <span>Final answer</span>
-          <strong>{result?.answer ? `${formatValue(result.answer.value, sigFigs)} ${result.answer.unit}` : 'Check values'}</strong>
+          <CalculatedValue value={result?.answer?.value} sigFigs={sigFigs} unit={result?.answer?.unit || ''} />
         </div>
       </div>
     </section>
