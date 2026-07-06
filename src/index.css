@@ -6478,6 +6478,13 @@ p {
   min-width: 0;
 }
 
+.topic-page-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
 .lesson-template-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 0.32fr);
@@ -8511,6 +8518,106 @@ p {
   font-weight: 850;
 }
 
+.topic-assessment-page,
+.assessment-hub-page {
+  gap: 18px;
+}
+
+.topic-assessment-hero.exam {
+  background:
+    linear-gradient(135deg, rgba(238, 248, 255, 0.92), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
+.topic-assessment-hero.past {
+  background:
+    linear-gradient(135deg, rgba(244, 251, 247, 0.94), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
+.topic-assessment-panel.dedicated {
+  max-width: 1180px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.topic-assessment-panel.dedicated.exam {
+  border-color: #bde3ff;
+  box-shadow: inset 5px 0 0 var(--primary), var(--shadow-sm);
+}
+
+.topic-assessment-panel.dedicated.past {
+  border-color: #baefdd;
+  box-shadow: inset 5px 0 0 var(--success), var(--shadow-sm);
+}
+
+.assessment-instructions {
+  border: 1px solid #dbe7f5;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 14px 14px 14px 18px;
+}
+
+.assessment-question-list.dedicated {
+  gap: 14px;
+}
+
+.assessment-topic-browser {
+  display: grid;
+  gap: 16px;
+}
+
+.assessment-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.assessment-topic-card {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-width: 0;
+  border: 1px solid #dbe7f5;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.assessment-topic-card span {
+  color: var(--primary-dark);
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.assessment-topic-card h3 {
+  color: #172033;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.assessment-topic-card p {
+  color: #53627a;
+  font-weight: 760;
+  line-height: 1.4;
+}
+
+.assessment-topic-card small {
+  width: fit-content;
+  border-radius: 999px;
+  background: #eef8ff;
+  color: var(--primary-dark);
+  padding: 6px 10px;
+  font-weight: 950;
+}
+
+.assessment-topic-card .btn {
+  justify-self: start;
+}
+
 .calc-walkthroughs,
 .exam-question-list {
   display: grid;
@@ -8641,7 +8748,8 @@ p {
   .beam-readout,
   .checkpoint-question-grid,
   .subtopic-exit-question-grid,
-  .topic-assessment-grid {
+  .topic-assessment-grid,
+  .assessment-topic-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -8685,6 +8793,7 @@ p {
   .checkpoint-question-grid,
   .subtopic-exit-question-grid,
   .topic-assessment-grid,
+  .assessment-topic-grid,
   .assessment-part-row {
     grid-template-columns: 1fr;
   }

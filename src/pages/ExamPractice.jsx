@@ -1,39 +1,65 @@
-export default function ExamPractice() {
+import { lessonTemplates } from '../data/lessonTemplates.js'
+import { allTopics } from '../data/topics.js'
+
+const topicsWithAssessments = allTopics
+  .map(topic => ({ topic, assessments: lessonTemplates[topic.id]?.topicAssessments }))
+  .filter(item => item.assessments)
+
+export default function ExamPractice({ navigate, mode = 'exam' }) {
+  const isPastPaperPage = mode === 'past'
+  const pageTitle = isPastPaperPage ? 'Past Papers' : 'Exam Practice'
+  const pageIntro = isPastPaperPage
+    ? 'Open official past-paper question sets by topic. Past papers live on their own pages, separate from the teaching lessons.'
+    : 'Open topic mock exams and exam-style practice. Exam practice lives on its own pages, separate from the teaching lessons.'
+  const route = isPastPaperPage ? 'topic-past-papers' : 'topic-exam-practice'
+
   return (
-    <div className="page">
+    <div className="page assessment-hub-page">
       <section className="hero">
-        <p className="eyebrow">Exam Practice</p>
-        <h1>Command words, exam frames, and mark-scheme thinking.</h1>
-        <p>
-          This starter page is ready for topic-specific exam questions, student response boxes,
-          mark schemes, and self-assessment rubrics.
-        </p>
+        <p className="eyebrow">{pageTitle}</p>
+        <h1>{isPastPaperPage ? 'Past-paper practice by topic.' : 'Exam practice by topic.'}</h1>
+        <p>{pageIntro}</p>
       </section>
 
       <section className="section grid-3">
         <article className="card">
-          <h3>Explain</h3>
-          <p>State the chemistry principle, then connect it to the evidence or context using because/therefore.</p>
+          <h3>{isPastPaperPage ? 'Attempt first' : 'Try without support'}</h3>
+          <p>{isPastPaperPage ? 'Use the official question before opening the mark scheme or teacher notes.' : 'Treat the mock like a timed paper and write full answers before revealing the mark scheme.'}</p>
         </article>
         <article className="card">
-          <h3>Calculate</h3>
-          <p>Write formula, substitute values, show units, and round to the correct significant figures.</p>
+          <h3>Mark carefully</h3>
+          <p>Compare against each marking point, then rewrite the answer with missing chemistry added in a different colour.</p>
         </article>
         <article className="card">
-          <h3>Suggest</h3>
-          <p>Apply familiar chemistry to an unfamiliar situation. Use patterns, bonding, structure, and data.</p>
+          <h3>Review patterns</h3>
+          <p>Track repeated command words, common missing units, weak explanations, and calculations that need more practice.</p>
         </article>
       </section>
 
-      <section className="section panel">
-        <p className="eyebrow">Student Response Frame</p>
-        <h2>Exam Answer Builder</h2>
-        <ol className="clean-list">
-          <li>Identify the topic and command word.</li>
-          <li>Write the relevant principle or equation.</li>
-          <li>Apply the principle to the data in the question.</li>
-          <li>Use correct symbols, units, state symbols, and significant figures.</li>
-        </ol>
+      <section className="section panel assessment-topic-browser">
+        <div className="section-header">
+          <div>
+            <p className="eyebrow">{isPastPaperPage ? 'Past paper pages' : 'Exam practice pages'}</p>
+            <h2>Choose a topic</h2>
+          </div>
+        </div>
+
+        <div className="assessment-topic-grid">
+          {topicsWithAssessments.map(({ topic, assessments }) => {
+            const assessment = isPastPaperPage ? assessments.pastPaper : assessments.mockExam
+            return (
+              <article className="assessment-topic-card" key={topic.id}>
+                <span>{topic.course} • Topic {topic.syllabusNumber}</span>
+                <h3>{topic.title}</h3>
+                <p>{assessment.title}</p>
+                <small>{isPastPaperPage ? `${assessment.questions.length} past-paper slots` : `${assessment.questions.length} questions • ${assessment.totalMarks} marks`}</small>
+                <button className="btn primary" type="button" onClick={() => navigate(route, topic.id)}>
+                  Open {isPastPaperPage ? 'Past Papers' : 'Exam Practice'}
+                </button>
+              </article>
+            )
+          })}
+        </div>
       </section>
     </div>
   )

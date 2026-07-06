@@ -358,91 +358,6 @@ function WorkbookSection({ section, index }) {
   )
 }
 
-function AssessmentQuestionCard({ question, index, label }) {
-  const [showScheme, setShowScheme] = useState(false)
-
-  return (
-    <article className={`assessment-question-card ${label}`}>
-      <div className="assessment-question-meta">
-        <span>{label === 'past-paper' ? 'Past paper' : `Question ${index + 1}`}</span>
-        {question.marks && <strong>{question.marks} marks</strong>}
-      </div>
-      <h4>{question.title}</h4>
-      {question.source && <p className="assessment-source">{question.source}</p>}
-      <p>{question.prompt}</p>
-      {question.table && <WorkbookDataTable table={question.table} />}
-      {question.parts && (
-        <div className="assessment-part-list">
-          {question.parts.map(part => (
-            <div className="assessment-part-row" key={part.label}>
-              <span>{part.label}</span>
-              <p>{part.text}</p>
-              {part.marks && <strong>[{part.marks}]</strong>}
-            </div>
-          ))}
-        </div>
-      )}
-      {(question.answer || question.markScheme) && (
-        <>
-          <button className="btn" type="button" onClick={() => setShowScheme(previous => !previous)}>
-            {showScheme ? 'Hide mark scheme' : 'Show mark scheme'}
-          </button>
-          {showScheme && (
-            <div className="assessment-mark-scheme">
-              {(question.markScheme || [question.answer]).map(point => <p key={point}>{point}</p>)}
-            </div>
-          )}
-        </>
-      )}
-    </article>
-  )
-}
-
-function TopicAssessmentPanel({ assessments }) {
-  if (!assessments) return null
-
-  return (
-    <section className="topic-assessment-panel" aria-label="Topic assessment">
-      <div className="topic-assessment-heading">
-        <p className="eyebrow">End of topic assessment</p>
-        <h3>{assessments.title}</h3>
-        <p>{assessments.description}</p>
-      </div>
-
-      <div className="topic-assessment-grid">
-        <section className="topic-assessment-card mock">
-          <div className="lesson-section-heading">
-            <p className="eyebrow">Mock exam</p>
-            <h3>{assessments.mockExam.title}</h3>
-            <p>{assessments.mockExam.duration} • {assessments.mockExam.totalMarks} marks</p>
-          </div>
-          <ul className="lesson-check-list">
-            {assessments.mockExam.instructions.map(instruction => <li key={instruction}>{instruction}</li>)}
-          </ul>
-          <div className="assessment-question-list">
-            {assessments.mockExam.questions.map((question, index) => (
-              <AssessmentQuestionCard question={question} index={index} label="mock" key={question.id} />
-            ))}
-          </div>
-        </section>
-
-        <section className="topic-assessment-card past">
-          <div className="lesson-section-heading">
-            <p className="eyebrow">Past paper questions</p>
-            <h3>{assessments.pastPaper.title}</h3>
-            <p>{assessments.pastPaper.description}</p>
-          </div>
-          <div className="assessment-question-list">
-            {assessments.pastPaper.questions.map((question, index) => (
-              <AssessmentQuestionCard question={question} index={index} label="past-paper" key={question.id} />
-            ))}
-          </div>
-        </section>
-      </div>
-    </section>
-  )
-}
-
 function WorkbookLessonExperience({ subtopic }) {
   const lessons = subtopic.workbookLessons || []
   const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id || '')
@@ -959,7 +874,7 @@ function SubtopicExitTicketPanel({ subtopic }) {
       <div className="lesson-section-heading">
         <p className="eyebrow">Exam-style exit ticket</p>
         <h3>{subtopic.ref} {subtopic.title}: final check</h3>
-        <p>Short exam-style questions for this subtopic only. The full mock exam and past-paper set are at the end of the whole topic.</p>
+        <p>Short exam-style questions for this subtopic only. Full exam practice and past papers are separate topic pages.</p>
       </div>
       <div className="subtopic-exit-question-grid">
         {questions.map((question, index) => (
@@ -1264,7 +1179,6 @@ export default function LessonTemplate({ topic, template, currentUser }) {
         </div>
       </section>
 
-      <TopicAssessmentPanel assessments={template.topicAssessments} />
     </div>
   )
 }

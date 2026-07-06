@@ -14,6 +14,7 @@ import LimitingReagentToolPage from './pages/LimitingReagentToolPage.jsx'
 import BornHaberToolPage from './pages/BornHaberToolPage.jsx'
 import HessToolPage from './pages/HessToolPage.jsx'
 import ExamPractice from './pages/ExamPractice.jsx'
+import TopicAssessmentPage from './pages/TopicAssessmentPage.jsx'
 import Practicals from './pages/Practicals.jsx'
 import TeacherResources from './pages/TeacherResources.jsx'
 import AdminResources from './pages/AdminResources.jsx'
@@ -29,7 +30,7 @@ export default function App() {
   const [profileOpen, setProfileOpen] = useState(false)
 
   function navigate(page, payload = null) {
-    if (page === 'topic' && payload) setSelectedTopicId(payload)
+    if (['topic', 'topic-exam-practice', 'topic-past-papers'].includes(page) && payload) setSelectedTopicId(payload)
     if (page === 'practicals') setSelectedPracticalLevel(payload)
     setCurrentPage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -112,7 +113,10 @@ export default function App() {
         {currentPage === 'limiting-reagent-tool' && <LimitingReagentToolPage navigate={navigate} />}
         {currentPage === 'hess-tool' && <HessToolPage navigate={navigate} />}
         {currentPage === 'born-haber-tool' && <BornHaberToolPage navigate={navigate} />}
-        {currentPage === 'exam' && <ExamPractice />}
+        {currentPage === 'exam' && <ExamPractice navigate={navigate} mode="exam" />}
+        {currentPage === 'past-papers' && <ExamPractice navigate={navigate} mode="past" />}
+        {currentPage === 'topic-exam-practice' && <TopicAssessmentPage topic={selectedTopic} navigate={navigate} mode="exam" />}
+        {currentPage === 'topic-past-papers' && <TopicAssessmentPage topic={selectedTopic} navigate={navigate} mode="past" />}
         {currentPage === 'practicals' && <Practicals initialLevel={selectedPracticalLevel} />}
         {currentPage === 'teacher' && <TeacherResources currentUser={currentUser} navigate={navigate} />}
         {currentPage === 'admin' && <AdminResources currentUser={currentUser} navigate={navigate} />}

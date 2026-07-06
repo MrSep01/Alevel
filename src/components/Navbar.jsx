@@ -7,6 +7,7 @@ const links = [
   { id: 'a2', label: 'A2 Chemistry' },
   { id: 'tools', label: 'Tools' },
   { id: 'exam', label: 'Exam Practice' },
+  { id: 'past-papers', label: 'Past Papers' },
   { id: 'practicals', label: 'Practicals' },
   { id: 'teacher', label: 'Teacher', teacherOnly: true },
   { id: 'admin', label: 'Admin', adminOnly: true },
@@ -23,6 +24,8 @@ export default function Navbar({ currentPage, currentUser, navigate, onLogout, o
 
   function isActiveLink(linkId) {
     if (currentPage === linkId) return true
+    if (currentPage === 'topic-exam-practice' && linkId === 'exam') return true
+    if (currentPage === 'topic-past-papers' && linkId === 'past-papers') return true
     if ([
       'stoich-flow-tool',
       'mole-relationship-tool',

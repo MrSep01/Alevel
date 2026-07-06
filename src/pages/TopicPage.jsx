@@ -18,7 +18,15 @@ export default function TopicPage({ topic, navigate, currentUser }) {
   if (lessonTemplate) {
     return (
       <div className="page lesson-template-page">
-        <button className="btn" onClick={() => navigate(pathwayPage)}>Back to pathway</button>
+        <div className="topic-page-action-row">
+          <button className="btn" type="button" onClick={() => navigate(pathwayPage)}>Back to pathway</button>
+          {lessonTemplate.topicAssessments && (
+            <>
+              <button className="btn primary" type="button" onClick={() => navigate('topic-exam-practice', topic.id)}>Exam Practice</button>
+              <button className="btn" type="button" onClick={() => navigate('topic-past-papers', topic.id)}>Past Papers</button>
+            </>
+          )}
+        </div>
         <LessonTemplate topic={topic} template={lessonTemplate} currentUser={currentUser} />
       </div>
     )
