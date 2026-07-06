@@ -325,6 +325,8 @@ function WorkbookWrittenTask({ task, index }) {
 }
 
 function WorkbookSection({ section, index }) {
+  const eyebrow = section.type === 'exit' ? 'Exam-style exit ticket' : section.phase
+
   return (
     <section className={`workbook-section-card ${section.type || 'task'}`}>
       <div className="workbook-section-time">
@@ -332,7 +334,7 @@ function WorkbookSection({ section, index }) {
         <strong>{section.minutes} min</strong>
       </div>
       <div className="workbook-section-body">
-        <p className="eyebrow">{section.phase}</p>
+        <p className="eyebrow">{eyebrow}</p>
         <h3>{section.title}</h3>
         {section.body && <p className="workbook-section-intro">{section.body}</p>}
         {section.visual && <ConceptVisual type={section.visual} />}
@@ -351,6 +353,91 @@ function WorkbookSection({ section, index }) {
             {section.prompts.map((task, taskIndex) => <WorkbookWrittenTask task={task} index={taskIndex} key={task.id} />)}
           </div>
         )}
+      </div>
+    </section>
+  )
+}
+
+function AssessmentQuestionCard({ question, index, label }) {
+  const [showScheme, setShowScheme] = useState(false)
+
+  return (
+    <article className={`assessment-question-card ${label}`}>
+      <div className="assessment-question-meta">
+        <span>{label === 'past-paper' ? 'Past paper' : `Question ${index + 1}`}</span>
+        {question.marks && <strong>{question.marks} marks</strong>}
+      </div>
+      <h4>{question.title}</h4>
+      {question.source && <p className="assessment-source">{question.source}</p>}
+      <p>{question.prompt}</p>
+      {question.table && <WorkbookDataTable table={question.table} />}
+      {question.parts && (
+        <div className="assessment-part-list">
+          {question.parts.map(part => (
+            <div className="assessment-part-row" key={part.label}>
+              <span>{part.label}</span>
+              <p>{part.text}</p>
+              {part.marks && <strong>[{part.marks}]</strong>}
+            </div>
+          ))}
+        </div>
+      )}
+      {(question.answer || question.markScheme) && (
+        <>
+          <button className="btn" type="button" onClick={() => setShowScheme(previous => !previous)}>
+            {showScheme ? 'Hide mark scheme' : 'Show mark scheme'}
+          </button>
+          {showScheme && (
+            <div className="assessment-mark-scheme">
+              {(question.markScheme || [question.answer]).map(point => <p key={point}>{point}</p>)}
+            </div>
+          )}
+        </>
+      )}
+    </article>
+  )
+}
+
+function TopicAssessmentPanel({ assessments }) {
+  if (!assessments) return null
+
+  return (
+    <section className="topic-assessment-panel" aria-label="Topic assessment">
+      <div className="topic-assessment-heading">
+        <p className="eyebrow">End of topic assessment</p>
+        <h3>{assessments.title}</h3>
+        <p>{assessments.description}</p>
+      </div>
+
+      <div className="topic-assessment-grid">
+        <section className="topic-assessment-card mock">
+          <div className="lesson-section-heading">
+            <p className="eyebrow">Mock exam</p>
+            <h3>{assessments.mockExam.title}</h3>
+            <p>{assessments.mockExam.duration} • {assessments.mockExam.totalMarks} marks</p>
+          </div>
+          <ul className="lesson-check-list">
+            {assessments.mockExam.instructions.map(instruction => <li key={instruction}>{instruction}</li>)}
+          </ul>
+          <div className="assessment-question-list">
+            {assessments.mockExam.questions.map((question, index) => (
+              <AssessmentQuestionCard question={question} index={index} label="mock" key={question.id} />
+            ))}
+          </div>
+        </section>
+
+        <section className="topic-assessment-card past">
+          <div className="lesson-section-heading">
+            <p className="eyebrow">Past paper questions</p>
+            <h3>{assessments.pastPaper.title}</h3>
+            <p>{assessments.pastPaper.description}</p>
+          </div>
+          <div className="assessment-question-list">
+            {assessments.pastPaper.questions.map((question, index) => (
+              <AssessmentQuestionCard question={question} index={index} label="past-paper" key={question.id} />
+            ))}
+          </div>
+        </section>
       </div>
     </section>
   )
@@ -839,6 +926,50 @@ function CheckpointQuestion({ question, index }) {
   )
 }
 
+function SubtopicExitQuestionCard({ question, index }) {
+  const [response, setResponse] = useState('')
+  const [showHint, setShowHint] = useState(false)
+  const [showAnswer, setShowAnswer] = useState(false)
+
+  return (
+    <article className="subtopic-exit-question-card">
+      <div className="subtopic-exit-question-meta">
+        <span>Question {index + 1}</span>
+        {question.marks && <strong>{question.marks} marks</strong>}
+      </div>
+      <OutcomeTags codes={question.outcomeCodes} />
+      <h4>{question.prompt}</h4>
+      <textarea value={response} onChange={event => setResponse(event.target.value)} placeholder="Write an exam-style answer here." rows="4" />
+      <div className="checkpoint-actions">
+        {question.hint && <button className="btn" type="button" onClick={() => setShowHint(previous => !previous)}>{showHint ? 'Hide hint' : 'Hint'}</button>}
+        {question.answer && <button className="btn primary" type="button" onClick={() => setShowAnswer(previous => !previous)}>{showAnswer ? 'Hide answer' : 'Reveal answer'}</button>}
+      </div>
+      {showHint && <p className="feedback needs-work">Hint: {question.hint}</p>}
+      {showAnswer && <p className="feedback good">Answer: {question.answer}</p>}
+    </article>
+  )
+}
+
+function SubtopicExitTicketPanel({ subtopic }) {
+  const questions = subtopic.examStyleExitTicket || []
+  if (!questions.length) return null
+
+  return (
+    <section className="lesson-template-section subtopic-exit-ticket-panel">
+      <div className="lesson-section-heading">
+        <p className="eyebrow">Exam-style exit ticket</p>
+        <h3>{subtopic.ref} {subtopic.title}: final check</h3>
+        <p>Short exam-style questions for this subtopic only. The full mock exam and past-paper set are at the end of the whole topic.</p>
+      </div>
+      <div className="subtopic-exit-question-grid">
+        {questions.map((question, index) => (
+          <SubtopicExitQuestionCard question={question} index={index} key={question.id} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function WebLessonExperience({ lesson, activities = [] }) {
   return (
     <section className="web-lesson-experience">
@@ -1026,11 +1157,12 @@ export default function LessonTemplate({ topic, template, currentUser }) {
             </div>
           </section>
 
+          <LearningOutcomesPanel outcomes={activeSubtopic.outcomes} />
+
           {activeSubtopic.workbookLessons ? (
             <WorkbookLessonExperience subtopic={activeSubtopic} />
           ) : (
             <>
-              <LearningOutcomesPanel outcomes={activeSubtopic.outcomes} />
               {activeSubtopic.webLesson && <WebLessonExperience lesson={activeSubtopic.webLesson} activities={activeSubtopic.activities} />}
             </>
           )}
@@ -1053,6 +1185,8 @@ export default function LessonTemplate({ topic, template, currentUser }) {
               </div>
             </section>
           )}
+
+          <SubtopicExitTicketPanel subtopic={activeSubtopic} />
 
           <section className="lesson-template-section">
             <div className="lesson-section-heading">
@@ -1129,6 +1263,8 @@ export default function LessonTemplate({ topic, template, currentUser }) {
           </section>
         </div>
       </section>
+
+      <TopicAssessmentPanel assessments={template.topicAssessments} />
     </div>
   )
 }

@@ -11,6 +11,134 @@ const atomicStructureLesson = {
     'Use diagrams, simulations, particle models, and data tasks before formal definitions.',
     'Make students explain evidence: Rutherford scattering, isotope data, electron configurations, and ionisation-energy graphs.',
   ],
+  topicAssessments: {
+    title: 'Topic 1 Atomic structure exam practice',
+    description: 'Use these only after students have completed the learning sequence for the whole topic. Subtopics keep short exit tickets; full exam practice sits here.',
+    mockExam: {
+      title: 'Atomic structure mock exam',
+      duration: '40 minutes',
+      totalMarks: 32,
+      instructions: [
+        'Attempt the full mock after finishing the topic lessons.',
+        'Write answers in exam style: use command words, show working and include units or charges where needed.',
+        'Reveal the mark scheme only after attempting each question.',
+      ],
+      questions: [
+        {
+          id: 'atomic-mock-lithium',
+          title: 'Lithium atom and ion',
+          marks: 9,
+          prompt: 'A lithium atom contains 3 protons, 4 neutrons and 3 electrons.',
+          parts: [
+            { label: 'a', text: 'Describe the number, charge and relative mass of each subatomic particle present.', marks: 5 },
+            { label: 'b', text: 'Write the isotopic symbol for this lithium atom.', marks: 1 },
+            { label: 'c', text: 'Explain why a lithium ion is positively charged.', marks: 3 },
+          ],
+          markScheme: [
+            'a: 3 protons, +1, relative mass 1; 4 neutrons, 0, relative mass 1; 3 electrons, -1, negligible relative mass.',
+            'b: ⁷₃Li.',
+            'c: lithium loses electron(s), so it has more protons than electrons and therefore an overall positive charge.',
+          ],
+        },
+        {
+          id: 'atomic-mock-alpha',
+          title: 'Alpha-particle scattering',
+          marks: 8,
+          prompt: 'Alpha-particles are fired at thin gold foil. Most pass through, some are deflected slightly and very few are deflected backwards.',
+          parts: [
+            { label: 'a', text: 'Explain why most alpha-particles pass straight through the foil.', marks: 2 },
+            { label: 'b', text: 'Explain why some alpha-particles are deflected.', marks: 3 },
+            { label: 'c', text: 'Suggest what the very rare backward deflections show about the nucleus.', marks: 3 },
+          ],
+          markScheme: [
+            'a: most of the atom is empty space, so most alpha-particles do not pass close to a nucleus.',
+            'b: alpha-particles are positive and are repelled by the positive nucleus; closer paths cause greater deflection.',
+            'c: the nucleus is very small, dense, positive and contains most of the mass.',
+          ],
+        },
+        {
+          id: 'atomic-mock-isotopes',
+          title: 'Isotopes and cobalt ions',
+          marks: 9,
+          prompt: 'Use the isotope symbols ⁵⁹₂₇Co and ⁵⁸₂₈Ni.',
+          parts: [
+            { label: 'a', text: 'Which isotope has the greater number of neutrons? Explain your answer.', marks: 2 },
+            { label: 'b', text: 'Which neutral atom has fewer electrons? Explain your answer.', marks: 2 },
+            { label: 'c', text: 'An ion of cobalt has 27 protons and 24 electrons. Give the symbol for this ion.', marks: 2 },
+            { label: 'd', text: 'Suggest why nickel can have a lower relative atomic mass than cobalt even though nickel has the higher proton number.', marks: 3 },
+          ],
+          markScheme: [
+            'a: cobalt; Co has 59 - 27 = 32 neutrons, Ni has 58 - 28 = 30 neutrons.',
+            'b: cobalt; a neutral Co atom has 27 electrons, while a neutral Ni atom has 28 electrons.',
+            'c: Co³⁺.',
+            'd: relative atomic mass is a weighted mean of isotopic masses; nickel has a different isotope abundance pattern with enough lighter isotopes to lower the average.',
+          ],
+        },
+        {
+          id: 'atomic-mock-electric-field',
+          title: 'Electron beam in an electric field',
+          marks: 6,
+          prompt: 'A beam of electrons passes between a negatively charged plate and a positively charged plate.',
+          parts: [
+            { label: 'a', text: 'Describe the path of the electron beam.', marks: 2 },
+            { label: 'b', text: 'Explain the path in terms of charge and attraction.', marks: 4 },
+          ],
+          markScheme: [
+            'a: the beam curves towards the positive plate and away from the negative plate.',
+            'b: electrons are negatively charged; opposite charges attract, so electrons are attracted to the positive plate; like charges repel, so electrons are repelled by the negative plate.',
+          ],
+        },
+      ],
+    },
+    pastPaper: {
+      title: 'Actual past paper question set',
+      description: 'Keep official Cambridge past-paper questions here at the end of the topic. Add the exact paper, session, variant and question number when the official question is supplied.',
+      questions: [
+        {
+          id: 'atomic-pp-particles',
+          title: 'Particles, atomic number and ions',
+          source: 'Cambridge International AS & A Level Chemistry 9701 past paper - add exact session/paper/question',
+          marks: 8,
+          prompt: 'Official past-paper question slot for particle structure, atomic number, mass number and ions.',
+          parts: [
+            { label: 'source', text: 'Attach or paste the official question extract here.', marks: null },
+            { label: 'mark scheme', text: 'Attach the official mark scheme here, then students can attempt before revealing.', marks: null },
+          ],
+          markScheme: [
+            'Use the official Cambridge mark scheme once the exact past-paper question is added.',
+          ],
+        },
+        {
+          id: 'atomic-pp-isotopes',
+          title: 'Isotopes and relative atomic mass',
+          source: 'Cambridge International AS & A Level Chemistry 9701 past paper - add exact session/paper/question',
+          marks: 8,
+          prompt: 'Official past-paper question slot for isotope notation, isotope properties and relative atomic mass.',
+          parts: [
+            { label: 'source', text: 'Attach or paste the official question extract here.', marks: null },
+            { label: 'mark scheme', text: 'Attach the official mark scheme here, then students can attempt before revealing.', marks: null },
+          ],
+          markScheme: [
+            'Use the official Cambridge mark scheme once the exact past-paper question is added.',
+          ],
+        },
+        {
+          id: 'atomic-pp-alpha',
+          title: 'Rutherford scattering and the nuclear atom',
+          source: 'Cambridge International AS & A Level Chemistry 9701 past paper - add exact session/paper/question',
+          marks: 6,
+          prompt: 'Official past-paper question slot for alpha-particle scattering and evidence for the nuclear model.',
+          parts: [
+            { label: 'source', text: 'Attach or paste the official question extract here.', marks: null },
+            { label: 'mark scheme', text: 'Attach the official mark scheme here, then students can attempt before revealing.', marks: null },
+          ],
+          markScheme: [
+            'Use the official Cambridge mark scheme once the exact past-paper question is added.',
+          ],
+        },
+      ],
+    },
+  },
   subtopics: [
     {
       ref: '1.1',
@@ -38,6 +166,32 @@ const atomicStructureLesson = {
         'I can explain why Rutherford scattering supports a small dense positive nucleus.',
         'I can calculate protons, neutrons and electrons for atoms and ions.',
         'I can explain radius trends using nuclear charge, shielding and electron shells.',
+      ],
+      examStyleExitTicket: [
+        {
+          id: '1-1-exit-alpha',
+          outcomeCodes: ['1.1.1', '1.1.4'],
+          marks: 3,
+          prompt: 'Most alpha-particles pass straight through thin gold foil. Explain what this shows about the structure of the atom.',
+          hint: 'Link the observation to empty space and the size of the nucleus.',
+          answer: 'Most of the atom is empty space. The nucleus is very small compared with the atom, so most alpha-particles do not pass close enough to a nucleus to be deflected.',
+        },
+        {
+          id: '1-1-exit-ion-count',
+          outcomeCodes: ['1.1.3', '1.1.6'],
+          marks: 3,
+          prompt: 'Calculate the number of protons, neutrons and electrons in ²⁷Al³⁺. Aluminium has atomic number 13.',
+          hint: 'Use protons = atomic number, neutrons = mass number - atomic number, and a 3+ ion has lost 3 electrons.',
+          answer: 'Protons = 13. Neutrons = 27 - 13 = 14. Electrons = 13 - 3 = 10.',
+        },
+        {
+          id: '1-1-exit-field',
+          outcomeCodes: ['1.1.5'],
+          marks: 3,
+          prompt: 'A proton beam, neutron beam and electron beam enter the same electric field at the same velocity. Describe and explain the different paths.',
+          hint: 'Compare charge first, then relative mass.',
+          answer: 'Protons are positive and bend towards the negative plate. Electrons are negative and bend towards the positive plate, with a larger deflection because their mass is much smaller. Neutrons are uncharged and continue straight.',
+        },
       ],
       workbookLessons: [
         {
@@ -262,72 +416,6 @@ const atomicStructureLesson = {
             },
           ],
         },
-        {
-          id: '1-1-workbook-exam-practice',
-          lessonNumber: 4,
-          duration: '40 minutes',
-          title: 'Workbook exam practice: atoms and beams',
-          question: 'Can you answer workbook-style atomic structure questions with exam precision?',
-          goal: 'apply particle structure and electric-field ideas to exam-style questions.',
-          outcomeCodes: ['1.1.2', '1.1.5', '1.1.6'],
-          sections: [
-            {
-              phase: 'Check prior knowledge',
-              minutes: 5,
-              type: 'prior',
-              title: 'Quick exam readiness',
-              questions: [
-                { id: 'w4-pk-1', prompt: 'A lithium atom with 3 protons and 4 neutrons has mass number:', options: ['7', '4', '3'], answer: '7', feedback: 'Mass number = protons + neutrons.' },
-                { id: 'w4-pk-2', prompt: 'An electron beam is attracted to:', options: ['a positive plate', 'a negative plate', 'neutrons'], answer: 'a positive plate', feedback: 'Electrons are negatively charged.' },
-              ],
-            },
-            {
-              phase: 'Exam-style question 1',
-              minutes: 12,
-              type: 'task',
-              title: 'Lithium atom diagram',
-              body: 'Use the diagram as if it were a workbook figure. Focus on number, charge and relative mass.',
-              visual: 'lithium-atom',
-              prompts: [
-                { id: 'w4-li-1', prompt: 'Describe the number, charge and relative mass of each subatomic particle shown.', answer: 'The atom has 3 protons, each +1 charge and relative mass 1; 4 neutrons, each 0 charge and relative mass 1; and 3 electrons, each -1 charge and negligible relative mass.' },
-                { id: 'w4-li-2', prompt: 'Write the isotopic symbol for the lithium atom shown.', answer: '⁷₃Li.' },
-                { id: 'w4-li-3', prompt: 'Explain why a lithium ion is positively charged.', answer: 'A lithium ion is positive because the atom has lost electron(s), so it has more protons than electrons.' },
-              ],
-            },
-            {
-              phase: 'Exam-style question 2',
-              minutes: 10,
-              type: 'interactive',
-              title: 'Electron beam between charged plates',
-              body: 'The workbook shows an electron beam entering a field between a negative plate and a positive plate. Predict the path and explain it.',
-              interactive: 'beam-deflection',
-              prompts: [
-                { id: 'w4-beam-1', prompt: 'Describe and explain the path of the electron beam.', answer: 'The beam curves towards the positive plate because electrons are negatively charged and are attracted to positive charge. It is repelled by the negative plate.' },
-              ],
-            },
-            {
-              phase: 'Checkpoint',
-              minutes: 8,
-              type: 'checkpoint',
-              title: 'Command words',
-              body: 'The workbook command word is describe or explain. Practise the difference.',
-              prompts: [
-                { id: 'w4-cp-1', prompt: 'Describe means what in an exam answer?', answer: 'State the key features or characteristics clearly.' },
-                { id: 'w4-cp-2', prompt: 'Explain means what in an exam answer?', answer: 'Give reasons and make the relationship between ideas clear.' },
-              ],
-            },
-            {
-              phase: 'Exit ticket',
-              minutes: 5,
-              type: 'exit',
-              title: 'Exam finish',
-              questions: [
-                { id: 'w4-exit-1', prompt: 'Which statement is enough for explain?', options: ['Electrons move down because they are negative and attracted to the positive plate.', 'Electrons move down.', 'The plate is there.'], answer: 'Electrons move down because they are negative and attracted to the positive plate.', explanation: 'An explanation needs the reason.' },
-                { id: 'w4-exit-2', prompt: 'The mass number of ⁷₃Li is:', options: ['7', '3', '4'], answer: '7', explanation: 'The top number is mass number.' },
-              ],
-            },
-          ],
-        },
       ],
       webLesson: {
         title: 'Particles in the atom and atomic radius',
@@ -530,6 +618,32 @@ const atomicStructureLesson = {
         'I can write isotope notation correctly.',
         'I can explain why isotope chemistry is similar but density can differ.',
       ],
+      examStyleExitTicket: [
+        {
+          id: '1-2-exit-definition',
+          outcomeCodes: ['1.2.1'],
+          marks: 2,
+          prompt: 'Define the term isotope.',
+          hint: 'Your definition must mention protons and neutrons.',
+          answer: 'Isotopes are atoms of the same element with the same number of protons but different numbers of neutrons.',
+        },
+        {
+          id: '1-2-exit-notation',
+          outcomeCodes: ['1.2.2'],
+          marks: 3,
+          prompt: 'Use ⁸⁶₃₆Kr to state the number of protons, neutrons and electrons in a neutral atom.',
+          hint: 'The bottom number is proton number and the top number is mass number.',
+          answer: 'Protons = 36. Neutrons = 86 - 36 = 50. Electrons = 36 because the atom is neutral.',
+        },
+        {
+          id: '1-2-exit-properties',
+          outcomeCodes: ['1.2.3', '1.2.4'],
+          marks: 4,
+          prompt: 'Explain why isotopes of the same element have similar chemical properties but can have different densities.',
+          hint: 'Chemical properties depend on electrons; density depends partly on mass.',
+          answer: 'They have the same number and arrangement of electrons, so they have similar chemical properties. They have different numbers of neutrons and therefore different masses, so physical properties such as density can differ.',
+        },
+      ],
       workbookLessons: [
         {
           id: '1-2-workbook-isotope-notation',
@@ -605,79 +719,6 @@ const atomicStructureLesson = {
             },
           ],
         },
-        {
-          id: '1-2-workbook-isotope-exam',
-          lessonNumber: 2,
-          duration: '40 minutes',
-          title: 'Isotope exam practice',
-          question: 'Can you explain isotope properties and relative atomic mass in exam answers?',
-          goal: 'apply isotope ideas to lithium, cobalt and nickel workbook-style questions.',
-          outcomeCodes: ['1.2.1', '1.2.2', '1.2.3', '1.2.4'],
-          sections: [
-            {
-              phase: 'Check prior knowledge',
-              minutes: 5,
-              type: 'prior',
-              title: 'Chemistry or mass?',
-              questions: [
-                { id: 'iso2-pk-1', prompt: 'Isotopes of the same element have the same chemical properties because they have the same:', options: ['electron arrangement', 'number of neutrons', 'mass number'], answer: 'electron arrangement', feedback: 'Chemical properties depend mainly on electron arrangement.' },
-                { id: 'iso2-pk-2', prompt: 'Different physical properties such as density can happen because isotopes have different:', options: ['masses', 'proton numbers', 'chemical symbols'], answer: 'masses', feedback: 'Different neutron numbers change mass.' },
-              ],
-            },
-            {
-              phase: 'Workbook exam question 1',
-              minutes: 10,
-              type: 'task',
-              title: 'Lithium isotopes',
-              body: 'Use the lithium atom idea from the workbook to explain isotope properties.',
-              visual: 'lithium-atom',
-              prompts: [
-                { id: 'iso2-li-1', prompt: 'Explain why two isotopes of lithium have the same chemical properties.', answer: 'They have the same number of protons and therefore the same number and arrangement of electrons, so their chemical properties are the same.' },
-                { id: 'iso2-li-2', prompt: 'Explain why two isotopes of lithium can have different densities.', answer: 'They have different numbers of neutrons, so their masses are different. Density depends on mass per unit volume.' },
-              ],
-            },
-            {
-              phase: 'Workbook exam question 2',
-              minutes: 12,
-              type: 'task',
-              title: 'Cobalt and nickel',
-              body: 'The workbook compares cobalt and nickel. Use proton number, isotopes and relative atomic mass carefully.',
-              table: {
-                headers: ['Element', 'Atomic number', 'Relative atomic mass'],
-                rows: [
-                  ['Co', '27', '58.9'],
-                  ['Ni', '28', '58.7'],
-                ],
-              },
-              prompts: [
-                { id: 'iso2-co-ni-1', prompt: 'Which element has the higher atomic number? Explain.', answer: 'Nickel has the higher atomic number because its proton number is 28, whereas cobalt has proton number 27.' },
-                { id: 'iso2-co-ni-2', prompt: 'Suggest why nickel can have a lower relative atomic mass than cobalt even though nickel has the higher atomic number.', answer: 'Relative atomic mass is a weighted mean of the masses of naturally occurring isotopes. Nickel has a different mixture of isotopes, with enough lighter isotopes to make its average relative atomic mass lower.' },
-              ],
-            },
-            {
-              phase: 'Continuation question',
-              minutes: 8,
-              type: 'checkpoint',
-              title: 'Isotope symbols and cobalt ions',
-              body: 'Use the isotope symbols ⁵⁹₂₇Co and ⁵⁸₂₈Ni.',
-              prompts: [
-                { id: 'iso2-cont-1', prompt: 'Which isotope has more neutrons: ⁵⁹₂₇Co or ⁵⁸₂₈Ni?', answer: '⁵⁹₂₇Co has more neutrons. Co has 59 - 27 = 32 neutrons; Ni has 58 - 28 = 30 neutrons.' },
-                { id: 'iso2-cont-2', prompt: 'Which neutral atom has fewer electrons?', answer: 'Cobalt has fewer electrons because neutral Co has 27 electrons and neutral Ni has 28 electrons.' },
-                { id: 'iso2-cont-3', prompt: 'An ion has 27 protons and 24 electrons. Give the cobalt ion symbol.', answer: 'Co³⁺, because it has three more protons than electrons.' },
-              ],
-            },
-            {
-              phase: 'Exit ticket',
-              minutes: 5,
-              type: 'exit',
-              title: 'Isotope reasoning check',
-              questions: [
-                { id: 'iso2-exit-1', prompt: 'Relative atomic mass is usually not a whole number because it is:', options: ['a weighted mean of isotope masses', 'always equal to proton number', 'the charge on an ion'], answer: 'a weighted mean of isotope masses', explanation: 'The abundance of each isotope affects the average.' },
-                { id: 'iso2-exit-2', prompt: '⁵⁹₂₇Co has how many neutrons?', options: ['32', '27', '59'], answer: '32', explanation: 'Neutrons = 59 - 27 = 32.' },
-              ],
-            },
-          ],
-        },
       ],
       resources: [
         { type: 'simulation', title: 'Isotopes and atomic mass simulation', url: 'https://phet.colorado.edu/en/simulation/isotopes-and-atomic-mass' },
@@ -713,6 +754,32 @@ const atomicStructureLesson = {
         'I can explain Hund’s rule using electron repulsion.',
         'I can identify a free radical from unpaired electrons.',
       ],
+      examStyleExitTicket: [
+        {
+          id: '1-3-exit-subshells',
+          outcomeCodes: ['1.3.1', '1.3.2'],
+          marks: 3,
+          prompt: 'State the number of orbitals in an s sub-shell, a p sub-shell and a d sub-shell, and the maximum number of electrons each sub-shell can hold.',
+          hint: 'Each orbital can hold 2 electrons.',
+          answer: 'An s sub-shell has 1 orbital and holds 2 electrons. A p sub-shell has 3 orbitals and holds 6 electrons. A d sub-shell has 5 orbitals and holds 10 electrons.',
+        },
+        {
+          id: '1-3-exit-config',
+          outcomeCodes: ['1.3.4', '1.3.6'],
+          marks: 3,
+          prompt: 'Write the full electron configuration of Al³⁺. Aluminium has proton number 13.',
+          hint: 'Start with neutral aluminium, then remove three electrons.',
+          answer: 'Neutral Al is 1s² 2s² 2p⁶ 3s² 3p¹. Al³⁺ has lost three outer electrons, so its configuration is 1s² 2s² 2p⁶.',
+        },
+        {
+          id: '1-3-exit-radical',
+          outcomeCodes: ['1.3.7', '1.3.9'],
+          marks: 2,
+          prompt: 'Explain how electrons-in-boxes notation can show that a species is a free radical.',
+          hint: 'Look for paired and unpaired electrons.',
+          answer: 'A free radical has one or more unpaired electrons. In electrons-in-boxes notation this is shown by a box containing a single electron rather than a pair.',
+        },
+      ],
       resources: [
         { type: 'video', title: 'Aufbau filling order visual', url: 'https://www.youtube.com/watch?v=J-DjEllynjE' },
         { type: 'reference', title: 'Atomic orbital shapes', url: 'https://www.chemguide.co.uk/atoms/properties/atomorbs.html' },
@@ -744,6 +811,32 @@ const atomicStructureLesson = {
         'I can write ionisation energy equations with correct state symbols.',
         'I can explain first ionisation energy trends across a period and down a group.',
         'I can use successive ionisation energy data to identify the shell structure of an element.',
+      ],
+      examStyleExitTicket: [
+        {
+          id: '1-4-exit-equation',
+          outcomeCodes: ['1.4.1', '1.4.2'],
+          marks: 3,
+          prompt: 'Write an equation, including state symbols, for the first ionisation energy of magnesium.',
+          hint: 'First ionisation energy removes one electron from one mole of gaseous atoms.',
+          answer: 'Mg(g) → Mg⁺(g) + e⁻. The gaseous state symbol is needed because ionisation energy is defined for gaseous atoms or ions.',
+        },
+        {
+          id: '1-4-exit-trend',
+          outcomeCodes: ['1.4.3', '1.4.5', '1.4.6'],
+          marks: 4,
+          prompt: 'Explain why first ionisation energy generally decreases down Group 2.',
+          hint: 'Mention distance from the nucleus and shielding.',
+          answer: 'Down the group, atoms have more occupied shells, so the outer electron is further from the nucleus and more shielded by inner electrons. The attraction between the nucleus and the outer electron is weaker, so less energy is needed to remove it.',
+        },
+        {
+          id: '1-4-exit-successive',
+          outcomeCodes: ['1.4.4', '1.4.7', '1.4.8'],
+          marks: 4,
+          prompt: 'Successive ionisation energy data show a large jump after the second electron is removed. What does this suggest about the element?',
+          hint: 'A large jump means the next electron is removed from an inner shell.',
+          answer: 'The atom has two outer-shell electrons, so after two electrons are removed the next electron is from an inner shell and requires much more energy. The element is therefore likely to be in Group 2.',
+        },
       ],
       resources: [
         { type: 'reference', title: 'Ionisation energy reference', url: 'https://www.chemguide.co.uk/atoms/properties/ies.html' },
