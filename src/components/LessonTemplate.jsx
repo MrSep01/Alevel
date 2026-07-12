@@ -1,4 +1,4 @@
-import { BookOpenCheck, CheckCircle2, Clapperboard, ExternalLink, FileText, MonitorPlay, Plus, Presentation, Trash2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpenCheck, CheckCircle2, Clapperboard, Clock3, Compass, ExternalLink, FileText, Layers3, ListChecks, MonitorPlay, Plus, Presentation, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 
 function getSavedAssets(topicId) {
@@ -128,7 +128,7 @@ function OutcomeTags({ codes = [] }) {
 
 function LearningOutcomesPanel({ outcomes }) {
   return (
-    <section className="lesson-template-section learning-outcomes-panel">
+    <section className="lesson-template-section learning-outcomes-panel" id="lesson-outcomes">
       <div className="lesson-section-heading">
         <p className="eyebrow">Learning outcomes first</p>
         <h3>This lesson is built around these syllabus statements.</h3>
@@ -149,6 +149,13 @@ function WorkbookInteractive({ type }) {
   if (type === 'particle-counter') return <ParticleCounter />
   if (type === 'beam-deflection') return <BeamDeflectionExplorer />
   if (type === 'radius-trends') return <RadiusTrendExplorer />
+  if (type === 'subshell-capacity') return <SubshellCapacityExplorer />
+  if (type === 'electron-configuration') return <ElectronConfigurationLab />
+  if (type === 'orbital-boxes') return <OrbitalBoxLab />
+  if (type === 'orbital-shapes') return <OrbitalShapeExplorer />
+  if (type === 'ionisation-equations') return <IonisationEquationExplorer />
+  if (type === 'ionisation-trends') return <IonisationTrendExplorer />
+  if (type === 'successive-ionisation') return <SuccessiveIonisationExplorer />
   return null
 }
 
@@ -324,11 +331,11 @@ function WorkbookWrittenTask({ task, index }) {
   )
 }
 
-function WorkbookSection({ section, index }) {
-  const eyebrow = section.type === 'exit' ? 'Exam-style exit ticket' : section.phase
+function WorkbookSection({ section, index, sectionId }) {
+  const eyebrow = section.type === 'exit' ? 'Lesson exit ticket' : section.phase
 
   return (
-    <section className={`workbook-section-card ${section.type || 'task'}`}>
+    <section className={`workbook-section-card ${section.type || 'task'}`} id={sectionId}>
       <div className="workbook-section-time">
         <span>{String(index + 1).padStart(2, '0')}</span>
         <strong>{section.minutes} min</strong>
@@ -369,33 +376,64 @@ function WorkbookLessonExperience({ subtopic }) {
   if (!lessons.length) return null
 
   const activeLesson = lessons.find(lesson => lesson.id === activeLessonId) || lessons[0]
+  const activeLessonIndex = lessons.findIndex(lesson => lesson.id === activeLesson.id)
   const totalMinutes = activeLesson.sections.reduce((sum, section) => sum + section.minutes, 0)
-  const outcomeDetails = activeLesson.outcomeCodes
-    .map(code => subtopic.outcomes.find(outcome => outcome.code === code))
-    .filter(Boolean)
+
+  function selectLesson(lessonId, moveToTop = false) {
+    setActiveLessonId(lessonId)
+    if (moveToTop && typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => {
+        document.getElementById('lesson-work')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    }
+  }
+
+  function jumpToLessonSection(index) {
+    document.getElementById(`${activeLesson.id}-section-${index}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
-    <section className="workbook-experience">
+    <section className="workbook-experience" id="lesson-work">
+      <div className="workbook-picker-heading">
+        <div>
+          <p className="eyebrow">Choose a lesson</p>
+          <h3>{subtopic.ref} learning sequence</h3>
+        </div>
+        <span>{lessons.length} × 40-minute lessons</span>
+      </div>
+
       <div className="workbook-lesson-picker" aria-label="Workbook lessons">
         {lessons.map(lesson => (
           <button
             className={lesson.id === activeLesson.id ? 'active' : ''}
             key={lesson.id}
             type="button"
-            onClick={() => setActiveLessonId(lesson.id)}
+            aria-current={lesson.id === activeLesson.id ? 'step' : undefined}
+            onClick={() => selectLesson(lesson.id)}
           >
-            <span>Lesson {lesson.lessonNumber}</span>
-            <strong>{lesson.title}</strong>
-            <small>{lesson.duration}</small>
+            <span className="workbook-lesson-number">{lesson.lessonNumber}</span>
+            <span className="workbook-lesson-copy">
+              <small>Lesson {lesson.lessonNumber}</small>
+              <strong>{lesson.title}</strong>
+              <em>{lesson.duration}</em>
+            </span>
           </button>
         ))}
       </div>
 
       <section className="workbook-hero-card">
         <div>
-          <p className="eyebrow">Interactive workbook</p>
+          <p className="eyebrow">Lesson {activeLesson.lessonNumber} • Interactive web lesson</p>
           <h3>{activeLesson.title}</h3>
           <p>{activeLesson.question}</p>
+          <div className="workbook-lesson-meta">
+            <span><Clock3 size={17} /> {activeLesson.duration}</span>
+            <OutcomeTags codes={activeLesson.outcomeCodes} />
+          </div>
+          <div className="workbook-lesson-goal">
+            <span>By the end</span>
+            <strong>{activeLesson.goal}</strong>
+          </div>
         </div>
         <div className="workbook-duration">
           <span>{totalMinutes}</span>
@@ -403,30 +441,43 @@ function WorkbookLessonExperience({ subtopic }) {
         </div>
       </section>
 
-      <section className="workbook-goals-card">
-        <div className="lesson-section-heading">
-          <p className="eyebrow">Today you will be able to</p>
-          <h3>{activeLesson.goal}</h3>
-        </div>
-        <div className="workbook-goal-list">
-          {outcomeDetails.map(outcome => (
-            <article key={outcome.code}>
-              <span>{outcome.code}</span>
-              <p>{outcome.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <nav className="workbook-route-strip" aria-label="Lesson stages">
+        {activeLesson.sections.map((section, index) => (
+          <button type="button" key={`${activeLesson.id}-${section.phase}`} onClick={() => jumpToLessonSection(index)}>
+            <span>{index + 1}</span>
+            <strong>{section.phase}</strong>
+            <small>{section.minutes} min</small>
+          </button>
+        ))}
+      </nav>
 
-      <div className="workbook-route-strip">
-        {activeLesson.sections.map(section => (
-          <span key={`${activeLesson.id}-${section.phase}`}>{section.minutes} min • {section.phase}</span>
+      <div className="workbook-section-list">
+        {activeLesson.sections.map((section, index) => (
+          <WorkbookSection
+            section={section}
+            index={index}
+            sectionId={`${activeLesson.id}-section-${index}`}
+            key={`${activeLesson.id}-${section.phase}-${section.title}`}
+          />
         ))}
       </div>
 
-      <div className="workbook-section-list">
-        {activeLesson.sections.map((section, index) => <WorkbookSection section={section} index={index} key={`${activeLesson.id}-${section.phase}-${section.title}`} />)}
-      </div>
+      {lessons.length > 1 && (
+        <nav className="workbook-lesson-footer" aria-label="Previous or next lesson">
+          {activeLessonIndex > 0 ? (
+            <button type="button" onClick={() => selectLesson(lessons[activeLessonIndex - 1].id, true)}>
+              <ArrowLeft size={18} />
+              <span><small>Previous lesson</small><strong>{lessons[activeLessonIndex - 1].title}</strong></span>
+            </button>
+          ) : <span />}
+          {activeLessonIndex < lessons.length - 1 && (
+            <button type="button" onClick={() => selectLesson(lessons[activeLessonIndex + 1].id, true)}>
+              <span><small>Next lesson</small><strong>{lessons[activeLessonIndex + 1].title}</strong></span>
+              <ArrowRight size={18} />
+            </button>
+          )}
+        </nav>
+      )}
     </section>
   )
 }
@@ -804,6 +855,455 @@ function RadiusTrendExplorer() {
   )
 }
 
+const subshellModels = {
+  s: {
+    label: 's sub-shell',
+    orbitals: 1,
+    capacity: 2,
+    shape: 'One spherical orbital',
+    examples: '1s, 2s, 3s, 4s',
+  },
+  p: {
+    label: 'p sub-shell',
+    orbitals: 3,
+    capacity: 6,
+    shape: 'Three dumbbell-shaped orbitals at right angles',
+    examples: '2p, 3p, 4p',
+  },
+  d: {
+    label: 'd sub-shell',
+    orbitals: 5,
+    capacity: 10,
+    shape: 'Five orbitals; their shapes are not required here',
+    examples: '3d',
+  },
+}
+
+function FilledOrbitalBoxes({ orbitalCount, electronCount }) {
+  const occupancies = Array.from({ length: orbitalCount }, () => 0)
+  for (let index = 0; index < Math.min(electronCount, orbitalCount); index += 1) occupancies[index] = 1
+  for (let index = orbitalCount; index < electronCount; index += 1) occupancies[index - orbitalCount] = 2
+
+  return (
+    <div className="orbital-box-row" aria-label={`${electronCount} electrons in ${orbitalCount} orbitals`}>
+      {occupancies.map((occupancy, index) => (
+        <span className="orbital-box" key={`${orbitalCount}-${index}`}>
+          {occupancy > 0 && <i>↑</i>}
+          {occupancy > 1 && <i>↓</i>}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function SubshellCapacityExplorer() {
+  const [subshellKey, setSubshellKey] = useState('p')
+  const model = subshellModels[subshellKey]
+
+  return (
+    <div className="lesson-interactive subshell-explorer">
+      <div className="preset-row" role="group" aria-label="Choose a sub-shell">
+        {Object.keys(subshellModels).map(key => (
+          <button className={key === subshellKey ? 'active' : ''} key={key} type="button" onClick={() => setSubshellKey(key)}>
+            {key} sub-shell
+          </button>
+        ))}
+      </div>
+      <div className="subshell-stage">
+        <div>
+          <p className="eyebrow">Maximum occupancy</p>
+          <h4>{model.label}</h4>
+          <FilledOrbitalBoxes orbitalCount={model.orbitals} electronCount={model.capacity} />
+          <p>Each box represents one orbital. Each orbital holds no more than two electrons with opposite spins.</p>
+        </div>
+        <dl>
+          <div><dt>Orbitals</dt><dd>{model.orbitals}</dd></div>
+          <div><dt>Maximum electrons</dt><dd>{model.capacity}</dd></div>
+          <div><dt>Model</dt><dd>{model.shape}</dd></div>
+          <div><dt>Examples</dt><dd>{model.examples}</dd></div>
+        </dl>
+      </div>
+    </div>
+  )
+}
+
+const electronSpecies = [
+  {
+    id: 'na',
+    label: 'Na',
+    name: 'sodium atom',
+    protonNumber: 11,
+    charge: 0,
+    shellArrangement: '2, 8, 1',
+    configuration: [['1s', 2], ['2s', 2], ['2p', 6], ['3s', 1]],
+    note: 'The final electron occupies 3s, so sodium has one outer-shell electron.',
+  },
+  {
+    id: 'al3',
+    label: 'Al³⁺',
+    name: 'aluminium ion',
+    protonNumber: 13,
+    charge: 3,
+    shellArrangement: '2, 8',
+    configuration: [['1s', 2], ['2s', 2], ['2p', 6]],
+    note: 'Aluminium loses its three n = 3 electrons to form Al³⁺.',
+  },
+  {
+    id: 'cl1',
+    label: 'Cl⁻',
+    name: 'chloride ion',
+    protonNumber: 17,
+    charge: -1,
+    shellArrangement: '2, 8, 8',
+    configuration: [['1s', 2], ['2s', 2], ['2p', 6], ['3s', 2], ['3p', 6]],
+    note: 'Chlorine gains one electron to complete the 3p sub-shell.',
+  },
+  {
+    id: 'cr',
+    label: 'Cr',
+    name: 'chromium atom',
+    protonNumber: 24,
+    charge: 0,
+    shellArrangement: '2, 8, 13, 1',
+    configuration: [['1s', 2], ['2s', 2], ['2p', 6], ['3s', 2], ['3p', 6], ['4s', 1], ['3d', 5]],
+    note: 'Chromium is an exception to the simplest filling pattern: it has a half-filled 3d sub-shell and one 4s electron.',
+  },
+  {
+    id: 'fe2',
+    label: 'Fe²⁺',
+    name: 'iron(II) ion',
+    protonNumber: 26,
+    charge: 2,
+    shellArrangement: '2, 8, 14',
+    configuration: [['1s', 2], ['2s', 2], ['2p', 6], ['3s', 2], ['3p', 6], ['3d', 6]],
+    note: 'Although 4s fills before 3d, transition-metal ions lose 4s electrons first.',
+  },
+]
+
+function ConfigurationNotation({ configuration }) {
+  return (
+    <span className="configuration-notation">
+      {configuration.map(([subshell, electrons]) => <span key={subshell}>{subshell}<sup>{electrons}</sup></span>)}
+    </span>
+  )
+}
+
+function ElectronConfigurationLab() {
+  const [speciesId, setSpeciesId] = useState('na')
+  const species = electronSpecies.find(item => item.id === speciesId) || electronSpecies[0]
+  const electronCount = species.protonNumber - species.charge
+  const electronCalculation = species.charge < 0
+    ? `${species.protonNumber} + ${Math.abs(species.charge)} = ${electronCount}`
+    : `${species.protonNumber} - ${species.charge} = ${electronCount}`
+
+  return (
+    <div className="lesson-interactive configuration-lab">
+      <div className="preset-row" role="group" aria-label="Choose an atom or ion">
+        {electronSpecies.map(item => (
+          <button className={item.id === species.id ? 'active' : ''} key={item.id} type="button" onClick={() => setSpeciesId(item.id)}>
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="configuration-stage">
+        <div className="species-identity">
+          <span>{species.label}</span>
+          <div><strong>{species.name}</strong><small>{species.protonNumber} protons • {electronCount} electrons</small></div>
+        </div>
+        <div className="configuration-calculation">
+          <span>Electron count</span>
+          <strong>{electronCalculation}</strong>
+          <small>subtract positive charge; add the magnitude of negative charge</small>
+        </div>
+        <div className="configuration-result">
+          <span>Sub-shell notation</span>
+          <ConfigurationNotation configuration={species.configuration} />
+        </div>
+        <div className="configuration-result">
+          <span>Shell arrangement</span>
+          <strong>{species.shellArrangement}</strong>
+        </div>
+      </div>
+      <p className="feedback good">{species.note}</p>
+    </div>
+  )
+}
+
+const orbitalBoxSpecies = [
+  { id: 'c', label: 'C', name: 'carbon', configuration: [['1s', 2], ['2s', 2], ['2p', 2]], unpaired: 2, note: 'The two 2p electrons occupy separate orbitals with parallel spins.' },
+  { id: 'n', label: 'N', name: 'nitrogen', configuration: [['1s', 2], ['2s', 2], ['2p', 3]], unpaired: 3, note: 'Each 2p orbital is singly occupied before pairing begins.' },
+  { id: 'o', label: 'O', name: 'oxygen', configuration: [['1s', 2], ['2s', 2], ['2p', 4]], unpaired: 2, note: 'The fourth 2p electron pairs in one orbital; two 2p electrons remain unpaired.' },
+  { id: 's', label: 'S', name: 'sulfur', configuration: [['1s', 2], ['2s', 2], ['2p', 6], ['3s', 2], ['3p', 4]], unpaired: 2, note: 'A paired 3p electron experiences spin-pair repulsion, which matters when comparing ionisation energies.' },
+  { id: 'cl-radical', label: 'Cl•', name: 'chlorine radical', configuration: [['1s', 2], ['2s', 2], ['2p', 6], ['3s', 2], ['3p', 5]], unpaired: 1, note: 'One unpaired electron makes this chlorine species a free radical.' },
+]
+
+function orbitalCountForSubshell(subshell) {
+  if (subshell.endsWith('s')) return 1
+  if (subshell.endsWith('p')) return 3
+  return 5
+}
+
+function OrbitalBoxLab() {
+  const [speciesId, setSpeciesId] = useState('c')
+  const species = orbitalBoxSpecies.find(item => item.id === speciesId) || orbitalBoxSpecies[0]
+
+  return (
+    <div className="lesson-interactive orbital-box-lab">
+      <div className="preset-row" role="group" aria-label="Choose a species">
+        {orbitalBoxSpecies.map(item => (
+          <button className={item.id === species.id ? 'active' : ''} key={item.id} type="button" onClick={() => setSpeciesId(item.id)}>
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="orbital-energy-board">
+        <div className="orbital-energy-axis"><span>higher energy</span><i /><span>lower energy</span></div>
+        <div className="orbital-configuration-rows">
+          {[...species.configuration].reverse().map(([subshell, electrons]) => (
+            <div className="orbital-configuration-row" key={subshell}>
+              <strong>{subshell}<sup>{electrons}</sup></strong>
+              <FilledOrbitalBoxes orbitalCount={orbitalCountForSubshell(subshell)} electronCount={electrons} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="orbital-box-summary">
+        <span>{species.label}</span>
+        <p><strong>{species.unpaired} unpaired electron{species.unpaired === 1 ? '' : 's'}.</strong> {species.note}</p>
+      </div>
+    </div>
+  )
+}
+
+const orbitalShapeModels = {
+  s: { label: 's orbital', description: 'Spherical electron-density region centred on the nucleus.', axis: 'No preferred direction' },
+  px: { label: 'pₓ orbital', description: 'Two lobes on opposite sides of the nucleus with a nodal plane through the nucleus.', axis: 'Aligned with the x-axis' },
+  py: { label: 'pᵧ orbital', description: 'The same p-orbital shape rotated to a different orientation.', axis: 'Aligned with the y-axis' },
+  pz: { label: 'p orbital (z-axis)', description: 'A third p orbital at right angles to pₓ and pᵧ.', axis: 'Aligned with the z-axis' },
+}
+
+function OrbitalShapeExplorer() {
+  const [shapeKey, setShapeKey] = useState('s')
+  const shape = orbitalShapeModels[shapeKey]
+  const isS = shapeKey === 's'
+
+  return (
+    <div className="lesson-interactive orbital-shape-explorer">
+      <div className="preset-row" role="group" aria-label="Choose an orbital">
+        {Object.entries(orbitalShapeModels).map(([key, item]) => (
+          <button className={key === shapeKey ? 'active' : ''} key={key} type="button" onClick={() => setShapeKey(key)}>
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className={`orbital-shape-stage ${shapeKey}`}>
+        <span className="orbital-axis horizontal">x</span>
+        <span className="orbital-axis vertical">y</span>
+        {isS ? (
+          <div className="s-orbital-cloud"><span>nucleus</span></div>
+        ) : (
+          <div className="p-orbital-model">
+            <span className="p-lobe first" />
+            <i>nucleus</i>
+            <span className="p-lobe second" />
+          </div>
+        )}
+      </div>
+      <div className="orbital-shape-copy"><strong>{shape.label}</strong><p>{shape.description}</p><span>{shape.axis}</span></div>
+    </div>
+  )
+}
+
+const ionisationElements = [
+  { symbol: 'Mg', name: 'magnesium', maxOrder: 4 },
+  { symbol: 'Ca', name: 'calcium', maxOrder: 4 },
+  { symbol: 'P', name: 'phosphorus', maxOrder: 4 },
+  { symbol: 'F', name: 'fluorine', maxOrder: 4 },
+]
+
+function chargeText(charge) {
+  if (charge === 0) return ''
+  return charge === 1 ? '+' : `${charge}+`
+}
+
+function IonSpecies({ symbol, charge = 0 }) {
+  return <span className="ion-species">{symbol}{charge > 0 && <sup>{chargeText(charge)}</sup>}<small>(g)</small></span>
+}
+
+function ordinal(value) {
+  if (value === 1) return 'first'
+  if (value === 2) return 'second'
+  if (value === 3) return 'third'
+  return `${value}th`
+}
+
+function IonisationEquationExplorer() {
+  const [elementSymbol, setElementSymbol] = useState('Mg')
+  const [order, setOrder] = useState(1)
+  const element = ionisationElements.find(item => item.symbol === elementSymbol) || ionisationElements[0]
+  const reactantCharge = order - 1
+  const productCharge = order
+
+  return (
+    <div className="lesson-interactive ionisation-equation-explorer">
+      <div className="ionisation-equation-controls">
+        <div className="preset-row" role="group" aria-label="Choose an element">
+          {ionisationElements.map(item => (
+            <button className={item.symbol === element.symbol ? 'active' : ''} key={item.symbol} type="button" onClick={() => setElementSymbol(item.symbol)}>
+              {item.symbol}
+            </button>
+          ))}
+        </div>
+        <div className="preset-row" role="group" aria-label="Choose an ionisation number">
+          {[1, 2, 3, 4].map(value => (
+            <button className={value === order ? 'active' : ''} key={value} type="button" onClick={() => setOrder(value)}>
+              IE<sub>{value}</sub>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="ionisation-equation-stage">
+        <span className="equation-caption">{ordinal(order)} ionisation energy of {element.name}</span>
+        <div className="ionisation-equation">
+          <IonSpecies symbol={element.symbol} charge={reactantCharge} />
+          <ArrowRight size={32} />
+          <IonSpecies symbol={element.symbol} charge={productCharge} />
+          <b>+</b>
+          <span className="electron-symbol">e⁻</span>
+        </div>
+      </div>
+      <p className="feedback good">The {ordinal(order)} ionisation removes one electron from one mole of gaseous {reactantCharge ? `${element.symbol}${chargeText(reactantCharge)} ions` : `${element.symbol} atoms`}.</p>
+    </div>
+  )
+}
+
+const ionisationTrendSets = {
+  period3: {
+    label: 'Across Period 3',
+    summary: 'The overall rise comes from increasing nuclear charge while electrons enter the same principal shell.',
+    data: [
+      { element: 'Na', value: 496, note: 'One 3s electron starts the period.' },
+      { element: 'Mg', value: 738, note: 'The 3s sub-shell is filled.' },
+      { element: 'Al', value: 578, note: 'The electron removed is from higher-energy 3p, so the value falls below Mg.' },
+      { element: 'Si', value: 787, note: 'Increasing nuclear charge strengthens attraction.' },
+      { element: 'P', value: 1012, note: 'Three unpaired 3p electrons form a relatively stable arrangement.' },
+      { element: 'S', value: 1000, note: 'A paired 3p electron experiences extra repulsion, so the value falls slightly below P.' },
+      { element: 'Cl', value: 1251, note: 'Greater nuclear charge raises the attraction.' },
+      { element: 'Ar', value: 1521, note: 'A filled outer shell gives the highest value in the period.' },
+    ],
+  },
+  group2: {
+    label: 'Down Group 2',
+    summary: 'Values decrease because the outer electron is further from the nucleus and more shielded by inner shells.',
+    data: [
+      { element: 'Be', value: 900, note: 'The outer electron is in the n = 2 shell.' },
+      { element: 'Mg', value: 738, note: 'An extra occupied shell increases distance and shielding.' },
+      { element: 'Ca', value: 590, note: 'The 4s electron is further from the nucleus.' },
+      { element: 'Sr', value: 550, note: 'Further distance and shielding weaken attraction.' },
+      { element: 'Ba', value: 503, note: 'The outer electron is most shielded in this set.' },
+    ],
+  },
+}
+
+function IonisationTrendExplorer() {
+  const [setKey, setSetKey] = useState('period3')
+  const [selectedElement, setSelectedElement] = useState('Al')
+  const trendSet = ionisationTrendSets[setKey]
+  const selected = trendSet.data.find(item => item.element === selectedElement) || trendSet.data[0]
+  const maximum = Math.max(...trendSet.data.map(item => item.value))
+
+  function selectSet(key) {
+    setSetKey(key)
+    setSelectedElement(ionisationTrendSets[key].data[0].element)
+  }
+
+  return (
+    <div className="lesson-interactive ionisation-trend-explorer">
+      <div className="preset-row" role="group" aria-label="Choose a trend">
+        {Object.entries(ionisationTrendSets).map(([key, item]) => (
+          <button className={key === setKey ? 'active' : ''} key={key} type="button" onClick={() => selectSet(key)}>
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="ie-chart-shell">
+        <span className="ie-y-axis">First ionisation energy / kJ mol⁻¹</span>
+        <div className="ie-bar-chart" style={{ gridTemplateColumns: `repeat(${trendSet.data.length}, minmax(68px, 1fr))` }}>
+          {trendSet.data.map(item => (
+            <button className={item.element === selected.element ? 'active' : ''} key={item.element} type="button" onClick={() => setSelectedElement(item.element)} aria-label={`${item.element}: ${item.value} kilojoules per mole`}>
+              <span className="ie-bar-value">{item.value}</span>
+              <i style={{ height: `${Math.max(18, (item.value / maximum) * 100)}%` }} />
+              <strong>{item.element}</strong>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="ie-trend-explanation">
+        <div><span>{selected.element}</span><strong>{selected.value} kJ mol⁻¹</strong></div>
+        <p>{selected.note}</p>
+        <small>{trendSet.summary}</small>
+      </div>
+    </div>
+  )
+}
+
+const successiveIonisationSets = [
+  { id: 'na', element: 'Na', group: 'Group 1', outer: '3s¹', values: [496, 4563, 6913, 9544, 13352], jumpAfter: 1, note: 'The large jump after IE₁ shows that sodium has one outer-shell electron.' },
+  { id: 'mg', element: 'Mg', group: 'Group 2', outer: '3s²', values: [738, 1451, 7733, 10542, 13630], jumpAfter: 2, note: 'The large jump after IE₂ shows that magnesium has two outer-shell electrons.' },
+  { id: 'al', element: 'Al', group: 'Group 13', outer: '3s² 3p¹', values: [578, 1817, 2745, 11578, 14831], jumpAfter: 3, note: 'The large jump after IE₃ shows that aluminium has three outer-shell electrons.' },
+  { id: 'si', element: 'Si', group: 'Group 14', outer: '3s² 3p²', values: [787, 1577, 3232, 4356, 16091], jumpAfter: 4, note: 'The large jump after IE₄ shows that silicon has four outer-shell electrons.' },
+]
+
+function SuccessiveIonisationExplorer() {
+  const [elementId, setElementId] = useState('mg')
+  const [selectedIndex, setSelectedIndex] = useState(2)
+  const element = successiveIonisationSets.find(item => item.id === elementId) || successiveIonisationSets[0]
+  const logValues = element.values.map(value => Math.log10(value))
+  const minimum = Math.min(...logValues)
+  const maximum = Math.max(...logValues)
+
+  function selectElement(id) {
+    const next = successiveIonisationSets.find(item => item.id === id) || successiveIonisationSets[0]
+    setElementId(id)
+    setSelectedIndex(Math.min(next.jumpAfter, next.values.length - 1))
+  }
+
+  return (
+    <div className="lesson-interactive successive-ie-explorer">
+      <div className="preset-row" role="group" aria-label="Choose an element">
+        {successiveIonisationSets.map(item => (
+          <button className={item.id === element.id ? 'active' : ''} key={item.id} type="button" onClick={() => selectElement(item.id)}>
+            {item.element}
+          </button>
+        ))}
+      </div>
+      <div className="successive-chart-shell">
+        <span className="ie-y-axis">Successive ionisation energy / kJ mol⁻¹</span>
+        <div className="successive-bar-chart">
+          {element.values.map((value, index) => {
+            const height = 24 + ((logValues[index] - minimum) / Math.max(0.1, maximum - minimum)) * 76
+            const isJump = index === element.jumpAfter
+            return (
+              <button className={`${index === selectedIndex ? 'active' : ''} ${isJump ? 'jump' : ''}`} key={`${element.id}-${index}`} type="button" onClick={() => setSelectedIndex(index)}>
+                <span>{value.toLocaleString()}</span>
+                <i style={{ height: `${height}%` }} />
+                <strong>IE<sub>{index + 1}</sub></strong>
+              </button>
+            )
+          })}
+        </div>
+        <small>Logarithmic display scale; labels show the actual values.</small>
+      </div>
+      <div className="successive-deduction">
+        <div><span>Selected</span><strong>IE<sub>{selectedIndex + 1}</sub> = {element.values[selectedIndex].toLocaleString()} kJ mol⁻¹</strong></div>
+        <div><span>Largest jump</span><strong>after IE<sub>{element.jumpAfter}</sub></strong></div>
+        <div><span>Deduction</span><strong>{element.group} • outer configuration {element.outer}</strong></div>
+      </div>
+      <p className="feedback good">{element.note}</p>
+    </div>
+  )
+}
+
 function InteractiveBlock({ item }) {
   return (
     <article className="interactive-block">
@@ -816,6 +1316,13 @@ function InteractiveBlock({ item }) {
       {item.type === 'particle-counter' && <ParticleCounter />}
       {item.type === 'beam-deflection' && <BeamDeflectionExplorer />}
       {item.type === 'radius-trends' && <RadiusTrendExplorer />}
+      {item.type === 'subshell-capacity' && <SubshellCapacityExplorer />}
+      {item.type === 'electron-configuration' && <ElectronConfigurationLab />}
+      {item.type === 'orbital-boxes' && <OrbitalBoxLab />}
+      {item.type === 'orbital-shapes' && <OrbitalShapeExplorer />}
+      {item.type === 'ionisation-equations' && <IonisationEquationExplorer />}
+      {item.type === 'ionisation-trends' && <IonisationTrendExplorer />}
+      {item.type === 'successive-ionisation' && <SuccessiveIonisationExplorer />}
     </article>
   )
 }
@@ -870,7 +1377,7 @@ function SubtopicExitTicketPanel({ subtopic }) {
   if (!questions.length) return null
 
   return (
-    <section className="lesson-template-section subtopic-exit-ticket-panel">
+    <section className="lesson-template-section subtopic-exit-ticket-panel" id="lesson-exit">
       <div className="lesson-section-heading">
         <p className="eyebrow">Exam-style exit ticket</p>
         <h3>{subtopic.ref} {subtopic.title}: final check</h3>
@@ -887,7 +1394,7 @@ function SubtopicExitTicketPanel({ subtopic }) {
 
 function WebLessonExperience({ lesson, activities = [] }) {
   return (
-    <section className="web-lesson-experience">
+    <section className="web-lesson-experience" id="lesson-work">
       <div className="web-lesson-title">
         <p className="eyebrow">Web lesson</p>
         <h3>{lesson.title}</h3>
@@ -980,6 +1487,8 @@ export default function LessonTemplate({ topic, template, currentUser }) {
   const canEdit = ['teacher', 'admin'].includes(currentUser?.role)
 
   const activeSubtopic = template.subtopics.find(subtopic => subtopic.ref === activeSubtopicId) || template.subtopics[0]
+  const activeSubtopicIndex = template.subtopics.findIndex(subtopic => subtopic.ref === activeSubtopic.ref)
+  const activeLessonCount = activeSubtopic.workbookLessons?.length || (activeSubtopic.webLesson ? 1 : 0)
   const activeSlides = assets.slides.filter(slide => !slide.subtopicRef || slide.subtopicRef === activeSubtopic.ref)
   const activeVideos = assets.videos.filter(video => !video.subtopicRef || video.subtopicRef === activeSubtopic.ref)
   const activeSeedVideos = useMemo(
@@ -990,6 +1499,7 @@ export default function LessonTemplate({ topic, template, currentUser }) {
     })),
     [activeSubtopic],
   )
+  const hasAttachedMedia = activeSlides.length + activeSeedVideos.length + activeVideos.length > 0
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -1024,53 +1534,84 @@ export default function LessonTemplate({ topic, template, currentUser }) {
     setAssets(previous => ({ ...previous, videos: previous.videos.filter(video => video.id !== id) }))
   }
 
+  function selectSubtopic(ref) {
+    setActiveSubtopicId(ref)
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => {
+        document.getElementById('lesson-subtopic-start')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    }
+  }
+
+  function jumpToSection(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <div className="lesson-template">
       <section className="lesson-template-hero">
         <div>
-          <p className="eyebrow">Web lesson • Topic {template.syllabusNumber}</p>
+          <p className="eyebrow">Cambridge AS Chemistry • Topic {template.syllabusNumber}</p>
           <h2>{template.title}</h2>
           <p>{template.lessonGoal}</p>
         </div>
         <div className="lesson-template-stats" aria-label="Lesson summary">
-          <span><BookOpenCheck size={18} /> {template.subtopics.length} subtopics</span>
-          <span><CheckCircle2 size={18} /> {template.subtopics.reduce((sum, subtopic) => sum + subtopic.outcomes.length, 0)} outcomes</span>
-          <span><Clapperboard size={18} /> {template.teachingTime}</span>
+          <span><Layers3 size={18} /><strong>{template.subtopics.length}</strong><small>subtopics</small></span>
+          <span><ListChecks size={18} /><strong>{template.subtopics.reduce((sum, subtopic) => sum + subtopic.outcomes.length, 0)}</strong><small>outcomes</small></span>
+          <span><Clock3 size={18} /><strong>{template.teachingTime}</strong><small>guided time</small></span>
         </div>
       </section>
 
       <section className="lesson-template-layout">
         <aside className="lesson-subtopic-nav">
-          <span className="lesson-nav-label">Syllabus route</span>
+          <div className="lesson-nav-progress">
+            <span className="lesson-nav-label">Topic route</span>
+            <strong>Section {activeSubtopicIndex + 1} of {template.subtopics.length}</strong>
+            <div role="progressbar" aria-valuemin="1" aria-valuemax={template.subtopics.length} aria-valuenow={activeSubtopicIndex + 1}>
+              <i style={{ width: `${((activeSubtopicIndex + 1) / template.subtopics.length) * 100}%` }} />
+            </div>
+          </div>
           {template.subtopics.map(subtopic => (
             <button
               className={subtopic.ref === activeSubtopic.ref ? 'active' : ''}
               key={subtopic.ref}
               type="button"
-              onClick={() => setActiveSubtopicId(subtopic.ref)}
+              aria-current={subtopic.ref === activeSubtopic.ref ? 'step' : undefined}
+              onClick={() => selectSubtopic(subtopic.ref)}
             >
-              <span>{subtopic.ref}</span>
-              <strong>{subtopic.title}</strong>
-              <small>{subtopic.outcomes.length} learning outcomes</small>
+              <span className="lesson-subtopic-number">{subtopic.ref}</span>
+              <span className="lesson-subtopic-copy">
+                <strong>{subtopic.title}</strong>
+                <small>
+                  {subtopic.workbookLessons?.length
+                    ? `${subtopic.workbookLessons.length} web lesson${subtopic.workbookLessons.length > 1 ? 's' : ''}`
+                    : `${subtopic.outcomes.length} learning outcomes`}
+                </small>
+              </span>
             </button>
           ))}
         </aside>
 
         <div className="lesson-template-main">
-          <section className="lesson-subtopic-header">
+          <section className="lesson-subtopic-header" id="lesson-subtopic-start">
             <div>
-              <p className="eyebrow">{activeSubtopic.ref} • {activeSubtopic.keyConcept}</p>
+              <p className="eyebrow">Subtopic {activeSubtopicIndex + 1} of {template.subtopics.length} • {activeSubtopic.ref} • {activeSubtopic.keyConcept}</p>
               <h3>{activeSubtopic.title}</h3>
               <p>{activeSubtopic.lessonQuestion}</p>
             </div>
-            <div className="lesson-flow-strip">
-              <span>Starter</span>
-              <span>Explore</span>
-              <span>Explain</span>
-              <span>Practice</span>
-              <span>Check</span>
+            <div className="lesson-subtopic-summary" aria-label="Current subtopic summary">
+              <span><BookOpenCheck size={18} /><strong>{activeLessonCount || activeSubtopic.activities.length}</strong><small>{activeLessonCount ? `lesson${activeLessonCount > 1 ? 's' : ''}` : 'activities'}</small></span>
+              <span><CheckCircle2 size={18} /><strong>{activeSubtopic.outcomes.length}</strong><small>outcomes</small></span>
             </div>
           </section>
+
+          <nav className="lesson-jump-nav" aria-label="Jump within this subtopic">
+            <span><Compass size={17} /> Student route</span>
+            <button type="button" onClick={() => jumpToSection('lesson-outcomes')}>Outcomes</button>
+            <button type="button" onClick={() => jumpToSection('lesson-work')}>Lesson</button>
+            <button type="button" onClick={() => jumpToSection('lesson-exit')}>Exam check</button>
+            <button type="button" onClick={() => jumpToSection('lesson-resources')}>Resources</button>
+          </nav>
 
           <LearningOutcomesPanel outcomes={activeSubtopic.outcomes} />
 
@@ -1083,7 +1624,7 @@ export default function LessonTemplate({ topic, template, currentUser }) {
           )}
 
           {!activeSubtopic.workbookLessons && !activeSubtopic.webLesson && (
-            <section className="lesson-template-section">
+            <section className="lesson-template-section" id="lesson-work">
               <div className="lesson-section-heading">
                 <p className="eyebrow">Suggested teaching activities</p>
                 <h3>Turn the Scheme of Work into a classroom sequence.</h3>
@@ -1103,10 +1644,10 @@ export default function LessonTemplate({ topic, template, currentUser }) {
 
           <SubtopicExitTicketPanel subtopic={activeSubtopic} />
 
-          <section className="lesson-template-section">
+          {(hasAttachedMedia || canEdit) && <section className="lesson-template-section lesson-media-section" id="lesson-media">
             <div className="lesson-section-heading">
-              <p className="eyebrow">Slides and video</p>
-              <h3>Attach lesson media directly to this subtopic.</h3>
+              <p className="eyebrow">Lesson media</p>
+              <h3>{canEdit ? 'Slides and video for this subtopic' : 'Watch and review'}</h3>
             </div>
 
             <div className="lesson-embed-grid">
@@ -1120,11 +1661,11 @@ export default function LessonTemplate({ topic, template, currentUser }) {
               ))}
             </div>
 
-            {activeSlides.length === 0 && activeSeedVideos.length + activeVideos.length === 0 && (
+            {!hasAttachedMedia && canEdit && (
               <div className="lesson-empty-media">
                 <Presentation size={24} />
                 <strong>No media attached yet</strong>
-                <p>Teachers can add slide decks and YouTube videos for this lesson.</p>
+                <p>Add a published slide deck or YouTube video for this lesson.</p>
               </div>
             )}
 
@@ -1144,22 +1685,13 @@ export default function LessonTemplate({ topic, template, currentUser }) {
                 </form>
               </div>
             )}
-          </section>
+          </section>}
 
-          <section className="lesson-template-section lesson-template-two-col">
+          <section className="lesson-template-section lesson-readiness-panel">
             <div>
               <div className="lesson-section-heading">
-                <p className="eyebrow">Teacher focus</p>
-                <h3>Planning notes</h3>
-              </div>
-              <ul className="lesson-check-list">
-                {template.teacherFocus.map(note => <li key={note}>{note}</li>)}
-              </ul>
-            </div>
-            <div>
-              <div className="lesson-section-heading">
-                <p className="eyebrow">Exit checks</p>
-                <h3>Evidence of understanding</h3>
+                <p className="eyebrow">Ready to move on?</p>
+                <h3>Use these statements for a final self-check.</h3>
               </div>
               <ul className="lesson-check-list">
                 {activeSubtopic.checkpoints.map(check => <li key={check}>{check}</li>)}
@@ -1167,7 +1699,19 @@ export default function LessonTemplate({ topic, template, currentUser }) {
             </div>
           </section>
 
-          <section className="lesson-template-section">
+          {canEdit && (
+            <section className="lesson-template-section teacher-planning-panel">
+              <div className="lesson-section-heading">
+                <p className="eyebrow">Teacher planning</p>
+                <h3>Notes for teaching this topic</h3>
+              </div>
+              <ul className="lesson-check-list">
+                {template.teacherFocus.map(note => <li key={note}>{note}</li>)}
+              </ul>
+            </section>
+          )}
+
+          <section className="lesson-template-section" id="lesson-resources">
             <div className="lesson-section-heading">
               <p className="eyebrow">Resource links</p>
               <h3>Useful references and simulations</h3>
@@ -1176,6 +1720,21 @@ export default function LessonTemplate({ topic, template, currentUser }) {
               {activeSubtopic.resources.map(resource => <ResourceLink key={`${resource.type}-${resource.url}`} resource={resource} />)}
             </div>
           </section>
+
+          <nav className="lesson-subtopic-footer" aria-label="Previous or next subtopic">
+            {activeSubtopicIndex > 0 ? (
+              <button type="button" onClick={() => selectSubtopic(template.subtopics[activeSubtopicIndex - 1].ref)}>
+                <ArrowLeft size={19} />
+                <span><small>Previous subtopic</small><strong>{template.subtopics[activeSubtopicIndex - 1].title}</strong></span>
+              </button>
+            ) : <span />}
+            {activeSubtopicIndex < template.subtopics.length - 1 && (
+              <button type="button" onClick={() => selectSubtopic(template.subtopics[activeSubtopicIndex + 1].ref)}>
+                <span><small>Next subtopic</small><strong>{template.subtopics[activeSubtopicIndex + 1].title}</strong></span>
+                <ArrowRight size={19} />
+              </button>
+            )}
+          </nav>
         </div>
       </section>
 

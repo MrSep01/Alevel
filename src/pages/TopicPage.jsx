@@ -1,3 +1,4 @@
+import { ArrowLeft, BookOpenCheck, ClipboardCheck, Files } from 'lucide-react'
 import PriorKnowledgeCheck from '../components/PriorKnowledgeCheck.jsx'
 import VocabularyList from '../components/VocabularyList.jsx'
 import LessonBlock from '../components/LessonBlock.jsx'
@@ -18,15 +19,30 @@ export default function TopicPage({ topic, navigate, currentUser }) {
   if (lessonTemplate) {
     return (
       <div className="page lesson-template-page">
-        <div className="topic-page-action-row">
-          <button className="btn" type="button" onClick={() => navigate(pathwayPage)}>Back to pathway</button>
-          {lessonTemplate.topicAssessments && (
-            <>
-              <button className="btn primary" type="button" onClick={() => navigate('topic-exam-practice', topic.id)}>Exam Practice</button>
-              <button className="btn" type="button" onClick={() => navigate('topic-past-papers', topic.id)}>Past Papers</button>
-            </>
-          )}
-        </div>
+        <nav className="topic-page-action-row" aria-label="Atomic structure pages">
+          <button className="topic-back-button" type="button" onClick={() => navigate(pathwayPage)}>
+            <ArrowLeft size={18} />
+            <span>AS pathway</span>
+          </button>
+          <div className="topic-page-tabs" aria-label="Topic navigation">
+            <button className="topic-page-tab active" type="button" aria-current="page">
+              <BookOpenCheck size={18} />
+              <span>Lessons</span>
+            </button>
+            {lessonTemplate.topicAssessments && (
+              <>
+                <button className="topic-page-tab" type="button" onClick={() => navigate('topic-exam-practice', topic.id)}>
+                  <ClipboardCheck size={18} />
+                  <span>Exam practice</span>
+                </button>
+                <button className="topic-page-tab" type="button" onClick={() => navigate('topic-past-papers', topic.id)}>
+                  <Files size={18} />
+                  <span>Past papers</span>
+                </button>
+              </>
+            )}
+          </div>
+        </nav>
         <LessonTemplate topic={topic} template={lessonTemplate} currentUser={currentUser} />
       </div>
     )
